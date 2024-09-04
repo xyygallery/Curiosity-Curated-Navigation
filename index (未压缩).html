@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'none'; 
-        script-src 'self' https://static.cloudflareinsights.com; 
+        script-src 'self' 'nonce-randomNonceValue' https://static.cloudflareinsights.com https://www.googletagmanager.com https://www.google-analytics.com; 
         style-src 'self'; 
         img-src 'self' data:; 
         font-src 'self'; 
-        connect-src 'self' https://api-gateway.umami.dev; 
+        connect-src 'self' https://api-gateway.umami.dev https://www.google-analytics.com; 
         object-src 'none'; 
         base-uri 'self';
     ">
+    <script nonce="randomNonceValue">
+        // 允许的内联脚本
+    </script>
     <meta name="description" content="好奇导航" />
     <meta name="next-size-adjust" />
     <title>好奇导航</title>
