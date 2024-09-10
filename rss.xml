@@ -2,11 +2,18 @@
 <rss version="2.0">
   <channel>
     <title>Hcqi.top</title>
-    <link>https://hcqi.top</link>
+    <link>https://hcqi.top/</link>
     <description>Hcqi.top RSS</description>
     <language>zh-cn</language>
     <lastBuildDate>Tue, 10 Sep 2024 12:00:00 +0000</lastBuildDate>
     <pubDate>Tue, 10 Sep 2024 12:00:00 +0000</pubDate>
+
+    <!-- 添加图标 -->
+    <image>
+      <url>https://github.com/wohccdaa/Curiosity-Curated-Navigation/blob/main/favicon.png?raw=true</url>
+      <title>Hcqi.top</title>
+      <link>https://hcqi.top/</link>
+    </image>
 
     <item>
       <title>Brown Cam</title>
@@ -16,6 +23,5 @@
       <guid>https://www.explore.org/livecams?utm_source=hcqi.top</guid>
     </item>
     
-    <!-- 继续添加新内容 -->
   </channel>
 </rss>
