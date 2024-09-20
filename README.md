@@ -1,6 +1,6 @@
-1. 请先修改 index 未压缩版.html;
-2. 完毕后保存未压缩版；
-3. 复制未压缩版的代码进行代码压缩；
-4. 粘贴压缩后的代码至 index.html；
-5. 压缩工具：https://kangax.github.io/html-minifier/
-
+压缩工具：https://kangax.github.io/html-minifier
+说明文档：README.md
+网站图标：favicon.ico
+可读代码：index (未压缩).html
+压缩代码：index.html
+SCP 策略：vercel.json
