@@ -1,14 +1,10 @@
 @font-face {
-    font-family: 'SourceHanSerifSC';
+    font-family: 'CustomFont'; /* 你可以自定义字体名称 */
+    src: url('../fonts/siyrssti.woff2') format('woff2');
+    font-weight: normal;
     font-style: normal;
-    font-weight: 400; /* 可以根据需要调整权重 */
-    font-display: swap;
-    src: url('../fonts/SourceHanSerifSC-VF.otf.woff2') format('woff2');
 }
 
-body {
-    font-family: 'SourceHanSerifSC', sans-serif; /* 默认字体设置 */
-}
 
 
 /*
