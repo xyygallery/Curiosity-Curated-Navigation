@@ -9,20 +9,21 @@
   bottom: 30px;
   right: 30px;
   z-index: 99;
-  background-color: #555;
-  color: white;
-  padding: 15px; /* 增加内边距，使按钮更大 */
-  border: none;
+  background-color: transparent; /* 背景透明 */
+  color: #555; /* 向上箭头的颜色 */
+  padding: 15px;
+  border: 2px solid #555; /* 添加边框，让按钮形状明显 */
   border-radius: 50%; /* 设置为圆形 */
   cursor: pointer;
   font-size: 18px;
-  width: 60px; /* 固定宽度 */
-  height: 60px; /* 固定高度 */
-  display: flex; /* 让内容居中 */
-  align-items: center; /* 垂直居中 */
-  justify-content: center; /* 水平居中 */
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #backToTopBtn:hover {
-  background-color: #333;
+  background-color: transparent; /* 鼠标悬停时保持透明 */
+  color: #555; /* 保持箭头颜色不变 */
 }
