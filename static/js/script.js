@@ -13,3 +13,4 @@ document.addEventListener('DOMContentLoaded', () => {
         linksContainer.style.visibility = 'visible';
     }
 });
+linksContainer.classList.add('visible');
