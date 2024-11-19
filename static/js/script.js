@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         linksContainer.innerHTML = '';
         linksArray.forEach(link => linksContainer.appendChild(link));
 
-        // 移除隐藏类
-        linksContainer.classList.remove('hidden');
+        // 设置为可见
+        linksContainer.style.visibility = 'visible';
     }
 });
