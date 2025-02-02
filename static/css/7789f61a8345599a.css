@@ -10,7 +10,6 @@
     background-color: transparent; /* 背景设为透明 */
     padding: 10px 15px;
     border-radius: 5px;
-    border: 2px solid #E6E5EB; /* 添加边框，使按钮可见 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: background-color 0.3s, border-color 0.3s; /* 添加边框颜色过渡 */
