@@ -21,7 +21,12 @@ const dateInfoElement = document.getElementById('date-info');
 
 // 将现有的日期从文本中提取并转换为 Date 对象
 const targetDateText = dateInfoElement.textContent.trim(); // 获取p标签里的文本
-const targetDate = new Date(targetDateText);
+const targetDate = new Date(targetDateText); // 转换为日期对象
+
+// 检查 targetDate 是否是有效的日期
+if (isNaN(targetDate)) {
+    console.error('无效的日期格式:', targetDateText);
+}
 
 // 函数：计算从目标日期到当前日期的时间差，并返回“几天前”的格式
 function calculateDaysAgo(targetDate) {
