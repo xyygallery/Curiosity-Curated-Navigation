@@ -7,18 +7,20 @@
 .scroll-btn {
     position: fixed;
     right: 20px;
-    background-color: #E6E5EB;
+    background-color: transparent; /* 背景设为透明 */
     padding: 10px 15px;
     border-radius: 5px;
+    border: 2px solid #E6E5EB; /* 添加边框，使按钮可见 */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, border-color 0.3s; /* 添加边框颜色过渡 */
     font-size: 16px;
     text-align: center;
 }
 
 .scroll-btn:hover {
-    background-color: #d6d5da;
+    background-color: #E6E5EB; /* 悬浮时背景色 */
+    border-color: #d6d5da; /* 悬浮时边框颜色 */
 }
 
 .scroll-btn-top {
