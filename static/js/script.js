@@ -15,3 +15,28 @@ function scrollToBottom() {
         behavior: 'smooth'
     });
 }
+
+// 获取HTML元素
+const dateInfoElement = document.getElementById('date-info');
+
+// 将现有的日期从文本中提取并转换为 Date 对象
+const targetDateText = dateInfoElement.textContent.trim(); // 获取p标签里的文本
+const targetDate = new Date(targetDateText);
+
+// 函数：计算从目标日期到当前日期的时间差，并返回“几天前”的格式
+function calculateDaysAgo(targetDate) {
+    const currentDate = new Date();  // 获取当前时间
+    const timeDifference = currentDate - targetDate;  // 计算时间差（毫秒）
+
+    const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));  // 转换成天数
+    return `${daysAgo} 天前`;
+}
+
+// 更新页面内容
+function updateDateInfo() {
+    const daysAgoText = calculateDaysAgo(targetDate);
+    dateInfoElement.textContent = `${targetDateText} (${daysAgoText})`; // 将原有日期与计算结果结合
+}
+
+// 页面加载后立即更新
+window.onload = updateDateInfo;
