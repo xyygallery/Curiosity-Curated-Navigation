@@ -36,7 +36,7 @@ function updateWebsiteCount() {
     // 获取显示总数的元素，并更新其内容
     const countDisplay = document.getElementById('website-count');
     if (countDisplay) {
-        countDisplay.textContent = `总收录 ${totalLinks} 个网站`;  // 更新显示的总数
+        countDisplay.textContent = ` ${totalLinks} 个网站`;  // 更新显示的总数
     }
 }
 
