@@ -27,3 +27,22 @@ function updateDateInfo() {
 
 // 页面加载后立即更新
 window.onload = updateDateInfo;
+
+
+
+
+
+  // 统计所有链接的数量，并更新显示
+    function updateWebsiteCount() {
+        const links = document.querySelectorAll('a'); // 获取所有的 <a> 标签
+        const totalLinks = links.length; // 统计链接数量
+        
+        // 更新显示总数
+        const countDisplay = document.getElementById('website-count');
+        countDisplay.textContent = `总共有 ${totalLinks} 个网站链接`;
+    }
+
+    // 页面加载时自动更新统计
+    window.onload = function() {
+        updateWebsiteCount(); // 页面加载时更新统计
+    }
