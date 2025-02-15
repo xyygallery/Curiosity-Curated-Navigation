@@ -12,7 +12,6 @@
 
     // 更新日期信息
     function updateDateInfo() {
-        // 选中所有 class="date-info" 的 <p> 标签，并逐个更新
         document.querySelectorAll(".date-info").forEach(p => {
             const dateText = p.textContent.trim();
             const targetDate = new Date(dateText);  // 转换为日期对象
@@ -28,21 +27,17 @@
 
     // 更新网站链接统计
     function updateWebsiteCount() {
-        // 获取所有的 <a> 标签
-        const links = document.querySelectorAll('a');
-        
-        // 获取链接的数量
-        const totalLinks = links.length;
-        
-        // 获取显示总数的元素，并更新其内容
-        const countDisplay = document.getElementById('website-count');
-        countDisplay.textContent = `总收录 ${totalLinks} 个网站`;
+        const links = document.querySelectorAll('a');  // 获取所有的 <a> 标签
+        const totalLinks = links.length;  // 获取链接的数量
+        const countDisplay = document.getElementById('website-count');  // 获取显示总数的元素
+        if (countDisplay) {
+            countDisplay.textContent = `总收录 ${totalLinks} 个网站`;
+        }
     }
 
-    // 使用 addEventListener 来绑定页面加载事件
-    window.addEventListener('load', function() {
+    // 使用 DOMContentLoaded 事件
+    document.addEventListener('DOMContentLoaded', function() {
         updateDateInfo();  // 更新日期信息
         updateWebsiteCount();  // 更新链接统计
     });
 </script>
-
