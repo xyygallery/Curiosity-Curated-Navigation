@@ -39,9 +39,10 @@
         countDisplay.textContent = `总收录 ${totalLinks} 个网站`;
     }
 
-    // 页面加载时自动更新
-    window.onload = function() {
+    // 使用 addEventListener 来绑定页面加载事件
+    window.addEventListener('load', function() {
         updateDateInfo();  // 更新日期信息
         updateWebsiteCount();  // 更新链接统计
-    }
+    });
 </script>
+
