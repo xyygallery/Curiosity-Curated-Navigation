@@ -32,17 +32,19 @@ window.onload = updateDateInfo;
 
 
 
-  // 统计所有链接的数量，并更新显示
-    function updateWebsiteCount() {
-        const links = document.querySelectorAll('a'); // 获取所有的 <a> 标签
-        const totalLinks = links.length; // 统计链接数量
-        
-        // 更新显示总数
-        const countDisplay = document.getElementById('website-count');
-        countDisplay.textContent = `总共有 ${totalLinks} 个网站链接`;
-    }
+  function updateWebsiteCount() {
+    // 获取所有的 <a> 标签
+    const links = document.querySelectorAll('a');
+    
+    // 获取链接的数量
+    const totalLinks = links.length;
+    
+    // 获取显示总数的元素，并更新其内容
+    const countDisplay = document.getElementById('website-count');
+    countDisplay.textContent = `总共有 ${totalLinks} 个网站链接`;
+}
 
-    // 页面加载时自动更新统计
-    window.onload = function() {
-        updateWebsiteCount(); // 页面加载时更新统计
-    }
+// 页面加载时自动更新统计
+window.onload = function() {
+    updateWebsiteCount(); // 页面加载时更新统计
+}
