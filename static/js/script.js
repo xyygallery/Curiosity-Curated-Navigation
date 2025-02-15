@@ -25,6 +25,23 @@ function updateDateInfo() {
     });
 }
 
-// 页面加载后立即更新
-window.onload = updateDateInfo;
+// 更新网站链接总数
+function updateWebsiteCount() {
+    // 获取所有的 <a> 标签
+    const links = document.querySelectorAll('a');
+    
+    // 获取链接的数量
+    const totalLinks = links.length;
+    
+    // 获取显示总数的元素，并更新其内容
+    const countDisplay = document.getElementById('website-count');
+    if (countDisplay) {
+        countDisplay.textContent = `总收录 ${totalLinks} 个网站`;  // 更新显示的总数
+    }
+}
 
+// 页面加载时自动更新统计
+document.addEventListener('DOMContentLoaded', function() {
+    updateDateInfo();   // 更新日期信息
+    updateWebsiteCount();  // 更新网站链接数量
+});
