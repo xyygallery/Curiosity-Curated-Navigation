@@ -6,11 +6,12 @@ function calculateDaysAgo(targetDate) {
     const timeDifference = currentDate - targetDate;  // 计算时间差（毫秒）
 
     const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));  // 转换成天数
-    return `${daysAgo} 天前`;  // 使用模板字符串
+    return ${daysAgo} 天前;  // 使用模板字符串
 }
 
 // 更新日期信息
 function updateDateInfo() {
+    // 选中所有 class="date-info" 的 <p> 标签，并逐个更新
     document.querySelectorAll(".date-info").forEach(p => {
         const dateText = p.textContent.trim();
         const targetDate = new Date(dateText);  // 转换为日期对象
@@ -18,36 +19,29 @@ function updateDateInfo() {
         if (isNaN(targetDate)) {
             console.error('无效的日期格式:', dateText);
         } else {
-            const daysAgoText = calculateDaysAgo(targetDate);
-            p.textContent = `${dateText} (${daysAgoText})`;
+            const daysAgoText = calculateDaysAgo(targetDate);  // 获取“几天前”的文本
+            p.textContent = ${dateText} (${daysAgoText});  // 使用模板字符串更新内容
         }
     });
 }
 
 // 更新网站链接总数
 function updateWebsiteCount() {
+    // 获取所有的 <a> 标签
     const links = document.querySelectorAll('a');
+    
+    // 获取链接的数量
     const totalLinks = links.length;
+    
+    // 获取显示总数的元素，并更新其内容
     const countDisplay = document.getElementById('website-count');
     if (countDisplay) {
-        countDisplay.textContent = ` 已收录 ${totalLinks} 个`;
+        countDisplay.textContent =  已收录 ${totalLinks} 个;  // 更新显示的总数
     }
 }
 
-// 重新排列网站链接（随机排序）
-function randomizeLinks() {
-    let container = document.getElementById("link-container");
-    let links = Array.from(container.children);
-
-    links.sort(() => Math.random() - 0.5); // 打乱顺序
-
-    container.innerHTML = ""; // 清空原内容
-    links.forEach(link => container.appendChild(link)); // 重新添加
-}
-
-// 页面加载时自动执行所有功能
+// 页面加载时自动更新统计
 document.addEventListener('DOMContentLoaded', function() {
     updateDateInfo();   // 更新日期信息
     updateWebsiteCount();  // 更新网站链接数量
-    randomizeLinks();   // 重新排序网站链接
 });
