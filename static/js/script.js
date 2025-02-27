@@ -45,3 +45,19 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDateInfo();   // 更新日期信息
     updateWebsiteCount();  // 更新网站链接数量
 });
+
+
+
+
+function toggleCategory(id) {
+    const content = document.getElementById(id);
+    const button = content.previousElementSibling.querySelector(".toggle-btn");
+
+    if (content.style.display === "none" || content.style.display === "") {
+        content.style.display = "block";
+        button.textContent = "-"; // 变成收起符号
+    } else {
+        content.style.display = "none";
+        button.textContent = "+"; // 变成展开符号
+    }
+}
