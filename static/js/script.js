@@ -6,7 +6,7 @@ function calculateDaysAgo(targetDate) {
     const timeDifference = currentDate - targetDate;  // 计算时间差（毫秒）
 
     const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));  // 转换成天数
-    return ${daysAgo} 天前;  // 使用模板字符串
+    return `${daysAgo} 天前`;  // 使用正确的模板字符串
 }
 
 // 更新日期信息
@@ -20,7 +20,7 @@ function updateDateInfo() {
             console.error('无效的日期格式:', dateText);
         } else {
             const daysAgoText = calculateDaysAgo(targetDate);  // 获取“几天前”的文本
-            p.textContent = ${dateText} (${daysAgoText});  // 使用模板字符串更新内容
+            p.textContent = `${dateText} (${daysAgoText})`;  // 使用正确的模板字符串
         }
     });
 }
@@ -36,7 +36,7 @@ function updateWebsiteCount() {
     // 获取显示总数的元素，并更新其内容
     const countDisplay = document.getElementById('website-count');
     if (countDisplay) {
-        countDisplay.textContent =  已收录 ${totalLinks} 个;  // 更新显示的总数
+        countDisplay.textContent = `已收录 ${totalLinks} 个`;  // 修正模板字符串
     }
 }
 
