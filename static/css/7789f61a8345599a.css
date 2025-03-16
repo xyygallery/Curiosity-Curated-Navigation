@@ -14,35 +14,3 @@
     background-color: #000000;
     color: #ffffff;
 }
-
-
-/* styles.css */
-.tooltip {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
-}
-
-/* 默认隐藏 Tooltip */
-.tooltip::after {
-    content: attr(data-title); /* 读取自定义文本 */
-    position: absolute;
-    bottom: 110%; /* 调整 Tooltip 位置 */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.75);
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.1s ease-in-out;
-}
-
-/* 悬停时立即显示 */
-.tooltip:hover::after {
-    opacity: 1;
-    visibility: visible;
-}
