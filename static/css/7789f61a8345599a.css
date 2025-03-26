@@ -21,5 +21,5 @@
       color: #000000;             /* 文字 */
       padding: 15px 20px;            /* 增加内边距 */
       border-radius: 6px;       /* 圆角效果 */
-       box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);    /* 盒子阴影，让整体有浮起来的感觉 */
+       box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);    /* 盒子阴影，让整体有浮起来的感觉 */
     }
