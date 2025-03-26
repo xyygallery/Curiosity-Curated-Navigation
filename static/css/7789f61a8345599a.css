@@ -17,8 +17,8 @@
 
 
  .white-text-bg {
-      background-color: #343B3F;  /* 背景 */
-      color: #D1BDFF;             /* 文字 */
+      background-color: #F3F4F6;  /* 背景 */
+      color: #000000;             /* 文字 */
       padding: 10px;            /* 添加内边距 */
       border-radius: 30px;       /* 圆角效果 */
     }
