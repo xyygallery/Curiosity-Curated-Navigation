@@ -14,3 +14,11 @@
     background-color: #000000;
     color: #ffffff;
 }
+
+
+ .white-text-bg {
+      background-color: black;  /* 白色背景 */
+      color: white;             /* 黑色文字 */
+      padding: 10px;            /* 添加内边距 */
+      border-radius: 4px;       /* 圆角效果 */
+    }
