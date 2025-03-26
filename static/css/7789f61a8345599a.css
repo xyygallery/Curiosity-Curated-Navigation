@@ -19,6 +19,6 @@
  .white-text-bg {
       background-color: #F3F4F6;  /* 背景 */
       color: #000000;             /* 文字 */
-      padding: 10px;            /* 添加内边距 */
-      border-radius: 30px;       /* 圆角效果 */
+      padding: 15px;            /* 添加内边距 */
+      border-radius: 6px;       /* 圆角效果 */
     }
