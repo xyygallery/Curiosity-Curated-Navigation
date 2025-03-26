@@ -5,14 +5,14 @@
 
 /* 选中文本的背景色和文字颜色 */
 ::selection {
-    background-color: #F7F7F7; /* 背景 */
-    color: #26CB4D; /* 文字 */
+    background-color: #0D4CBE; /* 背景 */
+    color: #CFCEC7; /* 文字 */
 }
 
 /* Firefox 兼容 */
 ::-moz-selection {
-    background-color: #F7F7F7;
-    color: #26CB4D;
+    background-color: #0D4CBE;
+    color: #CFCEC7;
 }
 
 
