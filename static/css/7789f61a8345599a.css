@@ -21,5 +21,4 @@
     color: #EAEAEA;             /* 文字 */
     text-align: center;         /* 水平居中 */
     margin: 0 auto;             /* 使块级元素居中 */
-    width: fit-content;         /* 根据内容调整宽度 */
 }
