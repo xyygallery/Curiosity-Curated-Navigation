@@ -17,8 +17,8 @@
 
 
 .white-text-bg {
-    background-color: #3A3A3A;  /* 背景 */
-    color: #EAEAEA;             /* 文字 */
+    background-color: #E6E6EB;  /* 背景 */
+    color: #000000;             /* 文字 */
     text-align: center;         /* 水平居中 */
     margin: 0 auto;             /* 使块级元素居中 */
 }
