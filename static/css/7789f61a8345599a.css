@@ -21,4 +21,6 @@
     color: #000000;             /* 文字 */
     text-align: center;         /* 水平居中 */
     margin: 0 auto;             /* 使块级元素居中 */
+    padding: 2px 6px;         /* 内边距，避免背景紧贴文字 */
+
 }
