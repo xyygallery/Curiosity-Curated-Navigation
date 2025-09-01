@@ -1,11 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("data/links.json") // ✅ 相对路径
+  fetch("data/links.json")
     .then(res => res.json())
     .then(data => {
       const app = document.getElementById("app");
       app.innerHTML = "";
-
-      let allLinks = []; // 用于统计
 
       data.categories.forEach((cat) => {
         // 分类标题
@@ -42,59 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
             </a>
           `;
           container.insertAdjacentHTML("beforeend", item);
-
-          // ✅ 收集所有链接
-          allLinks.push(link);
         });
 
         app.appendChild(container);
       });
-
-      // ✅ 渲染完成后统计信息
-      document.dispatchEvent(new CustomEvent("renderComplete", { detail: allLinks }));
     })
     .catch(err => {
       console.error("加载 JSON 出错:", err);
       document.getElementById("app").innerHTML =
         "<p style='color:red'>导航数据加载失败</p>";
     });
-});
-
-
-// 📊 统计逻辑
-document.addEventListener("renderComplete", (e) => {
-  const allLinks = e.detail || [];
-  if (!allLinks.length) return;
-
-  // 网站总数
-  const total = allLinks.length;
-
-  // 有效日期（排除空的）
-  const dates = allLinks
-    .map(l => l.date)
-    .filter(d => d && !isNaN(new Date(d).getTime()))
-    .map(d => new Date(d));
-
-  let earliest = null;
-  let latest = null;
-
-  if (dates.length) {
-    earliest = new Date(Math.min(...dates));
-    latest = new Date(Math.max(...dates));
-  }
-
-  // 格式化日期
-  const formatDate = (d) =>
-    d ? `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}` : "无";
-
-  const statsHtml = `
-    <div class="mt-10 text-center text-sm opacity-70">
-      <p>📊 已收录网站总数：<strong>${total}</strong></p>
-      <p>⏳ 最早收录：<strong>${formatDate(earliest)}</strong></p>
-      <p>🆕 最近更新：<strong>${formatDate(latest)}</strong></p>
-    </div>
-  `;
-
-  const stats = document.getElementById("stats");
-  if (stats) stats.innerHTML = statsHtml;
 });
