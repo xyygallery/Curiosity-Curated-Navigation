@@ -1,72 +1,63 @@
-// render.js (STRICT) — 输出与手写 HTML 一致的结构与 class
-// 仅负责把 /data/links.json 渲染到 <div id="app"></div>
-// 不做任何样式计算，样式全部依赖已有 CSS/Tailwind。
+
+// render.js (final version matching original HTML structure)
 
 async function loadLinks() {
-  const container = document.getElementById('app');
-  if (!container) return;
-
   try {
-    const res = await fetch('/data/links.json', { cache: 'no-store' });
+    const res = await fetch('/data/links.json');
     const data = await res.json();
-
-    // 清空占位
+    const container = document.getElementById('app');
     container.innerHTML = '';
 
-    // 逐个分类渲染（严格匹配您提供的 HTML 片段结构与 class）
-    (data.categories || []).forEach(cat => {
-      // 1) 分类标题块
-      const headerHTML = [
-        '<div class="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex mb-3 mt-10">',
-        '  <h2 class="relative left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">',
-        '    ' + (cat.name || ''),
-        '  </h2>',
-        '</div>'
-      ].join('\n');
+    data.categories.forEach(cat => {
+      // 分类标题容器
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex mb-3 mt-10';
 
-      // 2) 链接网格块
-      const linksHTML = [
-        '<div class="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">',
-        (cat.links || []).map(link => {
-          const title = escapeHTML(link.title || '');
-          const desc  = escapeHTML(link.desc  || '');
-          const url   = encodeURI(link.url || '#');
-          const date  = link.date ? String(link.date) : '';
-          const weightClass = (link.weight === 'semibold') ? 'font-semibold' : 'font-light';
-          return [
-            `<a href="${url}" class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30" target="_blank" rel="noopener noreferrer"${date ? ` title="收录日期：${escapeAttr(date)}"` : ''}>`,
-            `  <h2 class="mb-3 text-2xl ${weightClass}">`,
-            `    ${title}`,
-            `    <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none ml-2">-&gt;</span>`,
-            '  </h2>',
-            `  <p class="m-0 max-w-[30ch] text-sm opacity-50">${desc}</p>`,
-            '</a>'
-          ].join('\n');
-        }).join('\n'),
-        '</div>'
-      ].join('\n');
+      const h2 = document.createElement('h2');
+      h2.className = 'relative left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30';
+      h2.textContent = cat.name;
+      headerDiv.appendChild(h2);
+      container.appendChild(headerDiv);
 
-      container.insertAdjacentHTML('beforeend', headerHTML + '\n' + linksHTML + '\n');
+      // 链接网格容器
+      const gridDiv = document.createElement('div');
+      gridDiv.className = 'mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left';
+
+      cat.links.forEach(link => {
+        const a = document.createElement('a');
+        a.href = link.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.className = 'group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30';
+        if (link.date) a.title = '收录日期：' + link.date;
+
+        // 链接标题 h2
+        const h2Link = document.createElement('h2');
+        // 默认 font-light，支持 JSON 配置 weight=semibold
+        const weight = (link.weight === 'semibold') ? 'font-semibold' : 'font-light';
+        h2Link.className = 'mb-3 text-2xl ' + weight;
+        h2Link.textContent = link.title;
+
+        const span = document.createElement('span');
+        span.className = 'inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none ml-2';
+        span.innerHTML = '-&gt;';
+        h2Link.appendChild(span);
+
+        // 描述 p
+        const p = document.createElement('p');
+        p.className = 'm-0 max-w-[30ch] text-sm opacity-50';
+        p.textContent = link.desc || '';
+
+        a.appendChild(h2Link);
+        a.appendChild(p);
+        gridDiv.appendChild(a);
+      });
+
+      container.appendChild(gridDiv);
     });
-  } catch (e) {
-    console.error('加载 /data/links.json 失败：', e);
+  } catch (err) {
+    console.error('加载 links.json 出错', err);
   }
-}
-
-// 简单的转义，避免把 < > & 等插进 HTML
-function escapeHTML(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-function escapeAttr(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;');
 }
 
 document.addEventListener('DOMContentLoaded', loadLinks);
