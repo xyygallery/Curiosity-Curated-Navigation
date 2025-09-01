@@ -51,6 +51,10 @@ document.addEventListener("DOMContentLoaded", () => {
         app.appendChild(container);
       });
 
+      // ✅ 渲染完成后移除加载提示
+      const loadingEl = document.getElementById("loading");
+      if (loadingEl) loadingEl.remove();
+
       // ✅ 折叠逻辑
       app.addEventListener("click", (e) => {
         const h2 = e.target.closest("h2[data-toggle]");
