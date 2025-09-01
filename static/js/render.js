@@ -1,12 +1,11 @@
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   try {
-    const res = await fetch("/data/links.json");
-    const data = await res.json();
+    const dataScript = document.getElementById("links-data").textContent;
+    const data = JSON.parse(dataScript);
 
     const app = document.getElementById("app");
     app.innerHTML = "";
 
-    // 遍历分类
     data.categories.forEach((cat) => {
       // 分类标题
       const header = `
@@ -21,15 +20,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       `;
       app.insertAdjacentHTML("beforeend", header);
 
-      // 分类网站列表
+      // 链接容器
       const container = document.createElement("div");
       container.className =
         "mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left";
 
       cat.links.forEach((link) => {
-        // 最近更新网站加粗，否则正常
         const weight = link.recent ? "font-semibold" : "font-light";
-
         const item = `
           <a href="${link.url}" target="_blank" rel="noopener noreferrer"
              class="group rounded-lg border border-transparent px-5 py-4 transition-colors
@@ -48,8 +45,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       app.appendChild(container);
     });
+
+    // 🔔 通知统计脚本：渲染完成
+    document.dispatchEvent(new Event("renderComplete"));
   } catch (err) {
-    console.error("加载 links.json 失败：", err);
+    console.error("渲染失败：", err);
     document.getElementById("app").innerHTML =
       "<p style='color:red'>导航数据加载失败</p>";
   }
