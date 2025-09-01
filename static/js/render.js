@@ -1,5 +1,5 @@
 
-// render.js (fixed version)
+// render.js (restored Tailwind grid layout)
 
 async function loadLinks() {
   try {
@@ -19,7 +19,7 @@ async function loadLinks() {
       headerDiv.appendChild(h2);
       container.appendChild(headerDiv);
 
-      // 链接网格容器
+      // 链接网格容器（关键：必须保留 Tailwind grid class）
       const gridDiv = document.createElement('div');
       gridDiv.className = 'mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left';
 
@@ -31,10 +31,16 @@ async function loadLinks() {
         a.className = 'group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30';
         if (link.date) a.title = '收录日期：' + link.date;
 
+        // 标题 h2
         const h2Link = document.createElement('h2');
         h2Link.className = 'mb-3 text-2xl font-semibold';
-        h2Link.innerHTML = link.title + '<span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none ml-2">-&gt;</span>';
+        const span = document.createElement('span');
+        span.className = 'inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none ml-2';
+        span.innerHTML = '-&gt;';
+        h2Link.appendChild(document.createTextNode(link.title));
+        h2Link.appendChild(span);
 
+        // 描述 p
         const p = document.createElement('p');
         p.className = 'm-0 max-w-[30ch] text-sm opacity-50';
         p.textContent = link.desc || '';
