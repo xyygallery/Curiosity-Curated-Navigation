@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const app = document.getElementById("app");
+
   fetch("data/links.json")
     .then(res => res.json())
     .then(data => {
-      const app = document.getElementById("app");
-      app.innerHTML = "";
+      app.innerHTML = ""; // ✅ 确保渲染前清空
 
       data.categories.forEach((cat) => {
         // 分类标题
@@ -47,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(err => {
       console.error("加载 JSON 出错:", err);
-      document.getElementById("app").innerHTML =
-        "<p style='color:red'>导航数据加载失败</p>";
+      app.innerHTML = "<p style='color:red'>导航数据加载失败</p>";
     });
 });
