@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("/data/links.json")
+  fetch("data/links.json") // ✅ 相对路径，避免子目录报错
     .then(res => res.json())
     .then(data => {
       const app = document.getElementById("app");
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         app.appendChild(container);
       });
 
-      // 🔔 渲染完成后通知统计脚本
+      // ✅ 渲染完成后通知统计脚本
       document.dispatchEvent(new Event("renderComplete"));
     })
     .catch(err => {
