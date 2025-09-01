@@ -6,24 +6,29 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       app.innerHTML = ""; // ✅ 确保渲染前清空
 
-      data.categories.forEach((cat) => {
-        // 分类标题
-        const header = `
-          <div class="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex mb-3 mt-10">
-            <h2 class="relative left-0 top-0 flex w-full justify-center border-b border-gray-300
-              bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl
-              dark:border-neutral-800 dark:bg-zinc-800/30
-              lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-              ${cat.name}
-            </h2>
-          </div>
+      data.categories.forEach((cat, index) => {
+        // 分类标题（带折叠功能）
+        const header = document.createElement("div");
+        header.className =
+          "z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex mb-3 mt-10";
+        header.innerHTML = `
+          <h2 class="relative left-0 top-0 flex w-full justify-between border-b border-gray-300
+            bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl
+            dark:border-neutral-800 dark:bg-zinc-800/30
+            lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30
+            cursor-pointer select-none"
+            data-toggle="${index}">
+            ${cat.name}
+            <span class="ml-2 transition-transform">&#9660;</span>
+          </h2>
         `;
-        app.insertAdjacentHTML("beforeend", header);
+        app.appendChild(header);
 
         // 链接容器
         const container = document.createElement("div");
         container.className =
           "mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left";
+        container.setAttribute("data-container", index);
 
         cat.links.forEach((link) => {
           const weight = link.recent ? "font-semibold" : "font-light";
@@ -44,6 +49,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         app.appendChild(container);
+      });
+
+      // ✅ 折叠逻辑
+      app.addEventListener("click", (e) => {
+        const h2 = e.target.closest("h2[data-toggle]");
+        if (h2) {
+          const id = h2.getAttribute("data-toggle");
+          const container = app.querySelector(\`div[data-container="\${id}"]\`);
+          const arrow = h2.querySelector("span");
+
+          if (container.style.display === "none") {
+            container.style.display = "";
+            arrow.style.transform = "rotate(0deg)";
+          } else {
+            container.style.display = "none";
+            arrow.style.transform = "rotate(-90deg)";
+          }
+        }
       });
     })
     .catch(err => {
