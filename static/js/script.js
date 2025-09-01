@@ -8,24 +8,23 @@ function calculateDaysAgo(targetDate) {
 
 // 更新日期信息
 function updateDateInfo() {
-  document.querySelectorAll(".date-info").forEach((p) => {
+  document.querySelectorAll(".date-info").forEach(p => {
     const dateText = p.textContent.trim();
     const targetDate = new Date(dateText);
-
     if (!isNaN(targetDate)) {
       const daysAgoText = calculateDaysAgo(targetDate);
       p.textContent = `${dateText} (${daysAgoText})`;
-    } else {
-      console.warn("无效日期:", dateText);
     }
   });
 }
 
 // 更新网站链接总数
 function updateWebsiteCount() {
-  const links = document.querySelectorAll("a");
-  const totalLinks = links.length;
+  const links = Array.from(document.querySelectorAll("a"))
+    // ✅ 排除统计/信息这些非真实网站的 a 标签
+    .filter(a => a.href && !a.style.pointerEvents.includes("none"));
 
+  const totalLinks = links.length;
   const countDisplay = document.getElementById("website-count");
   if (countDisplay) {
     countDisplay.textContent = `已收录 ${totalLinks} 个`;
