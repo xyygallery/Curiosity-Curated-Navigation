@@ -1,1 +1,531 @@
-links.json
+{
+  "categories": [
+    {
+      "name": "全部网站",
+      "links": [
+        {
+          "title": "98.js\n        -&gt;",
+          "url": "https://98.js.org/",
+          "desc": "Windows 98 模拟",
+          "date": "2025/8/23"
+        },
+        {
+          "title": "中小学诵读库\n        -&gt;",
+          "url": "https://zedex.github.io/mandarin-reading-resource/",
+          "desc": "语文课文朗读资源",
+          "date": "2025/8/23"
+        },
+        {
+          "title": "头像生成器\n        -&gt;",
+          "url": "https://vue-color-avatar.leoku.dev/",
+          "desc": "简单头像生成器",
+          "date": "2025/8/23"
+        },
+        {
+          "title": "文件分享\n        -&gt;",
+          "url": "https://bashupload.app/index.html",
+          "desc": "一次性文件分享服务",
+          "date": "2025/8/23"
+        },
+        {
+          "title": "硬件测试工具\n        -&gt;",
+          "url": "https://volumeshader.org/zh",
+          "desc": "专业的硬件测试平台",
+          "date": "2025/8/23"
+        },
+        {
+          "title": "EPUB 合并\n        -&gt;",
+          "url": "https://epub.ysboke.cn/",
+          "desc": "EPUB 合并工坊",
+          "date": "2025/8/14"
+        },
+        {
+          "title": "图片处理工具\n        -&gt;",
+          "url": "https://utils.sheepcode.top/",
+          "desc": "压缩、转换、尺寸",
+          "date": "2025/8/14"
+        },
+        {
+          "title": "解压工具\n        -&gt;",
+          "url": "https://unziponline.org/",
+          "desc": "在浏览器中解压 ZIP 文件",
+          "date": "2025/8/14"
+        },
+        {
+          "title": "屏幕常亮\n        -&gt;",
+          "url": "https://screenawake.com/zh/",
+          "desc": "保持屏幕常亮",
+          "date": "2025/8/14"
+        },
+        {
+          "title": "图片分割器\n        -&gt;",
+          "url": "https://instagramgridmaker.com/",
+          "desc": "分割图片并保持画质",
+          "date": "2025/8/14"
+        },
+        {
+          "title": "牛气字谱\n        -&gt;",
+          "url": "https://zi.niuqizp.com/",
+          "desc": "字帖打印生成",
+          "date": "2025/8/14"
+        },
+        {
+          "title": "CSVInk\n        -&gt;",
+          "url": "https://csv.ink/",
+          "desc": "CSV 编辑器",
+          "date": "2025/8/14"
+        },
+        {
+          "title": "手机博物馆\n        -&gt;",
+          "url": "https://chaz.fun/phonemuseum/",
+          "desc": "3D 手机博物馆",
+          "date": "2025/8/6"
+        },
+        {
+          "title": "表格转换器\n        -&gt;",
+          "url": "https://tableconvert.com/zh-cn/",
+          "desc": "表格转换工具",
+          "date": "2025/8/6"
+        },
+        {
+          "title": "手绘箭头\n        -&gt;",
+          "url": "https://handyarrows.com/",
+          "desc": "各种手绘箭头图标",
+          "date": "2025/8/6"
+        },
+        {
+          "title": "PDF 分享器\n        -&gt;",
+          "url": "https://pdftolink.app/zh-hans",
+          "desc": "PDF 文件中转站",
+          "date": "2025/8/6"
+        },
+        {
+          "title": "ReelSync\n        -&gt;",
+          "url": "https://reel-sync.kev1nweng.space/#/",
+          "desc": "实时视频流共享工具",
+          "date": "2025/7/30"
+        },
+        {
+          "title": "Typing\n        -&gt;",
+          "url": "https://2study.top/#/practice",
+          "desc": "在线的背单词软件",
+          "date": "2025/7/30"
+        },
+        {
+          "title": "简单教程\n        -&gt;",
+          "url": "https://www.twle.cn/",
+          "desc": "简单编程教程平台",
+          "date": "2025/7/30"
+        },
+        {
+          "title": "PDF 工具\n        -&gt;",
+          "url": "https://pdf.imagestool.com/zh-CN/",
+          "desc": "PDF 集成工具",
+          "date": "2025/7/30"
+        },
+        {
+          "title": "时者问卦\n        -&gt;",
+          "url": "https://gua.time.actor/",
+          "desc": "AI 问卦工具",
+          "date": "2025/7/30"
+        },
+        {
+          "title": "图片模糊\n        -&gt;",
+          "url": "https://blurimagetool.com/zh",
+          "desc": "使图片模糊小工具",
+          "date": "2025/7/17"
+        },
+        {
+          "title": "翻页时钟\n        -&gt;",
+          "url": "https://www.claritydeck.app/flip-clock",
+          "desc": "翻页小时钟",
+          "date": "2025/7/17"
+        },
+        {
+          "title": "图标猎手\n        -&gt;",
+          "url": "https://www.uwarp.design/logo-hunter",
+          "desc": "App 图标下载",
+          "date": "2025/7/17"
+        },
+        {
+          "title": "损坏文件\n        -&gt;",
+          "url": "https://corrupt-a-file.net/",
+          "desc": "让你的文件变成损坏的",
+          "date": "2025/7/17"
+        },
+        {
+          "title": "图像压缩\n        -&gt;",
+          "url": "https://browser-compress-image.netlify.app/",
+          "desc": "浏览器端图像压缩器",
+          "date": "2025/7/12"
+        },
+        {
+          "title": "拼图工具\n        -&gt;",
+          "url": "https://img.ops-coffee.cn/",
+          "desc": "拼图与作图",
+          "date": "2025/7/12"
+        },
+        {
+          "title": "GPT 翻译\n        -&gt;",
+          "url": "https://www.gpttranslate.org/zh/",
+          "desc": "AI 翻译工具",
+          "date": "2025/7/12"
+        },
+        {
+          "title": "特殊符号\n        -&gt;",
+          "url": "https://special-characters.aitoolshubs.com/",
+          "desc": "特殊符号复制工具",
+          "date": "2025/7/12"
+        },
+        {
+          "title": "60 秒新闻站\n        -&gt;",
+          "url": "https://news.ravelloh.top/",
+          "desc": "每日新闻速递",
+          "date": "2025/7/12"
+        },
+        {
+          "title": "天气温度地图\n        -&gt;",
+          "url": "https://zoom.earth/maps/temperature/#view=23.155092,113.333658,10z/model=icon",
+          "desc": "全球天气温度地图",
+          "date": "2025/7/12"
+        },
+        {
+          "title": "图像分割器\n        -&gt;",
+          "url": "https://imgsplitter.org/",
+          "desc": "图像分割小工具",
+          "date": "2025/7/12"
+        },
+        {
+          "title": "Cyber 3D\n        -&gt;",
+          "url": "https://3d.text2img.vip/",
+          "desc": "3D 海报生成器",
+          "date": "2025/6/30"
+        },
+        {
+          "title": "老生常谈\n        -&gt;",
+          "url": "https://laosheng.top/",
+          "desc": "研究型导航网站",
+          "date": "2025/6/30"
+        },
+        {
+          "title": "发票打印助手\n        -&gt;",
+          "url": "https://fpzs.vercel.app/",
+          "desc": "发票打印助手",
+          "date": "2025/6/30"
+        },
+        {
+          "title": "趣记单词\n        -&gt;",
+          "url": "https://qujidanci.xieyonglin.com/",
+          "desc": "有趣的方式记忆单词",
+          "date": "2025/6/30"
+        },
+        {
+          "title": "二维码生成器\n        -&gt;",
+          "url": "https://liuliangsir.github.io/chromium-style-qrcode-generator-with-wasm/",
+          "desc": "Chromium 风格",
+          "date": "2025/6/30"
+        },
+        {
+          "title": "海棠诗社\n        -&gt;",
+          "url": "https://haitang.app/",
+          "desc": "古诗词的数字桃源",
+          "date": "2025/6/30"
+        },
+        {
+          "title": "实时汇率\n        -&gt;",
+          "url": "https://www.easycurrencycalc.com/",
+          "desc": "汇率换算器",
+          "date": "2025/6/30"
+        },
+        {
+          "title": "中国地铁线路图\n        -&gt;",
+          "url": "https://subway.cuvii.dev/",
+          "desc": "地铁线路图可视化",
+          "date": "2025/6/30"
+        },
+        {
+          "title": "地址生成器\n        -&gt;",
+          "url": "https://www.usaddrgen.com/",
+          "desc": "美国地址生成器",
+          "date": "2025/6/21"
+        },
+        {
+          "title": "节日日历\n        -&gt;",
+          "url": "https://calendar.aolifu.org/",
+          "desc": "发现世界各地的节日",
+          "date": "2025/6/21"
+        },
+        {
+          "title": "No hello\n        -&gt;",
+          "url": "https://nohello.net/zh-cn/",
+          "desc": "不要在聊天时问：“在吗？”",
+          "date": "2025/6/21"
+        },
+        {
+          "title": "涂色页\n        -&gt;",
+          "url": "https://dearcoloringpages.com/zh-Hans",
+          "desc": "美丽的涂色页面",
+          "date": "2025/6/21"
+        },
+        {
+          "title": "Office 查看器\n        -&gt;",
+          "url": "https://officeviewer.org/",
+          "desc": "支持 Word、Excel 和 PPT",
+          "date": "2025/6/21"
+        },
+        {
+          "title": "tmpfile\n        -&gt;",
+          "url": "https://dlload.cn/",
+          "desc": "极简的文件传输网站",
+          "date": "2025/6/21"
+        },
+        {
+          "title": "IPFSBED\n        -&gt;",
+          "url": "https://ipfsbed.is-an.org/",
+          "desc": "IPSF 文件托管",
+          "date": "2025/5/24"
+        },
+        {
+          "title": "智能抠图\n        -&gt;",
+          "url": "https://rmbg.hellokaton.me/",
+          "desc": "一键移除图片背景",
+          "date": "2025/5/24"
+        },
+        {
+          "title": "3D 图标\n        -&gt;",
+          "url": "https://www.thiings.co/things",
+          "desc": "高清 3D 图标",
+          "date": "2025/5/24"
+        },
+        {
+          "title": "MD 转 PDF\n        -&gt;",
+          "url": "https://ml2pdf.xyz/",
+          "desc": "Markdown 转 PDF",
+          "date": "2025/5/24"
+        },
+        {
+          "title": "单词\n        -&gt;",
+          "url": "https://kylebing.github.io/vocabulary/#/",
+          "desc": "标记你认识的单词",
+          "date": "2025/5/24"
+        },
+        {
+          "title": "FeedMe\n        -&gt;",
+          "url": "https://feedme.icu/",
+          "desc": "AI 生成摘要资讯",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "时间方格\n        -&gt;",
+          "url": "https://timegird.visualized.fun/",
+          "desc": "可视化时间工具",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "像距直观比较\n        -&gt;",
+          "url": "https://franklioxygen.github.io/mega-comparison/",
+          "desc": "比较像素的差距",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "FancyTeams\n        -&gt;",
+          "url": "https://fancyteams.cn/",
+          "desc": "前沿技术团队图鉴",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "小红书下载\n        -&gt;",
+          "url": "https://xiaohongshu.day/zh/",
+          "desc": "下载小红书笔记",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "二合一收款码\n        -&gt;",
+          "url": "https://pay-qrcode.4ce.cn/",
+          "desc": "物理合并收款二维码",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "SaltyLeo\n        -&gt;",
+          "url": "https://book.tstrs.me/",
+          "desc": "百万图书搜索引擎",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "Pieces\n        -&gt;",
+          "url": "https://www.webhek.com/post/species-in-pieces/",
+          "desc": "碎片拼图濒临动物",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "Life Grid\n        -&gt;",
+          "url": "https://karthicobla.github.io/LifeTimeVisualizer/",
+          "desc": "时间可视化工具",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "条码生成器\n        -&gt;",
+          "url": "https://barcode-maker.com/zh",
+          "desc": "条码生成器",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "IPTV 流媒体\n        -&gt;",
+          "url": "https://iptv-m3u8.netlify.app/",
+          "desc": "IPTV M3U8 流媒体",
+          "date": "2025/4/20"
+        },
+        {
+          "title": "文档编辑器\n        -&gt;",
+          "url": "https://products.groupdocs.app/zh/editor/total",
+          "desc": "支持 40 多种类型的文档",
+          "date": "2025/4/20"
+        },
+        {
+          "title": "收据生成器\n        -&gt;",
+          "url": "https://receipt-generator-ten.vercel.app/",
+          "desc": "收据生成器",
+          "date": "2025/4/20"
+        },
+        {
+          "title": "全球地铁线路图\n        -&gt;",
+          "url": "https://www.metrolinehub.com/zh",
+          "desc": "全球地铁系统线路图",
+          "date": "2025/4/20"
+        },
+        {
+          "title": "文本加密工具\n        -&gt;",
+          "url": "https://qbin.me/r/steganography",
+          "desc": "将文本加密在文本中",
+          "date": "2025/4/20"
+        },
+        {
+          "title": "PP直连\n        -&gt;",
+          "url": "https://www.ppzhilian.com/",
+          "desc": "强大的文件传输工具",
+          "date": "2025/4/20"
+        },
+        {
+          "title": "儿童睡前故事\n        -&gt;",
+          "url": "https://beddystories.com/zh",
+          "desc": "儿童睡前故事",
+          "date": "2025/4/20"
+        },
+        {
+          "title": "医保政策导航\n        -&gt;",
+          "url": "https://yibao.233h.com/",
+          "desc": "一站式医保政策查询平台",
+          "date": "2025/4/20"
+        },
+        {
+          "title": "推箱子\n        -&gt;",
+          "url": "https://sokobangame.online/zh/",
+          "desc": "经典游戏推箱子",
+          "date": "2025/8/14"
+        },
+        {
+          "title": "红色警戒2\n        -&gt;",
+          "url": "https://game.chronodivide.com/",
+          "desc": "经典游戏",
+          "date": "2025/7/12"
+        },
+        {
+          "title": "线路滑雪橇\n        -&gt;",
+          "url": "https://www.linerider.com/",
+          "desc": "沿着你你的画线滑雪橇",
+          "date": "2025/5/14"
+        },
+        {
+          "title": "谜题 1053 号\n        -&gt;",
+          "url": "https://figure.game/zh",
+          "desc": "连线消除方块游戏",
+          "date": "2025/5/14"
+        },
+        {
+          "title": "二十四节气\n        -&gt;",
+          "url": "https://jieqi.parryqiu.com/",
+          "desc": "二十四节气 App，支持 iOS",
+          "date": "2025/6/30"
+        },
+        {
+          "title": "Kinby\n        -&gt;",
+          "url": "https://kinby.xac.one/",
+          "desc": "媒体播放器，支持 Windows、macOS、Linux、Android/TV 和 iOS",
+          "date": "2025/6/30"
+        },
+        {
+          "title": "ImTip\n        -&gt;",
+          "url": "https://imtip.aardio.com/",
+          "desc": "智能桌面助手，支持 Windows",
+          "date": "2025/5/24"
+        },
+        {
+          "title": "Lumos's Blog\n        -&gt;",
+          "url": "https://lomus.cc/",
+          "desc": "表达个人想法",
+          "date": "2025/8/23"
+        },
+        {
+          "title": "极客死亡计划\n        -&gt;",
+          "url": "https://www.geedea.pro/",
+          "desc": "个性的作品",
+          "date": "2025/8/23"
+        },
+        {
+          "title": "J.F's BLOG\n        -&gt;",
+          "url": "https://blog.zzbd.org/",
+          "desc": "J.F's 的博客",
+          "date": "2025/8/6"
+        },
+        {
+          "title": "1900 博客\n        -&gt;",
+          "url": "https://1900.live/",
+          "desc": "互联网冲浪大师",
+          "date": "2025/7/12"
+        },
+        {
+          "title": "罗雷的博客\n        -&gt;",
+          "url": "https://luolei.org/",
+          "desc": "罗雷的独立博客",
+          "date": "2025/7/12"
+        },
+        {
+          "title": "Design\n        -&gt;",
+          "url": "https://df.fenx.work/",
+          "desc": "Design Fragments 的碎片信息",
+          "date": "2025/5/24"
+        },
+        {
+          "title": "OSS King\n        -&gt;",
+          "url": "https://www.ossking.com/",
+          "desc": "文件分享平台，开发者立下壮志豪言说要运营 10 年，域名确实续费了 10 年，敬请期待吧",
+          "date": "2025/6/21"
+        },
+        {
+          "title": "低端影视\n        -&gt;",
+          "url": "https://ddys.pro/",
+          "desc": "影视网站。免费、有广告但不过度干扰、无需注册登录、播放流畅、影视质量高、功能齐全。(2025/8/23 测试)",
+          "date": "2025/8/23"
+        },
+        {
+          "title": "英文小说网\n        -&gt;",
+          "url": "https://yingyuxiaoshuo.com/",
+          "desc": "书籍网站。免费、无广告、无需注册登录、界面极简。(2025/8/27 测试)",
+          "date": "2025/8/6"
+        },
+        {
+          "title": "怀旧书库\n        -&gt;",
+          "url": "https://www.huaijiushuku.com/",
+          "desc": "书籍网站。免费、有广告但不过度干扰、无需注册登录。(2025/8/27 测试)",
+          "date": "2025/5/9"
+        },
+        {
+          "title": "MYCOMIC\n        -&gt;",
+          "url": "https://mycomic.com/cn",
+          "desc": "漫画网站。免费、无广告、无需注册登录、畅快浏览、漫画资源丰富、功能齐全。(2025/8/23 测试)",
+          "date": "2025/5/24"
+        }
+      ]
+    }
+  ]
+}
