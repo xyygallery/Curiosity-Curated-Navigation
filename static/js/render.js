@@ -1,19 +1,27 @@
 
-// render.js
+// render.js (fixed version)
+
 async function loadLinks() {
   try {
     const res = await fetch('/data/links.json');
     const data = await res.json();
     const container = document.getElementById('app');
     container.innerHTML = '';
-    data.categories.forEach(cat => {
-      const details = document.createElement('details');
-      const summary = document.createElement('summary');
-      summary.textContent = cat.name + ' (' + cat.links.length + ')';
-      details.appendChild(summary);
 
-      const grid = document.createElement('div');
-      grid.className = container.className; // reuse grid classes
+    data.categories.forEach(cat => {
+      // 分类标题容器
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex mb-3 mt-10';
+
+      const h2 = document.createElement('h2');
+      h2.className = 'relative left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30';
+      h2.textContent = cat.name;
+      headerDiv.appendChild(h2);
+      container.appendChild(headerDiv);
+
+      // 链接网格容器
+      const gridDiv = document.createElement('div');
+      gridDiv.className = 'mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left';
 
       cat.links.forEach(link => {
         const a = document.createElement('a');
@@ -21,23 +29,22 @@ async function loadLinks() {
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
         a.className = 'group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30';
-        a.title = '收录日期：' + (link.date || '');
+        if (link.date) a.title = '收录日期：' + link.date;
 
-        const h2 = document.createElement('h2');
-        h2.className = 'mb-3 text-2xl font-semibold';
-        h2.innerHTML = link.title + '<span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none ml-2">-&gt;</span>';
+        const h2Link = document.createElement('h2');
+        h2Link.className = 'mb-3 text-2xl font-semibold';
+        h2Link.innerHTML = link.title + '<span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none ml-2">-&gt;</span>';
 
         const p = document.createElement('p');
         p.className = 'm-0 max-w-[30ch] text-sm opacity-50';
         p.textContent = link.desc || '';
 
-        a.appendChild(h2);
+        a.appendChild(h2Link);
         a.appendChild(p);
-        grid.appendChild(a);
+        gridDiv.appendChild(a);
       });
 
-      details.appendChild(grid);
-      container.appendChild(details);
+      container.appendChild(gridDiv);
     });
   } catch (err) {
     console.error('加载 links.json 出错', err);
