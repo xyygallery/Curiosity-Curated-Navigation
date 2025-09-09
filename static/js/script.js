@@ -68,3 +68,20 @@ function goRandom() {
 document.addEventListener('keydown', e => {
   if (e.key.toLowerCase() === 'x') goRandom();
 });
+
+
+// 平滑滚动到顶部
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 根据滚动位置显示/隐藏按钮
+  window.addEventListener('scroll', function() {
+    const btn = document.getElementById("backToTopBtn");
+    if (document.documentElement.scrollTop > 200 || document.body.scrollTop > 200) {
+      btn.style.display = "block";
+    } else {
+      btn.style.display = "none";
+    }
+  });
+
