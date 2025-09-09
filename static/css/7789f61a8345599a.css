@@ -18,10 +18,27 @@
 
 
 
-/* 设置整个页面的背景 */
+/* === Radial Gradient Background Layer (replicates React JSX effect) === */
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(125% 125% at 50% 90%, #fff 40%, #475569 100%);
-  color: #000;
+  background: transparent !important; /* keep it transparent so the layer shows */
+  color: #111;
+  position: relative;
+}
+
+/* Full-screen fixed layer behind all content */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #475569 100%);
+  /* keep it crisp across scroll */
+  background-attachment: fixed;
 }
