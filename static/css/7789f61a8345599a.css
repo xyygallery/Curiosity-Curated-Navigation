@@ -15,5 +15,10 @@
     color: #FFFFFF;
 }
 
-
+/* ===== 新增：全局背景渐变 ===== */
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(125% 125% at 50% 90%, #fff 40%, #475569 100%);
+}
 
