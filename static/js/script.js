@@ -70,18 +70,29 @@ document.addEventListener('keydown', e => {
 });
 
 
-// 平滑滚动到顶部
+ // 平滑滚动到顶部
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // 根据滚动位置显示/隐藏按钮
+  // 平滑滚动到底部
+  function scrollToBottom() {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
+  // 滚动时显示/隐藏按钮
   window.addEventListener('scroll', function() {
-    const btn = document.getElementById("backToTopBtn");
+    const topBtn = document.getElementById("backToTopBtn");
+    const bottomBtn = document.getElementById("backToBottomBtn");
     if (document.documentElement.scrollTop > 200 || document.body.scrollTop > 200) {
-      btn.style.display = "block";
+      topBtn.style.display = "block";
     } else {
-      btn.style.display = "none";
+      topBtn.style.display = "none";
+    }
+    // 当没有到页面底部时显示“返回底部”按钮
+    if (window.innerHeight + window.scrollY < document.body.scrollHeight - 200) {
+      bottomBtn.style.display = "block";
+    } else {
+      bottomBtn.style.display = "none";
     }
   });
-
