@@ -9,7 +9,8 @@
     input { width: 100%; padding: 8px; margin-top: 5px; }
     button { margin-top: 15px; padding: 10px 20px; cursor: pointer; }
     pre { background: #f4f4f4; padding: 15px; margin-top: 20px; border-radius: 5px; white-space: pre-wrap; }
-    #copyMsg { margin-left: 10px; color: green; display: none; }
+    #copyMsg, #allCopyMsg { margin-left: 10px; color: green; display: none; }
+    #errorMsg { margin-top: 10px; color: red; display: none; }
   </style>
 </head>
 <body>
@@ -28,28 +29,42 @@
   <input type="text" id="date">
 
   <button onclick="generate()">生成并复制代码</button>
-  <button onclick="clearForm()">清空表单</button>
   <span id="copyMsg">✅ 已复制</span>
+  <div id="errorMsg">❌ 请完整填写所有内容！</div>
 
-  <h2>结果：</h2>
+  <h2>最后生成的代码：</h2>
   <pre id="output"></pre>
 
+  <h2>累计生成的所有代码：</h2>
+  <button onclick="copyAll()">复制全部代码</button>
+  <span id="allCopyMsg">✅ 全部已复制</span>
+  <pre id="allOutput"></pre>
+
   <script>
+    let allCodes = [];
+
+    // 获取今天日期
+    function getToday() {
+      const today = new Date();
+      return today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate();
+    }
+
     // 页面加载时自动填入今天日期
     window.onload = function() {
-      const today = new Date();
-      const formattedDate = today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate();
-      document.getElementById('date').value = formattedDate;
+      document.getElementById('date').value = getToday();
     };
 
     function generate() {
-      const title = document.getElementById('title').value;
-      const desc = document.getElementById('desc').value;
-      const url = document.getElementById('url').value;
-      const date = document.getElementById('date').value;
+      const title = document.getElementById('title').value.trim();
+      const desc = document.getElementById('desc').value.trim();
+      const url = document.getElementById('url').value.trim();
+      const date = document.getElementById('date').value.trim();
 
+      // 错误提示
       if (!title || !desc || !url || !date) {
-        alert("请完整填写所有内容！");
+        const errorMsg = document.getElementById('errorMsg');
+        errorMsg.style.display = "block";
+        setTimeout(() => { errorMsg.style.display = "none"; }, 2000);
         return;
       }
 
@@ -63,27 +78,34 @@
 </a>
       `.trim();
 
-      // 显示代码
+      // 显示最后一次生成的代码
       document.getElementById('output').textContent = code;
 
-      // 自动复制到剪贴板
+      // 保存到累计数组
+      allCodes.push(code);
+      document.getElementById('allOutput').textContent = allCodes.join("\n\n");
+
+      // 自动复制到剪贴板（当前这一条）
       navigator.clipboard.writeText(code).then(() => {
         const msg = document.getElementById('copyMsg');
         msg.style.display = "inline";
-        setTimeout(() => {
-          msg.style.display = "none";
-        }, 2000); // 2 秒后消失
+        setTimeout(() => { msg.style.display = "none"; }, 2000);
       });
-    }
 
-    function clearForm() {
+      // 生成成功后自动清空表单 & 重置日期
       document.getElementById('title').value = "";
       document.getElementById('desc').value = "";
       document.getElementById('url').value = "";
-      const today = new Date();
-      const formattedDate = today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate();
-      document.getElementById('date').value = formattedDate; // 清空时也重置为今天
-      document.getElementById('output').textContent = "";
+      document.getElementById('date').value = getToday();
+    }
+
+    function copyAll() {
+      if (allCodes.length === 0) return;
+      navigator.clipboard.writeText(allCodes.join("\n\n")).then(() => {
+        const msg = document.getElementById('allCopyMsg');
+        msg.style.display = "inline";
+        setTimeout(() => { msg.style.display = "none"; }, 2000);
+      });
     }
   </script>
 </body>
