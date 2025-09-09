@@ -9,6 +9,7 @@
     input { width: 100%; padding: 8px; margin-top: 5px; }
     button { margin-top: 15px; padding: 10px 20px; cursor: pointer; }
     pre { background: #f4f4f4; padding: 15px; margin-top: 20px; border-radius: 5px; white-space: pre-wrap; }
+    #copyMsg { margin-left: 10px; color: green; display: none; }
   </style>
 </head>
 <body>
@@ -24,20 +25,33 @@
   <input type="text" id="url" placeholder="例如：https://98.js.org/">
 
   <label>收录日期：</label>
-  <input type="text" id="date" placeholder="例如：2025/8/23">
+  <input type="text" id="date">
 
-  <button onclick="generate()">生成代码</button>
-  <button onclick="copyCode()">复制代码</button>
+  <button onclick="generate()">生成并复制代码</button>
+  <button onclick="clearForm()">清空表单</button>
+  <span id="copyMsg">✅ 已复制</span>
 
   <h2>结果：</h2>
   <pre id="output"></pre>
 
   <script>
+    // 页面加载时自动填入今天日期
+    window.onload = function() {
+      const today = new Date();
+      const formattedDate = today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate();
+      document.getElementById('date').value = formattedDate;
+    };
+
     function generate() {
       const title = document.getElementById('title').value;
       const desc = document.getElementById('desc').value;
       const url = document.getElementById('url').value;
       const date = document.getElementById('date').value;
+
+      if (!title || !desc || !url || !date) {
+        alert("请完整填写所有内容！");
+        return;
+      }
 
       const code = `
 <a href="${url}" class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30" target="_blank" rel="noopener noreferrer" title="收录日期：${date}">
@@ -47,19 +61,29 @@
     </h2>
     <p class="m-0 max-w-[30ch] text-sm opacity-50">${desc}</p>
 </a>
-      `;
-      document.getElementById('output').textContent = code.trim();
+      `.trim();
+
+      // 显示代码
+      document.getElementById('output').textContent = code;
+
+      // 自动复制到剪贴板
+      navigator.clipboard.writeText(code).then(() => {
+        const msg = document.getElementById('copyMsg');
+        msg.style.display = "inline";
+        setTimeout(() => {
+          msg.style.display = "none";
+        }, 2000); // 2 秒后消失
+      });
     }
 
-    function copyCode() {
-      const output = document.getElementById('output').textContent;
-      if (!output) {
-        alert("请先生成代码！");
-        return;
-      }
-      navigator.clipboard.writeText(output).then(() => {
-        alert("代码已复制到剪贴板！");
-      });
+    function clearForm() {
+      document.getElementById('title').value = "";
+      document.getElementById('desc').value = "";
+      document.getElementById('url').value = "";
+      const today = new Date();
+      const formattedDate = today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate();
+      document.getElementById('date').value = formattedDate; // 清空时也重置为今天
+      document.getElementById('output').textContent = "";
     }
   </script>
 </body>
