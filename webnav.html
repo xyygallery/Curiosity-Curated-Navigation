@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>我的导航</title>
-  <meta name="color-scheme" content="light dark" />
   <style>
     :root{
       --bg: #ffffff;
@@ -16,65 +15,17 @@
       --radius:14px;
       --shadow: 0 4px 20px rgba(0,0,0,.04);
     }
-    @media (prefers-color-scheme: dark){
-      :root{
-        --bg:#0b0f15;
-        --fg:#e5e7eb;
-        --muted:#94a3b8;
-        --card:#111827;
-        --border:#1f2937;
-        --shadow: 0 6px 24px rgba(0,0,0,.4);
-      }
-    }
     html,body{height:100%}
     body{
       margin:0;
-      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
       background: var(--bg);
       color: var(--fg);
     }
-    .wrap{
-      max-width: 980px;
-      margin: 0 auto;
-      padding: clamp(16px,4vw,32px);
-    }
-    header{
-      display:flex;align-items:center;gap:12px;justify-content:space-between;margin-bottom:20px
-    }
-    .hello{
-      font-weight:700;
-      font-size: clamp(20px,2.6vw,28px);
-      letter-spacing:.2px;
-    }
-    .sub{color:var(--muted);font-size:14px}
-    .actions{display:flex;gap:8px;align-items:center}
-    button.icon{
-      border:1px solid var(--border);
-      background:transparent;
-      color:var(--fg);
-      border-radius:10px;
-      padding:8px 10px;
-      cursor:pointer;
-    }
-    button.icon:hover{border-color:var(--accent)}
-    /* search */
-    .search{
-      display:flex;gap:10px;align-items:center;margin: 8px 0 22px;
-      background: var(--card); border:1px solid var(--border);
-      border-radius: var(--radius); padding: 10px 12px; box-shadow: var(--shadow);
-    }
-    .engine{
-      border:1px dashed var(--border);padding:6px 10px;border-radius:10px;font-size:14px;cursor:pointer;white-space:nowrap
-    }
-    .engine b{color:var(--accent)}
-    .search input{
-      flex:1;border:none;background:transparent;color:var(--fg);font-size:16px;outline:none
-    }
-    .go{
-      border:none;background:var(--accent);color:white;border-radius:10px;padding:10px 14px;cursor:pointer
-    }
-    /* groups + links */
-    .groups{display:grid;gap:16px}
+    .wrap{max-width: 860px; margin: 0 auto; padding: clamp(16px,4vw,32px);}
+    header{margin-bottom:24px;}
+    .hello{font-weight:700; font-size: clamp(20px,2.6vw,28px); letter-spacing:.2px;}
+    .groups{display:grid; gap:16px}
     .group{
       background: var(--card);
       border: 1px solid var(--border);
@@ -87,277 +38,121 @@
     }
     .links{
       display:grid; gap:10px;
-      grid-template-columns: repeat(auto-fill, minmax(180px,1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
     }
     .link{
-      display:flex;align-items:center;gap:10px;
-      padding:10px 12px;border:1px solid var(--border);border-radius:12px;
-      background: transparent; text-decoration:none; color:var(--fg);
-      transition: transform .05s ease;
+      display:flex; flex-direction:column; gap:4px;
+      padding:10px 12px; border:1px solid var(--border); border-radius:12px;
+      background: transparent; text-decoration:none; color: var(--fg);
+      transition: transform .05s ease, border-color .15s ease;
+      word-break: break-word;
     }
     .link:hover{transform: translateY(-1px); border-color: var(--accent)}
-    .favicon{
-      width:18px;height:18px;flex:0 0 18px;border-radius:4px;background:#ddd;display:inline-block;overflow:hidden
-    }
-    .link-title{font-weight:600;font-size:14px}
-    .link-desc{font-size:12px;color:var(--muted)}
-    footer{margin-top:26px;color:var(--muted);font-size:12px;text-align:center}
-    /* dialog */
-    dialog{
-      border:1px solid var(--border);border-radius:16px;max-width:min(860px,92vw);
-      box-shadow: var(--shadow);padding:0;background:var(--bg);color:var(--fg)
-    }
-    .dlg-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--border)}
-    .dlg-body{padding:12px}
-    textarea{
-      width:100%;min-height:280px;border:1px solid var(--border);border-radius:12px;background:var(--card);
-      color:var(--fg);padding:12px;font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px
-    }
-    .row{display:flex;gap:10px;justify-content:flex-end;padding:0 12px 14px}
-    .row button{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--fg);cursor:pointer}
-    .row button.save{background:var(--accent);border-color:var(--accent);color:#fff}
-    @media (min-width: 860px){
-      .groups{grid-template-columns: repeat(3,1fr)}
-    }
+    .link-title{font-weight:600; font-size:14px}
+    .link-desc{font-size:12px; color:var(--muted)}
+    @media (min-width: 860px){ .groups{grid-template-columns: repeat(3,1fr)} }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div>
-        <div class="hello" id="hello">你好</div>
-        <div class="sub" id="date"></div>
-      </div>
-      <div class="actions">
-        <button class="icon" id="themeBtn" title="切换主题 (d)">🌗</button>
-        <button class="icon" id="editBtn" title="编辑链接 (e)">✏️</button>
-      </div>
+      <div class="hello" id="hello">你好</div>
     </header>
 
-    <form class="search" id="searchForm" autocomplete="off">
-      <div class="engine" id="engineBtn" title="切换搜索引擎 (s)">
-        搜索：<b id="engineName">Google</b>
-      </div>
-      <input id="q" type="search" placeholder="搜索点什么…（按 / 聚焦）" />
-      <button class="go" type="submit">Go</button>
-    </form>
-
     <main class="groups" id="groups"></main>
-
-    <footer>按 <code>/</code> 聚焦搜索 · <code>d</code> 切换主题 · <code>e</code> 编辑链接 · <code>s</code> 切换引擎</footer>
   </div>
 
-  <!-- 编辑对话框 -->
-  <dialog id="editor">
-    <div class="dlg-head">
-      <strong>编辑链接（JSON）</strong>
-      <button class="icon" id="closeDlg">✖</button>
-    </div>
-    <div class="dlg-body">
-<textarea id="jsonArea" spellcheck="false"></textarea>
-    </div>
-    <div class="row">
-      <button id="resetBtn" title="恢复为默认">恢复默认</button>
-      <button class="save" id="saveBtn">保存</button>
-    </div>
-  </dialog>
-
   <script>
-    // ----- 数据：默认分组 + 链接（可在编辑器中自定义/粘贴）
-    const DEFAULT_DATA = [
-      {
-        title: "常用",
-        links: [
-          { t: "Gmail", u: "https://mail.google.com", d: "邮件" },
-          { t: "日历", u: "https://calendar.google.com", d: "安排" },
-          { t: "Drive", u: "https://drive.google.com", d: "云盘" },
-          { t: "GitHub", u: "https://github.com", d: "代码" },
-          { t: "YouTube", u: "https://youtube.com", d: "视频" },
-          { t: "ChatGPT", u: "https://chat.openai.com", d: "AI 助手" }
-        ]
-      },
-      {
-        title: "工作",
-        links: [
-          { t: "Jira", u: "https://your-company.atlassian.net", d: "任务" },
-          { t: "Notion", u: "https://www.notion.so", d: "文档" },
-          { t: "Figma", u: "https://www.figma.com", d: "设计" }
-        ]
-      },
-      {
-        title: "工具",
-        links: [
-          { t: "Regex101", u: "https://regex101.com", d: "正则测试" },
-          { t: "Excalidraw", u: "https://excalidraw.com", d: "白板" },
-          { t: "TinyPNG", u: "https://tinypng.com", d: "压图" },
-          { t: "Can I use", u: "https://caniuse.com", d: "兼容性" }
-        ]
-      }
-    ];
-
-    // ----- 状态：搜索引擎 & 主题
-    const ENGINES = [
-      {name: "Google", url: q => `https://www.google.com/search?q=${encodeURIComponent(q)}`},
-      {name: "Bing",   url: q => `https://www.bing.com/search?q=${encodeURIComponent(q)}`},
-      {name: "DuckDuckGo", url: q => `https://duckduckgo.com/?q=${encodeURIComponent(q)}`}
-    ];
-
-    const ls = {
-      get(key, fallback){ try{ return JSON.parse(localStorage.getItem(key)) ?? fallback }catch{ return fallback } },
-      set(key, val){ localStorage.setItem(key, JSON.stringify(val)) }
+    // ===== 你的 JSON（已内联） =====
+    // 只使用 data[*].groupList[*].name / siteList[*].name|url|desc
+    const RAW = {
+      "data":[{"id":1725801071594,"name":"网站","groupList":[
+        {"id":1725801166515,"name":"分组 1","siteList":[
+          {"id":1725801230597,"name":"Github","url":"https://github.com/wohccdaa/Curiosity-Curated-Navigation","favicon":"","desc":""},
+          {"id":1754842556449,"name":"Telegram","url":"https://web.telegram.org/a/","favicon":"","desc":""}
+        ]},
+        {"id":1725801370995,"name":"分组 2 ","siteList":[
+          {"id":1725801392782,"name":"Vercel","url":"https://vercel.com/wohccdaas-projects","favicon":"","desc":""},
+          {"id":1725801420511,"name":"阿里域名","url":"https://dc.console.aliyun.com/next/index?spm=5176.12818093_47.overview_recent.2.3be92cc93m9IbE#/domain-list/all?type=","favicon":"","desc":""},
+          {"id":1725801510569,"name":"Cloudflare","url":"https://dash.cloudflare.com/b5d549cb9c53a68240a04858b8669153/tlkk.top","favicon":"","desc":""}
+        ]},
+        {"id":1725801452515,"name":"分组 3","siteList":[
+          {"id":1725801463245,"name":"IT 狗","url":"https://www.itdog.cn/http/","favicon":"","desc":""},
+          {"id":1730015521044,"name":"W3C链接检查","url":"https://validator.w3.org/checklink","favicon":"","desc":""},
+          {"id":1754842583129,"name":"风之谷 VPN","url":"https://cn1.fengzg.net/#/login","favicon":"","desc":""}
+        ]},
+        {"id":1725801619132,"name":"分组 4","siteList":[
+          {"id":1726403456500,"name":"即刻","url":"https://web.okjike.com/","favicon":"","desc":""},
+          {"id":1725801676787,"name":"有趣之家","url":"https://youquhome.com/message/","favicon":"","desc":""},
+          {"id":1751297621049,"name":"科技爱好者周刊","url":"https://ruanyf.aolifu.org/","favicon":"","desc":""},
+          {"id":1729604533332,"name":"偷懒周刊","url":"https://echosoar.github.io/weekly/","favicon":"","desc":""},
+          {"id":1725801947812,"name":"Linuxdo","url":"https://linux.do/c/resource/14","favicon":"","desc":""},
+          {"id":1729603630090,"name":"博客聚合","url":"https://www.v2ex.com/xna","favicon":"","desc":""},
+          {"id":1729602527419,"name":"站长","url":"https://www.v2ex.com/go/webmaster","favicon":"","desc":""},
+          {"id":1725801820129,"name":"分享创造","url":"https://www.v2ex.com/go/create","favicon":"","desc":"V2EX"},
+          {"id":1726643045979,"name":"大橘周刊","url":"https://rrorangeandfriends.de/","favicon":"","desc":""},
+          {"id":1725801723005,"name":"奇趣网站","url":"https://qiqu.dreamthere.cn/index/index","favicon":"","desc":""},
+          {"id":1725801881657,"name":"小众软件","url":"https://meta.appinn.net/","favicon":"","desc":""}
+        ]}
+      ]}],
+      "settings":{"linkStrategy":"newTab"}
     };
 
-    // 初始化用户数据
-    let userData = ls.get("nav.data", DEFAULT_DATA);
-    let engineIdx = ls.get("nav.engineIdx", 0);
-    let theme = ls.get("nav.theme", "auto"); // auto|light|dark
-
-    // ----- 渲染
+    // ===== 渲染逻辑（无图标） =====
     const groupsEl = document.getElementById("groups");
-    const engineBtn = document.getElementById("engineBtn");
-    const engineName = document.getElementById("engineName");
-    const searchForm = document.getElementById("searchForm");
-    const inputQ = document.getElementById("q");
-    const hello = document.getElementById("hello");
-    const dateEl = document.getElementById("date");
-    const themeBtn = document.getElementById("themeBtn");
 
-    function setGreeting(){
-      const now = new Date();
-      const h = now.getHours();
-      const map = h<6 ? "夜深了" : h<11 ? "早上好" : h<14 ? "中午好" : h<18 ? "下午好" : "晚上好";
-      hello.textContent = map;
-      const fmt = new Intl.DateTimeFormat(undefined,{ dateStyle:"full", timeStyle:"short"});
-      dateEl.textContent = fmt.format(now);
+    function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]))}
+
+    function greet(){
+      const h = new Date().getHours();
+      document.getElementById("hello").textContent = h<11 ? "早上好" : (h<14 ? "中午好" : "晚上好");
     }
 
-    function faviconURL(url){
-      try{
-        const u = new URL(url);
-        return `${u.origin}/favicon.ico`;
-      }catch{ return "" }
+    function normalizeData(raw){
+      const out = [];
+      const cats = Array.isArray(raw?.data) ? raw.data : [];
+      cats.forEach(cat=>{
+        const groups = Array.isArray(cat?.groupList) ? cat.groupList : [];
+        groups.forEach(g=>{
+          out.push({
+            title: g?.name ?? "未命名分组",
+            links: (Array.isArray(g?.siteList) ? g.siteList : []).map(s=>({
+              t: s?.name || s?.url || "未命名",
+              u: s?.url || "#",
+              d: s?.desc || ""
+            }))
+          });
+        });
+      });
+      return out;
     }
 
     function render(){
+      const data = normalizeData(RAW);
       groupsEl.innerHTML = "";
-      userData.forEach(group=>{
-        const g = document.createElement("section");
-        g.className = "group";
-        g.innerHTML = `<h2>${escapeHTML(group.title||"")}</h2><div class="links"></div>`;
-        const list = g.querySelector(".links");
-        (group.links||[]).forEach(link=>{
+      data.forEach(group=>{
+        const sec = document.createElement("section");
+        sec.className = "group";
+        sec.innerHTML = `<h2>${escapeHTML(group.title)}</h2><div class="links"></div>`;
+        const list = sec.querySelector(".links");
+        group.links.forEach(link=>{
           const a = document.createElement("a");
           a.className = "link";
           a.href = link.u;
-          a.target = "_blank";
+          a.target = "_blank"; // 遵循你的设置：新标签页
           a.rel = "noopener noreferrer";
           a.innerHTML = `
-            <span class="favicon"><img src="${faviconURL(link.u)}" alt="" width="18" height="18" onerror="this.style.display='none'"></span>
-            <span>
-              <div class="link-title">${escapeHTML(link.t||link.u)}</div>
-              ${link.d? `<div class="link-desc">${escapeHTML(link.d)}</div>`:""}
-            </span>
+            <div class="link-title">${escapeHTML(link.t)}</div>
+            ${link.d ? `<div class="link-desc">${escapeHTML(link.d)}</div>` : ""}
           `;
           list.appendChild(a);
         });
-        groupsEl.appendChild(g);
+        groupsEl.appendChild(sec);
       });
-      engineName.textContent = ENGINES[engineIdx].name;
-      applyTheme(theme);
-      setGreeting();
     }
 
-    function escapeHTML(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
-
-    // ----- 搜索
-    searchForm.addEventListener("submit", e=>{
-      e.preventDefault();
-      const q = inputQ.value.trim();
-      if(!q) return inputQ.focus();
-      location.href = ENGINES[engineIdx].url(q);
-    });
-    engineBtn.addEventListener("click", ()=>{
-      engineIdx = (engineIdx + 1) % ENGINES.length;
-      ls.set("nav.engineIdx", engineIdx);
-      engineName.textContent = ENGINES[engineIdx].name;
-    });
-
-    // ----- 主题
-    function applyTheme(mode){
-      const isDark = mode==="dark" || (mode==="auto" && matchMedia("(prefers-color-scheme: dark)").matches);
-      document.documentElement.style.colorScheme = isDark ? "dark" : "light";
-      document.body.dataset.theme = mode;
-    }
-    themeBtn.addEventListener("click", ()=>{
-      theme = theme==="light" ? "dark" : theme==="dark" ? "auto" : "light";
-      ls.set("nav.theme", theme);
-      applyTheme(theme);
-      themeBtn.title = `切换主题 (当前：${theme})`;
-    });
-    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ()=> applyTheme(theme));
-
-    // ----- 编辑器
-    const dlg = document.getElementById("editor");
-    const jsonArea = document.getElementById("jsonArea");
-    const editBtn = document.getElementById("editBtn");
-    const saveBtn = document.getElementById("saveBtn");
-    const closeDlg = document.getElementById("closeDlg");
-    const resetBtn = document.getElementById("resetBtn");
-
-    function openEditor(){
-      jsonArea.value = JSON.stringify(userData, null, 2);
-      dlg.showModal();
-      jsonArea.focus();
-    }
-    function saveEditor(){
-      try{
-        const next = JSON.parse(jsonArea.value);
-        if(!Array.isArray(next)) throw new Error("顶层应为数组");
-        // 简单校验
-        next.forEach(g=>{
-          if(!g || typeof g!=="object") throw new Error("分组需为对象");
-          if(!Array.isArray(g.links)) throw new Error("每个分组需要 links 数组");
-          g.links.forEach(l=>{
-            if(!l.u) throw new Error("每个链接需要包含 u (url)");
-          });
-        });
-        userData = next;
-        ls.set("nav.data", userData);
-        dlg.close(); render();
-      }catch(err){
-        alert("保存失败：\n" + err.message);
-      }
-    }
-
-    editBtn.addEventListener("click", openEditor);
-    document.getElementById("closeDlg").addEventListener("click", ()=> dlg.close());
-    saveBtn.addEventListener("click", saveEditor);
-    resetBtn.addEventListener("click", ()=>{
-      if(confirm("确认恢复为默认配置？")) {
-        userData = DEFAULT_DATA;
-        ls.set("nav.data", userData);
-        jsonArea.value = JSON.stringify(userData, null, 2);
-        render();
-      }
-    });
-
-    // ----- 快捷键
-    document.addEventListener("keydown", (e)=>{
-      if (e.key === "/" && document.activeElement !== inputQ){
-        e.preventDefault(); inputQ.focus(); inputQ.select();
-      } else if (e.key.toLowerCase() === "d"){
-        e.preventDefault(); themeBtn.click();
-      } else if (e.key.toLowerCase() === "e"){
-        e.preventDefault(); openEditor();
-      } else if (e.key.toLowerCase() === "s"){
-        e.preventDefault(); engineBtn.click();
-      }
-    });
-
-    // 初次渲染
-    render();
-    // 每分钟刷新问候 & 时间
-    setInterval(setGreeting, 60_000);
+    greet(); render();
+    setInterval(greet, 60*1000);
   </script>
 </body>
 </html>
