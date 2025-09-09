@@ -61,14 +61,14 @@
       line-height: 1.5;
       overflow-x: auto;
     }
-    #allCopyMsg, #errorMsg {
+    #allCopyMsg, #errorMsg, #descMsg, #titleMsg {
       margin-left: 10px;
       font-size: 13px;
       display: none;
       transition: opacity 0.3s ease;
     }
     #allCopyMsg { color: #0070f3; }
-    #errorMsg { color: #e00; }
+    #errorMsg, #descMsg, #titleMsg { color: #e00; }
     .btn-row {
       display: flex;
       gap: 10px;
@@ -80,10 +80,12 @@
   <h1>HTML 卡片生成器</h1>
 
   <label>标题</label>
-  <input type="text" id="title" placeholder="例如：98.js">
+  <input type="text" id="title" placeholder="例如：98.js" maxlength="6">
+  <span id="titleMsg">⚠️ 最多只能输入6个字</span>
 
   <label>描述</label>
-  <input type="text" id="desc" placeholder="例如：Windows 98 模拟">
+  <input type="text" id="desc" placeholder="例如：Windows 98 模拟" maxlength="9">
+  <span id="descMsg">⚠️ 最多只能输入9个字</span>
 
   <label>URL</label>
   <input type="text" id="url" placeholder="例如：https://98.js.org/">
@@ -120,9 +122,31 @@
       document.getElementById('date').value = getToday();
     };
 
+    // 限制标题输入提示
+    const titleInput = document.getElementById('title');
+    const titleMsg = document.getElementById('titleMsg');
+    titleInput.addEventListener('input', () => {
+      if (titleInput.value.length >= 6) {
+        titleMsg.style.display = "inline";
+      } else {
+        titleMsg.style.display = "none";
+      }
+    });
+
+    // 限制描述输入提示
+    const descInput = document.getElementById('desc');
+    const descMsg = document.getElementById('descMsg');
+    descInput.addEventListener('input', () => {
+      if (descInput.value.length >= 9) {
+        descMsg.style.display = "inline";
+      } else {
+        descMsg.style.display = "none";
+      }
+    });
+
     function generate() {
-      const title = document.getElementById('title').value.trim();
-      const desc = document.getElementById('desc').value.trim();
+      const title = titleInput.value.trim();
+      const desc = descInput.value.trim();
       const url = document.getElementById('url').value.trim();
       const date = document.getElementById('date').value.trim();
 
@@ -151,11 +175,13 @@
       allCodes.push(code);
       document.getElementById('allOutput').textContent = allCodes.join("\n\n");
 
-      // 生成成功后清空表单 & 重置日期
-      document.getElementById('title').value = "";
-      document.getElementById('desc').value = "";
+      // 清空表单 & 重置日期
+      titleInput.value = "";
+      descInput.value = "";
       document.getElementById('url').value = "";
       document.getElementById('date').value = getToday();
+      titleMsg.style.display = "none";
+      descMsg.style.display = "none";
     }
 
     function copyAll() {
