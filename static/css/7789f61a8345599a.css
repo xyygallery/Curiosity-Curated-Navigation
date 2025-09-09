@@ -18,27 +18,42 @@
 
 
 
-/* === Radial Gradient Background Layer (replicates React JSX effect) === */
+/* === Diagonal Stripes Background (mobile-optimized) === */
 html, body {
   height: 100%;
 }
-
 body {
   margin: 0;
   min-height: 100vh;
-  background: transparent !important; /* keep it transparent so the layer shows */
+  background-color: #ffffff !important;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    #f3f4f6 2px,
+    #f3f4f6 4px
+  ) !important;
+  background-attachment: scroll;
   color: #111;
-  position: relative;
 }
 
-/* Full-screen fixed layer behind all content */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #475569 100%);
-  /* keep it crisp across scroll */
-  background-attachment: fixed;
+/* On mobile/high-DPR, enlarge stripe width to avoid moiré */
+@media (max-width: 768px), (pointer: coarse) {
+  body {
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 3px,
+      #f5f6f8 3px,
+      #f5f6f8 6px
+    ) !important;
+  }
+}
+
+/* Force light background even in dark mode */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #ffffff !important;
+    color: #111 !important;
+  }
 }
