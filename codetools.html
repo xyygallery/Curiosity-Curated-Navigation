@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML 代码生成器</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input { width: 100%; padding: 8px; margin-top: 5px; }
+    button { margin-top: 15px; padding: 10px 20px; cursor: pointer; }
+    pre { background: #f4f4f4; padding: 15px; margin-top: 20px; border-radius: 5px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>HTML 卡片生成器</h1>
+
+  <label>标题：</label>
+  <input type="text" id="title" placeholder="例如：98.js">
+
+  <label>描述：</label>
+  <input type="text" id="desc" placeholder="例如：Windows 98 模拟">
+
+  <label>URL：</label>
+  <input type="text" id="url" placeholder="例如：https://98.js.org/">
+
+  <label>收录日期：</label>
+  <input type="text" id="date" placeholder="例如：2025/8/23">
+
+  <button onclick="generate()">生成代码</button>
+  <button onclick="copyCode()">复制代码</button>
+
+  <h2>结果：</h2>
+  <pre id="output"></pre>
+
+  <script>
+    function generate() {
+      const title = document.getElementById('title').value;
+      const desc = document.getElementById('desc').value;
+      const url = document.getElementById('url').value;
+      const date = document.getElementById('date').value;
+
+      const code = `
+<a href="${url}" class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30" target="_blank" rel="noopener noreferrer" title="收录日期：${date}">
+    <h2 class="mb-3 text-2xl font-light">
+       ${title}
+        <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none ml-2">-&gt;</span>
+    </h2>
+    <p class="m-0 max-w-[30ch] text-sm opacity-50">${desc}</p>
+</a>
+      `;
+      document.getElementById('output').textContent = code.trim();
+    }
+
+    function copyCode() {
+      const output = document.getElementById('output').textContent;
+      if (!output) {
+        alert("请先生成代码！");
+        return;
+      }
+      navigator.clipboard.writeText(output).then(() => {
+        alert("代码已复制到剪贴板！");
+      });
+    }
+  </script>
+</body>
+</html>
