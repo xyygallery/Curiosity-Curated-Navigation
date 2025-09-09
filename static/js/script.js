@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-
+// 随机网站
 
 function goRandom() {
   const EXCLUDE_CONTAINERS = ['#stats', '#info', 'footer', '.site-stats', '.site-info'];
@@ -70,7 +70,7 @@ document.addEventListener('keydown', e => {
 });
 
 
- // 平滑滚动到顶部
+  // 平滑滚动到顶部
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -84,12 +84,15 @@ document.addEventListener('keydown', e => {
   window.addEventListener('scroll', function() {
     const topBtn = document.getElementById("backToTopBtn");
     const bottomBtn = document.getElementById("backToBottomBtn");
-    if (document.documentElement.scrollTop > 200 || document.body.scrollTop > 200) {
+
+    // 页面向下滚动超过 200px 才显示“返回顶部”
+    if (window.scrollY > 200) {
       topBtn.style.display = "block";
     } else {
       topBtn.style.display = "none";
     }
-    // 当没有到页面底部时显示“返回底部”按钮
+
+    // 当没有滚到最底部时才显示“返回底部”
     if (window.innerHeight + window.scrollY < document.body.scrollHeight - 200) {
       bottomBtn.style.display = "block";
     } else {
