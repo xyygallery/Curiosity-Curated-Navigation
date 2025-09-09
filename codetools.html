@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>代码生成器</title>
+  <title>HTML 代码生成器</title>
   <style>
     body {
       font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
@@ -61,14 +61,14 @@
       line-height: 1.5;
       overflow-x: auto;
     }
-    #allCopyMsg, #errorMsg, #descMsg, #titleMsg {
+    #allCopyMsg, #errorMsg, #descMsg, #titleMsg, #urlMsg {
       margin-left: 10px;
       font-size: 13px;
       display: none;
       transition: opacity 0.3s ease;
     }
     #allCopyMsg { color: #0070f3; }
-    #errorMsg, #descMsg, #titleMsg { color: #e00; }
+    #errorMsg, #descMsg, #titleMsg, #urlMsg { color: #e00; }
     .btn-row {
       display: flex;
       gap: 10px;
@@ -77,21 +77,22 @@
   </style>
 </head>
 <body>
-  <h1>代码生成器</h1>
+  <h1>HTML 卡片生成器</h1>
 
   <label>标题</label>
-  <input type="text" id="title" placeholder="例如：98.js" maxlength="6">
-  <span id="titleMsg">⚠️ 最多只能输入6个字</span>
+  <input type="text" id="title" placeholder="例如：98.js">
+  <span id="titleMsg">⚠️ 标题最多 7 个中文</span>
 
   <label>描述</label>
-  <input type="text" id="desc" placeholder="例如：Windows 98 模拟" maxlength="9">
-  <span id="descMsg">⚠️ 最多只能输入9个字</span>
+  <input type="text" id="desc" placeholder="例如：Windows 98 模拟">
+  <span id="descMsg">⚠️ 描述最多 11 个中文</span>
 
   <label>URL</label>
   <input type="text" id="url" placeholder="例如：https://98.js.org/">
+  <span id="urlMsg">❌ URL 必须以 http:// 或 https:// 开头</span>
 
   <label>收录日期</label>
-  <input type="text" id="date">
+  <input type="date" id="date">
 
   <div class="btn-row">
     <button onclick="generate()">生成</button>
@@ -111,52 +112,66 @@
   <script>
     let allCodes = [];
 
-    // 获取今天日期
-    function getToday() {
+    // 获取今天日期，返回 YYYY-MM-DD
+    function getTodayISO() {
       const today = new Date();
-      return today.getFullYear() + "/" + (today.getMonth() + 1) + "/" + today.getDate();
+      const y = today.getFullYear();
+      const m = String(today.getMonth() + 1).padStart(2, "0");
+      const d = String(today.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
     }
 
-    // 页面加载时自动填入今天日期
+    // 格式化为 YYYY/M/D
+    function formatDateDisplay(dateStr) {
+      const [y, m, d] = dateStr.split("-");
+      return `${parseInt(y)}/${parseInt(m)}/${parseInt(d)}`;
+    }
+
     window.onload = function() {
-      document.getElementById('date').value = getToday();
+      document.getElementById('date').value = getTodayISO();
     };
 
-    // 限制标题输入提示
-    const titleInput = document.getElementById('title');
-    const titleMsg = document.getElementById('titleMsg');
-    titleInput.addEventListener('input', () => {
-      if (titleInput.value.length >= 6) {
-        titleMsg.style.display = "inline";
-      } else {
-        titleMsg.style.display = "none";
-      }
-    });
+    // 限制中文数量
+    function limitChinese(input, limit, msgEl) {
+      input.addEventListener('input', () => {
+        const value = input.value;
+        const chineseChars = value.match(/[\u4e00-\u9fa5]/g) || [];
+        if (chineseChars.length > limit) {
+          input.value = value.slice(0, value.length - 1);
+          msgEl.style.display = "inline";
+          setTimeout(() => { msgEl.style.display = "none"; }, 2000);
+        }
+      });
+    }
 
-    // 限制描述输入提示
-    const descInput = document.getElementById('desc');
-    const descMsg = document.getElementById('descMsg');
-    descInput.addEventListener('input', () => {
-      if (descInput.value.length >= 9) {
-        descMsg.style.display = "inline";
-      } else {
-        descMsg.style.display = "none";
-      }
-    });
+    // 应用限制
+    limitChinese(document.getElementById('title'), 7, document.getElementById('titleMsg'));
+    limitChinese(document.getElementById('desc'), 11, document.getElementById('descMsg'));
 
     function generate() {
-      const title = titleInput.value.trim();
-      const desc = descInput.value.trim();
+      const title = document.getElementById('title').value.trim();
+      const desc = document.getElementById('desc').value.trim();
       const url = document.getElementById('url').value.trim();
-      const date = document.getElementById('date').value.trim();
+      const dateRaw = document.getElementById('date').value.trim();
 
       const errorMsg = document.getElementById('errorMsg');
-      if (!title || !desc || !url || !date) {
+      const urlMsg = document.getElementById('urlMsg');
+
+      if (!title || !desc || !url || !dateRaw) {
         errorMsg.style.display = "inline";
         errorMsg.style.opacity = "1";
         setTimeout(() => { errorMsg.style.opacity = "0"; }, 2000);
         return;
       }
+
+      if (!/^https?:\/\//.test(url)) {
+        urlMsg.style.display = "inline";
+        urlMsg.style.opacity = "1";
+        setTimeout(() => { urlMsg.style.opacity = "0"; }, 2500);
+        return;
+      }
+
+      const date = formatDateDisplay(dateRaw);
 
       const code = `
 <a href="${url}" class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30" target="_blank" rel="noopener noreferrer" title="收录日期：${date}">
@@ -168,20 +183,15 @@
 </a>
       `.trim();
 
-      // 显示最后一次生成的代码
       document.getElementById('output').textContent = code;
-
-      // 保存到累计数组
       allCodes.push(code);
       document.getElementById('allOutput').textContent = allCodes.join("\n\n");
 
-      // 清空表单 & 重置日期
-      titleInput.value = "";
-      descInput.value = "";
+      // 清空表单并重置日期
+      document.getElementById('title').value = "";
+      document.getElementById('desc').value = "";
       document.getElementById('url').value = "";
-      document.getElementById('date').value = getToday();
-      titleMsg.style.display = "none";
-      descMsg.style.display = "none";
+      document.getElementById('date').value = getTodayISO();
     }
 
     function copyAll() {
