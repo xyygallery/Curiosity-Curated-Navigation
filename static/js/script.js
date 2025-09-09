@@ -49,120 +49,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-(function () {
+function goRandom() {
   const EXCLUDE_CONTAINERS = ['#stats', '#info', 'footer', '.site-stats', '.site-info'];
-
-  function getAllCards() {
-    return Array.from(document.querySelectorAll('a.group'));
-  }
-  function isInExcluded(el) {
-    return EXCLUDE_CONTAINERS.some(sel => el.closest(sel));
-  }
-
-  window.goRandom = function goRandom() {
-    const links = Array.from(document.querySelectorAll('a[href^="http"]'))
-      .filter(a => a.id !== 'randomGoBtn' && !a.closest('#randomGoBtn'))
-      .filter(a => !isInExcluded(a));
-    const unique = Array.from(new Set(links.map(a => a.href)));
-    if (unique.length === 0) {
-      alert('没有可用的网站链接（排除底部统计/信息区后为空）!');
-      return;
-    }
-    const url = unique[Math.floor(Math.random() * unique.length)];
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
-  function extractCardInfo(card) {
-    const titleEl = card.querySelector('h2');
-    const descEl = card.querySelector('p');
-    const title = titleEl ? titleEl.textContent.trim() : '';
-    const desc = descEl ? descEl.textContent.trim() : '';
-    const url  = card.href || '';
-    return { card, title, desc, url, text: (title + ' ' + desc + ' ' + url).toLowerCase() };
-  }
-
-  let indexCache = null;
-  function buildIndex() {
-    const cards = getAllCards().filter(el => !isInExcluded(el));
-    indexCache = cards.map(extractCardInfo);
-    return indexCache;
-  }
-  function ensureIndex() {
-    return indexCache || buildIndex();
-  }
-
-  function applyFilter(keyword) {
-    const q = (keyword || '').toLowerCase().trim();
-    const data = ensureIndex();
-    if (!q) {
-      data.forEach(({card}) => card.style.removeProperty('display'));
-      return data.map(d => d.card);
-    }
-    const matches = [];
-    data.forEach(({card, text}) => {
-      if (text.includes(q)) {
-        card.style.removeProperty('display');
-        matches.push(card);
-      } else {
-        card.style.display = 'none';
-      }
-    });
-    return matches;
-  }
-  function focusFirst(matches) {
-    if (!matches || matches.length === 0) return;
-    const el = matches[0];
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    el.classList.add('ring-2');
-    setTimeout(() => el.classList.remove('ring-2'), 1500);
-  }
-  function openRandomFrom(matches) {
-    if (!matches || matches.length === 0) {
-      alert('没有匹配的结果');
-      return;
-    }
-    const el = matches[Math.floor(Math.random() * matches.length)];
-    window.open(el.href, '_blank', 'noopener,noreferrer');
-  }
-
-  function bindSearchUI() {
-    const input = document.getElementById('searchInput');
-    const btn   = document.getElementById('searchBtn');
-    const rand  = document.getElementById('searchRandomBtn');
-    if (!input || !btn || !rand) return;
-
-    let t = null;
-    input.addEventListener('input', () => {
-      clearTimeout(t);
-      t = setTimeout(() => applyFilter(input.value), 120);
-    });
-    btn.addEventListener('click', () => {
-      const matches = applyFilter(input.value);
-      focusFirst(matches);
-    });
-    rand.addEventListener('click', () => {
-      const matches = applyFilter(input.value);
-      openRandomFrom(matches);
-    });
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-        const matches = applyFilter(input.value);
-        openRandomFrom(matches);
-      } else if (e.key === 'Enter') {
-        const matches = applyFilter(input.value);
-        focusFirst(matches);
-      }
-    });
-    document.addEventListener('keydown', e => {
-      if (e.key.toLowerCase() === 'r' && document.activeElement !== input) goRandom();
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    buildIndex();
-    bindSearchUI();
+  const allLinks = Array.from(document.querySelectorAll('a[href^="http"]'))
+    .filter(a => a.id !== 'randomGoBtn' && !a.closest('#randomGoBtn'));
+  const candidates = allLinks.filter(a => {
+    return !EXCLUDE_CONTAINERS.some(sel => a.closest(sel));
   });
-})();
+  const uniqueUrls = Array.from(new Set(candidates.map(a => a.href)));
+  if (uniqueUrls.length === 0) {
+    alert('没有可用的网站链接（排除底部统计/信息区后为空）!');
+    return;
+  }
+  const randomUrl = uniqueUrls[Math.floor(Math.random() * uniqueUrls.length)];
+  window.open(randomUrl, '_blank', 'noopener,noreferrer');
+}
 
+document.addEventListener('keydown', e => {
   if (e.key.toLowerCase() === 'r') goRandom();
 });
