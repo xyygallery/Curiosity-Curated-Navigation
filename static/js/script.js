@@ -45,3 +45,24 @@ document.addEventListener('DOMContentLoaded', function() {
     updateDateInfo();   // 更新日期信息
     updateWebsiteCount();  // 更新网站链接数量
 });
+
+
+function goRandom() {
+  const EXCLUDE_CONTAINERS = ['#stats', '#info', 'footer', '.site-stats', '.site-info'];
+  const allLinks = Array.from(document.querySelectorAll('a[href^="http"]'))
+    .filter(a => a.id !== 'randomGoBtn' && !a.closest('#randomGoBtn'));
+  const candidates = allLinks.filter(a => {
+    return !EXCLUDE_CONTAINERS.some(sel => a.closest(sel));
+  });
+  const uniqueUrls = Array.from(new Set(candidates.map(a => a.href)));
+  if (uniqueUrls.length === 0) {
+    alert('没有可用的网站链接（排除底部统计/信息区后为空）!');
+    return;
+  }
+  const randomUrl = uniqueUrls[Math.floor(Math.random() * uniqueUrls.length)];
+  window.open(randomUrl, '_blank', 'noopener,noreferrer');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key.toLowerCase() === 'r') goRandom();
+});
