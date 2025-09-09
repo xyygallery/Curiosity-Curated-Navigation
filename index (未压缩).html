@@ -30,12 +30,12 @@ No Excess, No Flattery, Simplicity Is Value.
 
   <h1 class="font-semibold text-3xl mb-12">Hcqi.top</h1>    
      
-  <!-- 🔎 站内搜索（仅过滤导航卡片，不包含底部统计/信息区） -->
-<div class="w-full max-w-3xl mb-6 flex gap-2 items-center" id="site-search">
-<input aria-label="搜索站内网站" class="flex-1 border rounded-lg px-3 py-2 outline-none" id="searchInput" placeholder="搜索站内网站（标题/描述/链接）…" type="search"/>
-<button class="border rounded-lg px-4 py-2" id="searchBtn">搜索</button>
-<button class="border rounded-lg px-4 py-2" id="searchRandomBtn">从结果里随机 🎲</button>
-    
+<button id="randomGoBtn"
+        onclick="goRandom()"
+        style="margin-top:30px;padding:10px 20px;border-radius:10px;border:1px solid #ddd;background:#f7f7f7;cursor:pointer;">
+ 随机网站传送门
+</button>
+
         
 <!-- 注释内容  -->
 <div class="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex mb-3 mt-10">
@@ -5500,6 +5500,7 @@ Raw Web
 </body>
 
 </html>
+
 
 
 
