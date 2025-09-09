@@ -50,48 +50,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 随机网站
 
-// 平滑滚动到顶部
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  // 平滑滚动
+  function scrollToTop(){ window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  function scrollToBottom(){ window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' }); }
 
-  // 平滑滚动到底部
-  function scrollToBottom() {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-  }
-
-  // 随机网站
+  // 随机网站（排除底部统计/信息区 & 三个按钮自身）
   function goRandom() {
-    const EXCLUDE_CONTAINERS = ['#stats', '#info', 'footer', '.site-stats', '.site-info'];
+    const EXCLUDE_CONTAINERS = ['#stats','#info','footer','.site-stats','.site-info'];
+    const EXCLUDE_BUTTON_IDS = ['btnToTop','btnRandom','btnToBottom'];
     const allLinks = Array.from(document.querySelectorAll('a[href^="http"]'))
-      .filter(a => !EXCLUDE_CONTAINERS.some(sel => a.closest(sel)));
-    if (allLinks.length === 0) {
-      alert("没有可用的网站！");
-      return;
-    }
-    const randomUrl = allLinks[Math.floor(Math.random() * allLinks.length)].href;
-    window.open(randomUrl, "_blank");
+      .filter(a => !EXCLUDE_CONTAINERS.some(sel => a.closest(sel)))
+      .filter(a => !EXCLUDE_BUTTON_IDS.some(id => a.closest('#'+id))); // 保险：避免拾到按钮里链接（一般没有）
+    if (allLinks.length === 0) { alert('没有可用的网站链接！'); return; }
+    const url = allLinks[Math.floor(Math.random() * allLinks.length)].href;
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
-  // 滚动时显示/隐藏按钮
-  window.addEventListener('scroll', function() {
-    const topBtn = document.getElementById("backToTopBtn");
-    const randomBtn = document.getElementById("randomGoBtn");
-    const bottomBtn = document.getElementById("backToBottomBtn");
+  // 显示/隐藏逻辑：滚动超过阈值才显示；到底部附近隐藏“底部”按钮
+  function updateFloatingButtons() {
+    const topBtn = document.getElementById('btnToTop');
+    const rndBtn = document.getElementById('btnRandom');
+    const botBtn = document.getElementById('btnToBottom');
+    const threshold = 120; // 超过这个距离才显示
+    const scrolled = window.scrollY > threshold;
+    const nearBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - threshold);
 
-    // 页面往下滚动时才显示“返回顶部”和“随”
-    if (window.scrollY > 200) {
-      topBtn.style.display = "block";
-      randomBtn.style.display = "block";
-    } else {
-      topBtn.style.display = "none";
-      randomBtn.style.display = "none";
-    }
+    // 需要时统一显示
+    topBtn.style.display = scrolled ? 'block' : 'none';
+    rndBtn.style.display = scrolled ? 'block' : 'none';
+    // 底部按钮：滚动超过阈值 且 未接近底部 才显示
+    botBtn.style.display = (scrolled && !nearBottom) ? 'block' : 'none';
+  }
 
-    // 页面没到最底部时显示“返回底部”
-    if (window.innerHeight + window.scrollY < document.body.scrollHeight - 200) {
-      bottomBtn.style.display = "block";
-    } else {
-      bottomBtn.style.display = "none";
-    }
-  });
+  // 初始化与事件
+  document.addEventListener('DOMContentLoaded', updateFloatingButtons);
+  window.addEventListener('scroll', updateFloatingButtons);
+  window.addEventListener('resize', updateFloatingButtons);
