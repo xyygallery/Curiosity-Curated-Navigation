@@ -47,30 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+
 // 随机网站
 
-function goRandom() {
-  const EXCLUDE_CONTAINERS = ['#stats', '#info', 'footer', '.site-stats', '.site-info'];
-  const allLinks = Array.from(document.querySelectorAll('a[href^="http"]'))
-    .filter(a => a.id !== 'randomGoBtn' && !a.closest('#randomGoBtn'));
-  const candidates = allLinks.filter(a => {
-    return !EXCLUDE_CONTAINERS.some(sel => a.closest(sel));
-  });
-  const uniqueUrls = Array.from(new Set(candidates.map(a => a.href)));
-  if (uniqueUrls.length === 0) {
-    alert('没有可用的网站链接（排除底部统计/信息区后为空）!');
-    return;
-  }
-  const randomUrl = uniqueUrls[Math.floor(Math.random() * uniqueUrls.length)];
-  window.open(randomUrl, '_blank', 'noopener,noreferrer');
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key.toLowerCase() === 'x') goRandom();
-});
-
-
-  // 平滑滚动到顶部
+// 平滑滚动到顶部
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -80,19 +60,35 @@ document.addEventListener('keydown', e => {
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   }
 
+  // 随机网站
+  function goRandom() {
+    const EXCLUDE_CONTAINERS = ['#stats', '#info', 'footer', '.site-stats', '.site-info'];
+    const allLinks = Array.from(document.querySelectorAll('a[href^="http"]'))
+      .filter(a => !EXCLUDE_CONTAINERS.some(sel => a.closest(sel)));
+    if (allLinks.length === 0) {
+      alert("没有可用的网站！");
+      return;
+    }
+    const randomUrl = allLinks[Math.floor(Math.random() * allLinks.length)].href;
+    window.open(randomUrl, "_blank");
+  }
+
   // 滚动时显示/隐藏按钮
   window.addEventListener('scroll', function() {
     const topBtn = document.getElementById("backToTopBtn");
+    const randomBtn = document.getElementById("randomGoBtn");
     const bottomBtn = document.getElementById("backToBottomBtn");
 
-    // 页面向下滚动超过 200px 才显示“返回顶部”
+    // 页面往下滚动时才显示“返回顶部”和“随”
     if (window.scrollY > 200) {
       topBtn.style.display = "block";
+      randomBtn.style.display = "block";
     } else {
       topBtn.style.display = "none";
+      randomBtn.style.display = "none";
     }
 
-    // 当没有滚到最底部时才显示“返回底部”
+    // 页面没到最底部时显示“返回底部”
     if (window.innerHeight + window.scrollY < document.body.scrollHeight - 200) {
       bottomBtn.style.display = "block";
     } else {
