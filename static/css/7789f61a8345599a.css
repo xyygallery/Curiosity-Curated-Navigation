@@ -41,6 +41,34 @@
 
 
 
+/* 网格淡入背景 */
+.grid-fade-bg {
+  position: fixed;
+  inset: 0;          /* 全屏覆盖 */
+  z-index: -1;       /* 在内容下方 */
+  background-color: #f8fafc; /* 底色 */
+
+  background-image:
+    linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+    linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+  background-size: 20px 30px; /* 网格间距 */
+
+  /* 遮罩：让网格只在上半部分，往下逐渐淡出 */
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 0%,
+    #000 60%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 0%,
+    #000 60%,
+    transparent 100%
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: cover;
+  mask-size: cover;
+}
 
 
 
