@@ -12,6 +12,36 @@
 }
 
 
+/* 通用圆形按钮样式 */
+.circle-btn {
+  display: none;
+  position: fixed;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  color: #444;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 999;
+  transition: all 0.2s ease;
+}
+
+/* 悬停效果 */
+.circle-btn:hover {
+  background: #e0e0e0;
+  color: #000;
+  transform: scale(1.05);
+}
+
+
+
+
+
 
 
 /* === Diagonal Stripes Background (mobile-optimized) === */
