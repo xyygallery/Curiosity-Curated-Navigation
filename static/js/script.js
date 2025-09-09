@@ -66,5 +66,5 @@ function goRandom() {
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key.toLowerCase() === 'r') goRandom();
+  if (e.key.toLowerCase() === 'x') goRandom();
 });
