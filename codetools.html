@@ -61,13 +61,13 @@
       line-height: 1.5;
       overflow-x: auto;
     }
-    #copyMsg, #allCopyMsg, #errorMsg {
+    #allCopyMsg, #errorMsg {
       margin-left: 10px;
       font-size: 13px;
       display: none;
       transition: opacity 0.3s ease;
     }
-    #copyMsg, #allCopyMsg { color: #0070f3; }
+    #allCopyMsg { color: #0070f3; }
     #errorMsg { color: #e00; }
     .btn-row {
       display: flex;
@@ -92,8 +92,7 @@
   <input type="text" id="date">
 
   <div class="btn-row">
-    <button onclick="generate()">生成并复制</button>
-    <span id="copyMsg">✅ 已复制</span>
+    <button onclick="generate()">生成</button>
     <span id="errorMsg">❌ 请完整填写所有内容</span>
   </div>
 
@@ -151,14 +150,6 @@
       // 保存到累计数组
       allCodes.push(code);
       document.getElementById('allOutput').textContent = allCodes.join("\n\n");
-
-      // 自动复制到剪贴板（当前这一条）
-      navigator.clipboard.writeText(code).then(() => {
-        const msg = document.getElementById('copyMsg');
-        msg.style.display = "inline";
-        msg.style.opacity = "1";
-        setTimeout(() => { msg.style.opacity = "0"; }, 2000);
-      });
 
       // 生成成功后清空表单 & 重置日期
       document.getElementById('title').value = "";
