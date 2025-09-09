@@ -22,10 +22,16 @@
       background: var(--bg);
       color: var(--fg);
     }
-    .wrap{max-width: 860px; margin: 0 auto; padding: clamp(16px,4vw,32px);}
-    header{margin-bottom:24px;}
+    .wrap{max-width: 1120px; margin: 0 auto; padding: clamp(16px,4vw,32px);}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
     .hello{font-weight:700; font-size: clamp(20px,2.6vw,28px); letter-spacing:.2px;}
-    .groups{display:grid; gap:16px}
+    .actions{display:flex;gap:8px}
+    button.icon{
+      border:1px solid var(--border);background:transparent;color:var(--fg);
+      border-radius:10px;padding:8px 10px;cursor:pointer
+    }
+    button.icon:hover{border-color:var(--accent)}
+    .groups{display:grid;gap:16px}
     .group{
       background: var(--card);
       border: 1px solid var(--border);
@@ -38,8 +44,13 @@
     }
     .links{
       display:grid; gap:10px;
-      grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+      grid-template-columns: repeat(1, minmax(0,1fr));
     }
+    @media (min-width: 600px){ .links{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (min-width: 900px){ .links{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
+    /* ★ 1200px 起 4 栏 */
+    @media (min-width: 1200px){ .links{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
+
     .link{
       display:flex; flex-direction:column; gap:4px;
       padding:10px 12px; border:1px solid var(--border); border-radius:12px;
@@ -50,22 +61,93 @@
     .link:hover{transform: translateY(-1px); border-color: var(--accent)}
     .link-title{font-weight:600; font-size:14px}
     .link-desc{font-size:12px; color:var(--muted)}
-    @media (min-width: 860px){ .groups{grid-template-columns: repeat(3,1fr)} }
+
+    dialog{
+      border:1px solid var(--border);border-radius:16px;max-width:min(860px,92vw);
+      box-shadow: var(--shadow);padding:0;background:var(--bg);color:var(--fg)
+    }
+    .dlg-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--border)}
+    .dlg-body{padding:12px}
+    textarea{
+      width:100%;min-height:280px;border:1px solid var(--border);border-radius:12px;background:var(--card);
+      color:var(--fg);padding:12px;font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px
+    }
+    .row{display:flex;gap:10px;justify-content:flex-end;padding:0 12px 14px}
+    .row button{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--fg);cursor:pointer}
+    .row button.save{background:var(--accent);border-color:var(--accent);color:#fff}
+    .cfg{display:grid;gap:10px}
+    .cfg label{font-size:13px;color:var(--muted)}
+    .cfg input[type="text"], .cfg input[type="password"]{
+      width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--fg)
+    }
+    .hint{font-size:12px;color:var(--muted)}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <div class="hello" id="hello">你好</div>
+      <div class="actions">
+        <button class="icon" id="editBtn" title="编辑本地 JSON">✏️ 编辑</button>
+        <button class="icon" id="cloudBtn" title="云同步（GitHub Gist）">☁️ 云同步</button>
+      </div>
     </header>
 
     <main class="groups" id="groups"></main>
   </div>
 
+  <!-- 本地 JSON 编辑器（原始结构） -->
+  <dialog id="editor">
+    <div class="dlg-head">
+      <strong>编辑链接（你的原始 JSON 结构）</strong>
+      <button class="icon" id="closeDlg">✖</button>
+    </div>
+    <div class="dlg-body">
+      <textarea id="jsonArea" spellcheck="false"></textarea>
+    </div>
+    <div class="row">
+      <button id="resetBtn">恢复初始</button>
+      <button class="save" id="saveBtn">保存到本地</button>
+    </div>
+  </dialog>
+
+  <!-- 云同步（GitHub Gist） -->
+  <dialog id="cloud">
+    <div class="dlg-head">
+      <strong>云同步（GitHub Gist）</strong>
+      <button class="icon" id="closeCloud">✖</button>
+    </div>
+    <div class="dlg-body">
+      <div class="cfg">
+        <div>
+          <label>Gist ID</label>
+          <input id="gistId" type="text" placeholder="例如：abcd1234ef..." />
+        </div>
+        <div>
+          <label>文件名</label>
+          <input id="gistFile" type="text" placeholder="nav.json" value="nav.json" />
+        </div>
+        <div>
+          <label>Token（repo 或 gist 范围，建议单独最小权限）</label>
+          <input id="gistToken" type="password" placeholder="ghp_xxx" />
+          <div><label><input type="checkbox" id="rememberToken"> 记住 Token 到本地</label></div>
+        </div>
+        <div class="hint">
+          说明：不显示图标；数据结构使用 <code>data → groupList → siteList</code>（字段：<code>name / url / desc</code>）。<br>
+          上传=覆盖 Gist 文件内容；下载=从 Gist 读入并渲染。
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <button id="pullBtn">从云下载</button>
+      <button class="save" id="pushBtn">上传到云</button>
+    </div>
+  </dialog>
+
   <script>
-    // ===== 你的 JSON（已内联） =====
-    // 只使用 data[*].groupList[*].name / siteList[*].name|url|desc
-    const RAW = {
+    // ===================== 初始数据（你的 JSON，已内联） =====================
+    // 可随时在“✏️ 编辑”里修改；或用“☁️ 云同步”与 Gist 互相同步。
+    let RAW = {
       "data":[{"id":1725801071594,"name":"网站","groupList":[
         {"id":1725801166515,"name":"分组 1","siteList":[
           {"id":1725801230597,"name":"Github","url":"https://github.com/wohccdaa/Curiosity-Curated-Navigation","favicon":"","desc":""},
@@ -98,14 +180,17 @@
       "settings":{"linkStrategy":"newTab"}
     };
 
-    // ===== 渲染逻辑（无图标） =====
+    // ===================== 工具 & 渲染 =====================
     const groupsEl = document.getElementById("groups");
+    const helloEl = document.getElementById("hello");
+    const editBtn = document.getElementById("editBtn");
+    const cloudBtn = document.getElementById("cloudBtn");
 
     function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]))}
 
     function greet(){
       const h = new Date().getHours();
-      document.getElementById("hello").textContent = h<11 ? "早上好" : (h<14 ? "中午好" : "晚上好");
+      helloEl.textContent = h<11 ? "早上好" : (h<14 ? "中午好" : "晚上好");
     }
 
     function normalizeData(raw){
@@ -139,7 +224,7 @@
           const a = document.createElement("a");
           a.className = "link";
           a.href = link.u;
-          a.target = "_blank"; // 遵循你的设置：新标签页
+          a.target = "_blank";
           a.rel = "noopener noreferrer";
           a.innerHTML = `
             <div class="link-title">${escapeHTML(link.t)}</div>
@@ -149,10 +234,126 @@
         });
         groupsEl.appendChild(sec);
       });
+      localStorage.setItem("nav.raw", JSON.stringify(RAW)); // 本地持久化
     }
+
+    // 初次加载：若本地已有，优先用本地
+    try{
+      const cached = JSON.parse(localStorage.getItem("nav.raw"));
+      if (cached && cached.data) RAW = cached;
+    }catch{}
 
     greet(); render();
     setInterval(greet, 60*1000);
+
+    // ===================== 本地编辑对话框 =====================
+    const dlg = document.getElementById("editor");
+    const jsonArea = document.getElementById("jsonArea");
+    document.getElementById("closeDlg").addEventListener("click", ()=> dlg.close());
+    editBtn.addEventListener("click", ()=>{
+      jsonArea.value = JSON.stringify(RAW, null, 2);
+      dlg.showModal();
+      jsonArea.focus();
+    });
+    document.getElementById("resetBtn").addEventListener("click", ()=>{
+      if(confirm("确认恢复到页面内置初始数据？这不会影响云端。")){
+        // 还原为页面内置常量（上面定义的对象）
+        location.reload();
+      }
+    });
+    document.getElementById("saveBtn").addEventListener("click", ()=>{
+      try{
+        const next = JSON.parse(jsonArea.value);
+        // 简校验
+        if(!Array.isArray(next?.data)) throw new Error("缺少 data 数组");
+        RAW = next;
+        render();
+        dlg.close();
+      }catch(e){ alert("保存失败：\n"+e.message); }
+    });
+
+    // ===================== 云同步（GitHub Gist） =====================
+    const cloudDlg = document.getElementById("cloud");
+    const closeCloud = document.getElementById("closeCloud");
+    const gistIdEl = document.getElementById("gistId");
+    const gistFileEl = document.getElementById("gistFile");
+    const gistTokenEl = document.getElementById("gistToken");
+    const rememberTokenEl = document.getElementById("rememberToken");
+    const pullBtn = document.getElementById("pullBtn");
+    const pushBtn = document.getElementById("pushBtn");
+
+    function loadCloudCfg(){
+      gistIdEl.value = localStorage.getItem("nav.gistId") || "";
+      gistFileEl.value = localStorage.getItem("nav.gistFile") || "nav.json";
+      gistTokenEl.value = localStorage.getItem("nav.gistToken") || "";
+      rememberTokenEl.checked = !!localStorage.getItem("nav.gistToken");
+    }
+    function saveCloudCfg(){
+      localStorage.setItem("nav.gistId", gistIdEl.value.trim());
+      localStorage.setItem("nav.gistFile", gistFileEl.value.trim() || "nav.json");
+      if (rememberTokenEl.checked) {
+        localStorage.setItem("nav.gistToken", gistTokenEl.value);
+      } else {
+        localStorage.removeItem("nav.gistToken");
+      }
+    }
+
+    cloudBtn.addEventListener("click", ()=>{ loadCloudCfg(); cloudDlg.showModal(); });
+    closeCloud.addEventListener("click", ()=> cloudDlg.close());
+
+    async function gistFetch(url, init={}){
+      const token = gistTokenEl.value.trim();
+      const headers = {
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version":"2022-11-28",
+        ...(init.headers||{})
+      };
+      if(token) headers["Authorization"] = "Bearer " + token;
+      const res = await fetch(url, {...init, headers});
+      if(!res.ok){
+        const txt = await res.text().catch(()=> "");
+        throw new Error(`GitHub API 错误 ${res.status}: ${txt}`);
+      }
+      return res.json();
+    }
+
+    pullBtn.addEventListener("click", async ()=>{
+      try{
+        saveCloudCfg();
+        const id = gistIdEl.value.trim();
+        const file = gistFileEl.value.trim() || "nav.json";
+        if(!id) throw new Error("请填写 Gist ID");
+        const data = await gistFetch(`https://api.github.com/gists/${id}`);
+        const content = data?.files?.[file]?.content;
+        if(!content) throw new Error(`未找到文件：${file}`);
+        const parsed = JSON.parse(content);
+        if(!Array.isArray(parsed?.data)) throw new Error("云端 JSON 结构不正确，需包含 data 数组");
+        RAW = parsed;
+        render();
+        alert("已从云端下载并应用。");
+      }catch(e){ alert("下载失败：\n"+e.message); }
+    });
+
+    pushBtn.addEventListener("click", async ()=>{
+      try{
+        saveCloudCfg();
+        const id = gistIdEl.value.trim();
+        const file = gistFileEl.value.trim() || "nav.json";
+        const token = gistTokenEl.value.trim();
+        if(!id) throw new Error("请填写 Gist ID");
+        if(!token) throw new Error("上传需要 Token（下载可不填）");
+        const body = {
+          files: {
+            [file]: { content: JSON.stringify(RAW, null, 2) }
+          }
+        };
+        await gistFetch(`https://api.github.com/gists/${id}`, {
+          method: "PATCH",
+          body: JSON.stringify(body)
+        });
+        alert("已上传到云端（Gist）。");
+      }catch(e){ alert("上传失败：\n"+e.message); }
+    });
   </script>
 </body>
 </html>
