@@ -48,9 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-/**
- * site-tools.js
- */
+
 (function () {
   const EXCLUDE_CONTAINERS = ['#stats', '#info', 'footer', '.site-stats', '.site-info'];
 
