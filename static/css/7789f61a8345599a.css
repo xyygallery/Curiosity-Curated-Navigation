@@ -15,10 +15,19 @@
     color: #FFFFFF;
 }
 
-/* ===== 新增：全局背景渐变 ===== */
-body {
-    margin: 0;
-    min-height: 100vh;
-    background: radial-gradient(125% 125% at 50% 90%, #fff 40%, #475569 100%);
+/* 渐变背景的独立包裹层，不影响全局主题 */
+.radial-bg {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* 用一个固定定位的伪元素铺满全屏做背景 */
+.radial-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;           /* 在内容层后面 */
+  background: radial-gradient(125% 125% at 50% 90%, #fff 40%, #475569 100%);
+  pointer-events: none;  /* 避免影响交互 */
 }
 
