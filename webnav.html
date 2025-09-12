@@ -3,150 +3,135 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>我的导航</title>
+  <title>我的导航 · 本地版</title>
+  <meta name="color-scheme" content="light dark">
   <style>
+    /* ===== 设计系统 ===== */
     :root{
       --bg: #ffffff;
       --fg: #0f172a;
       --muted:#6b7280;
       --card:#f6f7fb;
       --border:#e5e7eb;
-      --accent:#3b82f6;
-      --radius:14px;
-      --shadow: 0 4px 20px rgba(0,0,0,.04);
+      --accent:#2563eb;
+      --radius:16px;
+      --shadow: 0 6px 30px rgba(0,0,0,.06);
+      --ring: 0 0 0 4px color-mix(in oklab, var(--accent) 18%, transparent);
     }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0b1020;
+        --fg:#e5e7eb;
+        --muted:#9aa2b2;
+        --card:#111831;
+        --border:#1d253f;
+        --shadow: 0 8px 36px rgba(0,0,0,.35);
+        --accent:#3b82f6;
+      }
+    }
+
+    *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font: 16px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
+      font: 16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans";
       background: var(--bg);
       color: var(--fg);
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
     }
+
     .wrap{max-width: 1120px; margin: 0 auto; padding: clamp(16px,4vw,32px);}
-    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-    .hello{font-weight:700; font-size: clamp(20px,2.6vw,28px); letter-spacing:.2px;}
-    .actions{display:flex;gap:8px}
-    button.icon{
-      border:1px solid var(--border);background:transparent;color:var(--fg);
-      border-radius:10px;padding:8px 10px;cursor:pointer
+
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:34px;height:34px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:grid;place-items:center;font-weight:800;letter-spacing:.5px}
+    .hello{font-weight:800; font-size: clamp(20px,2.4vw,28px); letter-spacing:.2px;}
+
+    .tools{display:flex;gap:8px;align-items:center}
+    .search{position:relative;min-width:220px;}
+    .search input{
+      width:100%; padding:10px 12px 10px 36px; border:1px solid var(--border); border-radius:12px;
+      background:var(--card); color:var(--fg); outline:none;
     }
-    button.icon:hover{border-color:var(--accent)}
-    .groups{display:grid;gap:16px}
-    .group{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 14px;
-      box-shadow: var(--shadow);
-    }
-    .group h2{
-      margin: 0 0 10px 0; font-size: 15px; letter-spacing:.4px; text-transform:uppercase; color:var(--muted)
-    }
-    .links{
-      display:grid; gap:10px;
-      grid-template-columns: repeat(1, minmax(0,1fr));
-    }
+    .search input:focus{ box-shadow: var(--ring); border-color: var(--accent) }
+    .search .icon{ position:absolute; left:10px; top:50%; translate:0 -50%; opacity:.65 }
+
+    .btn{ border:1px solid var(--border); background:transparent; color:var(--fg);
+      border-radius:12px; padding:10px 12px; cursor:pointer; transition:border-color .18s ease, transform .06s ease }
+    .btn:hover{ border-color: var(--accent) }
+    .btn:active{ transform: translateY(1px) }
+    .btn.primary{ background:var(--accent); border-color:var(--accent); color:#fff }
+
+    .groups{ display:grid; gap:16px }
+    .group{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow) }
+    .group-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border) }
+    .group-title{ margin:0; font-size:14px; letter-spacing:.4px; text-transform:uppercase; color:var(--muted) }
+
+    .links{ display:grid; gap:10px; padding:12px; grid-template-columns: repeat(1, minmax(0,1fr)); }
     @media (min-width: 600px){ .links{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
     @media (min-width: 900px){ .links{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
-    /* ★ 1200px 起 4 栏 */
     @media (min-width: 1200px){ .links{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
 
-    .link{
-      display:flex; flex-direction:column; gap:4px;
-      padding:10px 12px; border:1px solid var(--border); border-radius:12px;
-      background: transparent; text-decoration:none; color: var(--fg);
-      transition: transform .05s ease, border-color .15s ease;
-      word-break: break-word;
-    }
-    .link:hover{transform: translateY(-1px); border-color: var(--accent)}
-    .link-title{font-weight:600; font-size:14px}
-    .link-desc{font-size:12px; color:var(--muted)}
+    .link{ display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border:1px solid var(--border); border-radius:14px; background:transparent; text-decoration:none; color:var(--fg); transition: transform .06s ease, border-color .18s ease; word-break: break-word; min-height:56px }
+    .link:hover{ transform: translateY(-1px); border-color: var(--accent) }
+    .link .ico{ flex:0 0 28px; height:28px; width:28px; border-radius:8px; border:1px solid var(--border); background:var(--bg); display:grid; place-items:center; font-size:12px; font-weight:700 }
+    .link .meta{ display:flex; flex-direction:column; gap:4px; min-width:0 }
+    .link-title{ font-weight:650; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+    .link-desc{ font-size:12px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
 
-    dialog{
-      border:1px solid var(--border);border-radius:16px;max-width:min(860px,92vw);
-      box-shadow: var(--shadow);padding:0;background:var(--bg);color:var(--fg)
-    }
-    .dlg-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--border)}
-    .dlg-body{padding:12px}
-    textarea{
-      width:100%;min-height:280px;border:1px solid var(--border);border-radius:12px;background:var(--card);
-      color:var(--fg);padding:12px;font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px
-    }
-    .row{display:flex;gap:10px;justify-content:flex-end;padding:0 12px 14px}
-    .row button{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--fg);cursor:pointer}
-    .row button.save{background:var(--accent);border-color:var(--accent);color:#fff}
-    .cfg{display:grid;gap:10px}
-    .cfg label{font-size:13px;color:var(--muted)}
-    .cfg input[type="text"], .cfg input[type="password"]{
-      width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--fg)
-    }
-    .hint{font-size:12px;color:var(--muted)}
+    dialog{ border:1px solid var(--border); border-radius:18px; max-width:min(880px,92vw); box-shadow:var(--shadow); padding:0; background:var(--bg); color:var(--fg) }
+    .dlg-head{ display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid var(--border) }
+    .dlg-body{ padding:12px 14px }
+    .row{ display:flex; gap:10px; justify-content:flex-end; padding:0 14px 14px }
+    textarea{ width:100%; min-height:300px; border:1px solid var(--border); border-radius:12px; background:var(--card); color:var(--fg); padding:12px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px }
+    textarea:focus{ box-shadow:var(--ring); border-color:var(--accent) }
+
+    .hint{ font-size:12px; color:var(--muted) }
+    .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; padding:2px 6px; border:1px solid var(--border); border-radius:6px; background:var(--card) }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="hello" id="hello">你好</div>
-      <div class="actions">
-        <button class="icon" id="editBtn" title="编辑本地 JSON">✏️ 编辑</button>
-        <button class="icon" id="cloudBtn" title="云同步（GitHub Gist）">☁️ 云同步</button>
+      <div class="brand">
+        <div class="logo">NV</div>
+        <div class="hello" id="hello">你好</div>
+      </div>
+      <div class="tools">
+        <div class="search" title="搜索标题/描述/分组">
+          <span class="icon">🔎</span>
+          <input id="q" type="search" placeholder="搜索… ( / )" autocomplete="off" />
+        </div>
+        <button class="btn" id="editBtn" title="编辑本地 JSON (Ctrl+E)">✏️ 编辑</button>
+        <button class="btn" id="importBtn" title="导入 JSON 文件">⬆️ 导入</button>
+        <button class="btn" id="exportBtn" title="导出为 JSON">⬇️ 导出</button>
       </div>
     </header>
 
-    <main class="groups" id="groups"></main>
+    <main class="groups" id="groups" aria-live="polite"></main>
   </div>
 
-  <!-- 本地 JSON 编辑器（原始结构） -->
+  <!-- 本地 JSON 编辑器 -->
   <dialog id="editor">
     <div class="dlg-head">
-      <strong>编辑链接（你的原始 JSON 结构）</strong>
-      <button class="icon" id="closeDlg">✖</button>
+      <strong>编辑链接（原始 JSON 结构）</strong>
+      <button class="btn" id="closeDlg" aria-label="关闭">✖</button>
     </div>
     <div class="dlg-body">
       <textarea id="jsonArea" spellcheck="false"></textarea>
+      <p class="hint">结构：<code>data → groupList → siteList</code>；字段：<code>name / url / desc</code>。保存后会持久化到 <code>localStorage</code>。</p>
+      <p class="hint">快捷键：<span class="kbd">Ctrl</span>+<span class="kbd">S</span> 保存，<span class="kbd">Esc</span> 关闭。</p>
     </div>
     <div class="row">
-      <button id="resetBtn">恢复初始</button>
-      <button class="save" id="saveBtn">保存到本地</button>
+      <button class="btn" id="resetBtn">恢复初始</button>
+      <button class="btn primary" id="saveBtn">保存到本地</button>
     </div>
   </dialog>
 
-  <!-- 云同步（GitHub Gist） -->
-  <dialog id="cloud">
-    <div class="dlg-head">
-      <strong>云同步（GitHub Gist）</strong>
-      <button class="icon" id="closeCloud">✖</button>
-    </div>
-    <div class="dlg-body">
-      <div class="cfg">
-        <div>
-          <label>Gist ID</label>
-          <input id="gistId" type="text" placeholder="例如：abcd1234ef..." />
-        </div>
-        <div>
-          <label>文件名</label>
-          <input id="gistFile" type="text" placeholder="nav.json" value="nav.json" />
-        </div>
-        <div>
-          <label>Token（repo 或 gist 范围，建议单独最小权限）</label>
-          <input id="gistToken" type="password" placeholder="ghp_xxx" />
-          <div><label><input type="checkbox" id="rememberToken"> 记住 Token 到本地</label></div>
-        </div>
-        <div class="hint">
-          说明：不显示图标；数据结构使用 <code>data → groupList → siteList</code>（字段：<code>name / url / desc</code>）。<br>
-          上传=覆盖 Gist 文件内容；下载=从 Gist 读入并渲染。
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <button id="pullBtn">从云下载</button>
-      <button class="save" id="pushBtn">上传到云</button>
-    </div>
-  </dialog>
+  <input id="filePicker" type="file" accept="application/json" hidden>
 
   <script>
-    // ===================== 初始数据（你的 JSON，已内联） =====================
-    // 可随时在“✏️ 编辑”里修改；或用“☁️ 云同步”与 Gist 互相同步。
+    // ===================== 初始数据（与你提供的结构保持一致） =====================
     let RAW = {
       "data":[{"id":1725801071594,"name":"网站","groupList":[
         {"id":1725801166515,"name":"分组 1","siteList":[
@@ -180,179 +165,132 @@
       "settings":{"linkStrategy":"newTab"}
     };
 
-    // ===================== 工具 & 渲染 =====================
-    const groupsEl = document.getElementById("groups");
-    const helloEl = document.getElementById("hello");
-    const editBtn = document.getElementById("editBtn");
-    const cloudBtn = document.getElementById("cloudBtn");
+    // ===================== 工具函数 =====================
+    const $ = sel => document.querySelector(sel);
+    const groupsEl = $("#groups");
+    const helloEl  = $("#hello");
+    const qInput   = $("#q");
+    const editBtn  = $("#editBtn");
 
-    function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]))}
-
-    function greet(){
-      const h = new Date().getHours();
-      helloEl.textContent = h<11 ? "早上好" : (h<14 ? "中午好" : "晚上好");
-    }
+    function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",
+      ">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+    function greet(){ const h=new Date().getHours(); helloEl.textContent = h<11?"早上好":(h<14?"中午好":"晚上好"); }
 
     function normalizeData(raw){
       const out = [];
-      const cats = Array.isArray(raw?.data) ? raw.data : [];
-      cats.forEach(cat=>{
-        const groups = Array.isArray(cat?.groupList) ? cat.groupList : [];
-        groups.forEach(g=>{
+      (raw?.data||[]).forEach(cat=>{
+        (cat?.groupList||[]).forEach(g=>{
           out.push({
             title: g?.name ?? "未命名分组",
-            links: (Array.isArray(g?.siteList) ? g.siteList : []).map(s=>({
-              t: s?.name || s?.url || "未命名",
-              u: s?.url || "#",
-              d: s?.desc || ""
-            }))
+            links: (g?.siteList||[]).map(s=>({ t:s?.name||s?.url||"未命名", u:s?.url||"#", d:s?.desc||"" }))
           });
         });
       });
       return out;
     }
 
-    function render(){
+    // 生成域名首字母头像
+    function toInitial(url){ try{ const u=new URL(url); const h=u.hostname.replace(/^www\./,''); return h[0]?.toUpperCase()||"·" }catch{ return "·" } }
+
+    function faviconURL(url){
+      try{
+        const u = new URL(url);
+        return `${u.origin}/favicon.ico`;
+      }catch{ return '' }
+    }
+
+    function render(filter=""){
       const data = normalizeData(RAW);
+      const kw = filter.trim().toLowerCase();
       groupsEl.innerHTML = "";
+
       data.forEach(group=>{
+        // 过滤：匹配分组/标题/描述
+        const links = group.links.filter(l=>{
+          if(!kw) return true;
+          return group.title.toLowerCase().includes(kw)
+            || l.t.toLowerCase().includes(kw)
+            || l.d.toLowerCase().includes(kw)
+            || l.u.toLowerCase().includes(kw);
+        });
+        if(!links.length) return;
+
         const sec = document.createElement("section");
         sec.className = "group";
-        sec.innerHTML = `<h2>${escapeHTML(group.title)}</h2><div class="links"></div>`;
+        sec.innerHTML = `<div class="group-head"><h2 class="group-title">${escapeHTML(group.title)}</h2></div><div class="links"></div>`;
         const list = sec.querySelector(".links");
-        group.links.forEach(link=>{
+
+        links.forEach(link=>{
           const a = document.createElement("a");
-          a.className = "link";
-          a.href = link.u;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
+          a.className = "link"; a.href = link.u;
+          if(RAW?.settings?.linkStrategy!=="sameTab"){ a.target = "_blank"; a.rel = "noopener noreferrer"; }
           a.innerHTML = `
-            <div class="link-title">${escapeHTML(link.t)}</div>
-            ${link.d ? `<div class="link-desc">${escapeHTML(link.d)}</div>` : ""}
-          `;
+            <div class="ico" aria-hidden="true"><img alt="" decoding="async" referrerpolicy="no-referrer" width="16" height="16" style="width:16px;height:16px" onerror="this.remove();this.parentElement.textContent='${escapeHTML(toInitial(link.u))}'" src="${escapeHTML(faviconURL(link.u))}"></div>
+            <div class="meta">
+              <div class="link-title" title="${escapeHTML(link.t)}">${escapeHTML(link.t)}</div>
+              ${link.d?`<div class="link-desc" title="${escapeHTML(link.d)}">${escapeHTML(link.d)}</div>`:""}
+            </div>`;
           list.appendChild(a);
         });
         groupsEl.appendChild(sec);
       });
-      localStorage.setItem("nav.raw", JSON.stringify(RAW)); // 本地持久化
+      localStorage.setItem("nav.raw", JSON.stringify(RAW));
     }
 
     // 初次加载：若本地已有，优先用本地
-    try{
-      const cached = JSON.parse(localStorage.getItem("nav.raw"));
-      if (cached && cached.data) RAW = cached;
-    }catch{}
+    try{ const cached = JSON.parse(localStorage.getItem("nav.raw")); if (cached && cached.data) RAW = cached; }catch{}
 
-    greet(); render();
-    setInterval(greet, 60*1000);
+    greet(); render(); setInterval(greet, 60*1000);
 
-    // ===================== 本地编辑对话框 =====================
+    // 搜索：快捷键 / 聚焦；输入时过滤
+    window.addEventListener('keydown', (e)=>{
+      if(e.key==='/' && document.activeElement!==qInput){ e.preventDefault(); qInput.focus(); }
+      if(e.ctrlKey && e.key.toLowerCase()==='e'){ e.preventDefault(); editBtn.click(); }
+    });
+    qInput.addEventListener('input', ()=> render(qInput.value));
+
+    // ========== 本地编辑对话框 ==========
     const dlg = document.getElementById("editor");
     const jsonArea = document.getElementById("jsonArea");
     document.getElementById("closeDlg").addEventListener("click", ()=> dlg.close());
-    editBtn.addEventListener("click", ()=>{
-      jsonArea.value = JSON.stringify(RAW, null, 2);
-      dlg.showModal();
-      jsonArea.focus();
-    });
     document.getElementById("resetBtn").addEventListener("click", ()=>{
-      if(confirm("确认恢复到页面内置初始数据？这不会影响云端。")){
-        // 还原为页面内置常量（上面定义的对象）
-        location.reload();
-      }
+      if(confirm("确认恢复到页面内置初始数据？这会覆盖本地自定义。")) location.reload();
     });
-    document.getElementById("saveBtn").addEventListener("click", ()=>{
+    document.getElementById("saveBtn").addEventListener("click", saveFromTextarea);
+    document.addEventListener('keydown', (e)=>{
+      if(dlg.open && e.key==='Escape') dlg.close();
+      if(dlg.open && e.ctrlKey && e.key.toLowerCase()==='s'){ e.preventDefault(); saveFromTextarea(); }
+    });
+    function saveFromTextarea(){
       try{
         const next = JSON.parse(jsonArea.value);
-        // 简校验
         if(!Array.isArray(next?.data)) throw new Error("缺少 data 数组");
-        RAW = next;
-        render();
-        dlg.close();
+        RAW = next; render(qInput.value); dlg.close();
       }catch(e){ alert("保存失败：\n"+e.message); }
+    }
+    editBtn.addEventListener("click", ()=>{ jsonArea.value = JSON.stringify(RAW, null, 2); dlg.showModal(); jsonArea.focus(); });
+
+    // ========== 纯本地导入 / 导出 ==========
+    const picker = document.getElementById('filePicker');
+    document.getElementById('importBtn').addEventListener('click', ()=> picker.click());
+    picker.addEventListener('change', async (e)=>{
+      const f = e.target.files?.[0]; if(!f) return;
+      try{
+        const text = await f.text(); const next = JSON.parse(text);
+        if(!Array.isArray(next?.data)) throw new Error('JSON 结构无效：需要 data 数组');
+        RAW = next; render(qInput.value);
+        alert('已导入。');
+      }catch(err){ alert('导入失败：\n'+err.message); }
+      finally{ picker.value = ''; }
     });
 
-    // ===================== 云同步（GitHub Gist） =====================
-    const cloudDlg = document.getElementById("cloud");
-    const closeCloud = document.getElementById("closeCloud");
-    const gistIdEl = document.getElementById("gistId");
-    const gistFileEl = document.getElementById("gistFile");
-    const gistTokenEl = document.getElementById("gistToken");
-    const rememberTokenEl = document.getElementById("rememberToken");
-    const pullBtn = document.getElementById("pullBtn");
-    const pushBtn = document.getElementById("pushBtn");
-
-    function loadCloudCfg(){
-      gistIdEl.value = localStorage.getItem("nav.gistId") || "";
-      gistFileEl.value = localStorage.getItem("nav.gistFile") || "nav.json";
-      gistTokenEl.value = localStorage.getItem("nav.gistToken") || "";
-      rememberTokenEl.checked = !!localStorage.getItem("nav.gistToken");
-    }
-    function saveCloudCfg(){
-      localStorage.setItem("nav.gistId", gistIdEl.value.trim());
-      localStorage.setItem("nav.gistFile", gistFileEl.value.trim() || "nav.json");
-      if (rememberTokenEl.checked) {
-        localStorage.setItem("nav.gistToken", gistTokenEl.value);
-      } else {
-        localStorage.removeItem("nav.gistToken");
-      }
-    }
-
-    cloudBtn.addEventListener("click", ()=>{ loadCloudCfg(); cloudDlg.showModal(); });
-    closeCloud.addEventListener("click", ()=> cloudDlg.close());
-
-    async function gistFetch(url, init={}){
-      const token = gistTokenEl.value.trim();
-      const headers = {
-        "Accept": "application/vnd.github+json",
-        "X-GitHub-Api-Version":"2022-11-28",
-        ...(init.headers||{})
-      };
-      if(token) headers["Authorization"] = "Bearer " + token;
-      const res = await fetch(url, {...init, headers});
-      if(!res.ok){
-        const txt = await res.text().catch(()=> "");
-        throw new Error(`GitHub API 错误 ${res.status}: ${txt}`);
-      }
-      return res.json();
-    }
-
-    pullBtn.addEventListener("click", async ()=>{
-      try{
-        saveCloudCfg();
-        const id = gistIdEl.value.trim();
-        const file = gistFileEl.value.trim() || "nav.json";
-        if(!id) throw new Error("请填写 Gist ID");
-        const data = await gistFetch(`https://api.github.com/gists/${id}`);
-        const content = data?.files?.[file]?.content;
-        if(!content) throw new Error(`未找到文件：${file}`);
-        const parsed = JSON.parse(content);
-        if(!Array.isArray(parsed?.data)) throw new Error("云端 JSON 结构不正确，需包含 data 数组");
-        RAW = parsed;
-        render();
-        alert("已从云端下载并应用。");
-      }catch(e){ alert("下载失败：\n"+e.message); }
-    });
-
-    pushBtn.addEventListener("click", async ()=>{
-      try{
-        saveCloudCfg();
-        const id = gistIdEl.value.trim();
-        const file = gistFileEl.value.trim() || "nav.json";
-        const token = gistTokenEl.value.trim();
-        if(!id) throw new Error("请填写 Gist ID");
-        if(!token) throw new Error("上传需要 Token（下载可不填）");
-        const body = {
-          files: {
-            [file]: { content: JSON.stringify(RAW, null, 2) }
-          }
-        };
-        await gistFetch(`https://api.github.com/gists/${id}`, {
-          method: "PATCH",
-          body: JSON.stringify(body)
-        });
-        alert("已上传到云端（Gist）。");
-      }catch(e){ alert("上传失败：\n"+e.message); }
+    document.getElementById('exportBtn').addEventListener('click', ()=>{
+      const blob = new Blob([JSON.stringify(RAW, null, 2)], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'nav.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
     });
   </script>
 </body>
