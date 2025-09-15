@@ -1,0 +1,19 @@
+{
+  "groups": [
+    {
+      "title": "分组 1",
+      "links": [
+        {"text": "Github", "url": "https://github.com/wohccdaa/Curiosity-Curated-Navigation"},
+        {"text": "Telegram", "url": "https://web.telegram.org/a/"}
+      ]
+    },
+    {
+      "title": "分组 2",
+      "links": [
+        {"text": "Vercel", "url": "https://vercel.com/wohccdaas-projects"},
+        {"text": "阿里域名", "url": "https://dc.console.aliyun.com/next/index?spm=5176.12818093_47.overview_recent.2.3be92cc93m9IbE#/domain-list/all?type="},
+        {"text": "Cloudflare", "url": "https://dash.cloudflare.com/b5d549cb9c53a68240a04858b8669153/tlkk.top"}
+      ]
+    }
+  ]
+}
