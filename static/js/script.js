@@ -88,10 +88,3 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('resize', updateFloatingButtons);
 
 
-
-function scrollToCategory(id) {
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-}
