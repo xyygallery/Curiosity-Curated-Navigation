@@ -17,9 +17,9 @@
 .circle-btn {
   display: none;
   position: fixed;
-  right: 60px;
-  width: 100px;
-  height: 50px;
+  right: 30px;
+  width: 50px;
+  height: 100px;
   border-radius: 50%;
   border: 1px solid #ccc;
   background: #fafafa;
