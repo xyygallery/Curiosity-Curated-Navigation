@@ -5492,23 +5492,20 @@
 
         
 
-<!-- 返回顶部按钮 -->
-<button id="btnToTop" class="circle-btn" onclick="scrollToTop()">
-  <svg class="progress-circle" viewBox="0 0 36 36">
-    <!-- 背景圆 -->
-    <path class="circle-bg"
-          d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831"/>
-    <!-- 进度圆 -->
-    <path id="circle-progress" class="circle"
-          stroke-dasharray="0, 100"
-          d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831"/>
+<!-- 返回顶部按钮（SVG 圆环 + SVG 箭头） -->
+<button id="btnToTop" class="circle-btn" aria-label="返回顶部" onclick="scrollToTop()">
+  <!-- 进度环：用 circle + dashoffset 实现 -->
+  <svg class="progress-circle" viewBox="0 0 36 36" aria-hidden="true">
+    <circle class="circle-bg" cx="18" cy="18" r="15.9155"></circle>
+    <circle id="circle-progress" class="circle" cx="18" cy="18" r="15.9155"></circle>
   </svg>
-  <span class="arrow">↑</span>
+
+  <!-- 中心箭头：SVG 矢量更锐利 -->
+  <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 5l0 14M12 5l-6 6M12 5l6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
 </button>
+
 
    
 
@@ -5526,6 +5523,7 @@
 </body>
 
 </html>
+
 
 
 
