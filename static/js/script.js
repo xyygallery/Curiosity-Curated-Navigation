@@ -41,3 +41,56 @@
   window.addEventListener('resize', updateFloatingButtons);
 
 
+// 1. 获取当天日期作为种子
+function todaySeed() {
+  const now = new Date();
+  return Number(
+    `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
+      now.getDate()
+    ).padStart(2, "0")}`
+  );
+}
+
+// 2. 简单伪随机数发生器
+function makePRNG(seed) {
+  let s = seed >>> 0;
+  return function () {
+    s = (1664525 * s + 1013904223) >>> 0;
+    return s / 4294967296;
+  };
+}
+
+// 3. Fisher-Yates 洗牌
+function shuffleWith(seed, arr) {
+  const rnd = makePRNG(seed);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// 4. 支持用 ?seed=20251005 来测试（不用等到明天）
+function getSeedFromURL() {
+  const params = new URLSearchParams(location.search);
+  const v = params.get("seed");
+  if (!v) return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+// 5. 执行打乱
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.querySelector("#site-list");
+  if (!container) return;
+
+  const items = Array.from(container.querySelectorAll("a"));
+  const seed = getSeedFromURL() ?? todaySeed();
+
+  const shuffled = shuffleWith(seed, items.slice());
+
+  container.innerHTML = "";
+  shuffled.forEach((el) => container.appendChild(el));
+
+  console.log("[每日随机顺序] 当前 seed =", seed);
+});
