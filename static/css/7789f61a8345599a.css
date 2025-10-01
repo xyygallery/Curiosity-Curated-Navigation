@@ -61,7 +61,7 @@
 /* 进度圈 */
 .circle {
   fill: none;
-  stroke: #16a34a;           /* 绿色，可换 Tailwind 的 emerald-600 */
+  stroke: #000;           /* 绿色，可换 Tailwind 的 emerald-600 */
   stroke-width: 3.6;
   stroke-linecap: round;
   /* 用 dasharray + dashoffset 控制进度，值在 JS 里设置 */
@@ -76,7 +76,7 @@
   height: 22px;
   left: 50%; top: 50%;
   transform: translate(-50%, -50%); /* 精准居中 */
-  color: #16a34a;
+  color: #000;
   pointer-events: none;
 }
 
