@@ -6,26 +6,62 @@ function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// 更新按钮显示与进度环
-function updateTopButton() {
+(function setupBackToTop() {
   const btn = document.getElementById("btnToTop");
-  const circle = document.getElementById("circle-progress");
-  if (!btn || !circle) return;
+  const ring = document.getElementById("circle-progress");
+  if (!btn || !ring) return;
 
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+  // 圆的周长（与 r 对应：r=15.9155 => 周长≈100），这里显式计算更稳
+  const r = 15.9155;
+  const circumference = 2 * Math.PI * r;
+  ring.style.strokeDasharray = `${circumference} ${circumference}`;
+  ring.style.strokeDashoffset = `${circumference}`; // 初始 0%
 
-  // 显示/隐藏
-  btn.style.display = scrollTop > 120 ? "block" : "none";
+  const THRESHOLD = 120;
+  let scheduled = false;
 
-  // 更新圆环进度
-  circle.setAttribute("stroke-dasharray", `${progress}, 100`);
-}
+  function computeProgress() {
+    const doc = document.documentElement;
+    const scrollTop = window.scrollY || doc.scrollTop || 0;
+    const max = Math.max(1, doc.scrollHeight - window.innerHeight);
+    const p = Math.min(1, Math.max(0, scrollTop / max)); // 0~1
+    return { scrollTop, p };
+  }
 
-document.addEventListener("DOMContentLoaded", updateTopButton);
-window.addEventListener("scroll", updateTopButton, { passive: true });
-window.addEventListener("resize", updateTopButton);
+  function apply() {
+    const { scrollTop, p } = computeProgress();
+
+    // 显示/隐藏 + 渐入
+    if (scrollTop > THRESHOLD) {
+      if (btn.style.display !== "block") btn.style.display = "block";
+      btn.classList.add("show");
+    } else {
+      btn.classList.remove("show");
+      // 等过渡结束后再隐藏，避免闪烁
+      setTimeout(() => {
+        if (!btn.classList.contains("show")) btn.style.display = "none";
+      }, 200);
+    }
+
+    // 进度：0% => dashoffset=周长；100% => 0
+    const offset = circumference * (1 - p);
+    ring.style.strokeDashoffset = `${offset}`;
+
+    scheduled = false;
+  }
+
+  // rAF 节流：滚动频繁时只在下一帧更新一次，显著更顺滑
+  function onScrollResize() {
+    if (!scheduled) {
+      scheduled = true;
+      requestAnimationFrame(apply);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", apply, { once: true });
+  window.addEventListener("scroll", onScrollResize, { passive: true });
+  window.addEventListener("resize", onScrollResize);
+})();
 
 
 
