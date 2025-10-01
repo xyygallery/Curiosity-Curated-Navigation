@@ -41,7 +41,7 @@
   window.addEventListener('resize', updateFloatingButtons);
 
 
-// 1. 获取当天日期作为种子
+// ===== 随机打乱工具 =====
 function todaySeed() {
   const now = new Date();
   return Number(
@@ -50,8 +50,6 @@ function todaySeed() {
     ).padStart(2, "0")}`
   );
 }
-
-// 2. 简单伪随机数发生器
 function makePRNG(seed) {
   let s = seed >>> 0;
   return function () {
@@ -59,8 +57,6 @@ function makePRNG(seed) {
     return s / 4294967296;
   };
 }
-
-// 3. Fisher-Yates 洗牌
 function shuffleWith(seed, arr) {
   const rnd = makePRNG(seed);
   for (let i = arr.length - 1; i > 0; i--) {
@@ -69,8 +65,6 @@ function shuffleWith(seed, arr) {
   }
   return arr;
 }
-
-// 4. 支持用 ?seed=20251005 来测试（不用等到明天）
 function getSeedFromURL() {
   const params = new URLSearchParams(location.search);
   const v = params.get("seed");
@@ -79,18 +73,31 @@ function getSeedFromURL() {
   return Number.isFinite(n) ? n : null;
 }
 
-// 5. 执行打乱
-document.addEventListener("DOMContentLoaded", () => {
+// ===== 主流程：尽早运行 =====
+function runShuffle() {
   const container = document.querySelector("#site-list");
   if (!container) return;
 
   const items = Array.from(container.querySelectorAll("a"));
   const seed = getSeedFromURL() ?? todaySeed();
-
   const shuffled = shuffleWith(seed, items.slice());
 
+  // 重排
+  const frag = document.createDocumentFragment();
+  shuffled.forEach(el => frag.appendChild(el));
   container.innerHTML = "";
-  shuffled.forEach((el) => container.appendChild(el));
+  container.appendChild(frag);
 
-  console.log("[每日随机顺序] 当前 seed =", seed);
-});
+  // 打乱完成 -> 显示
+  container.classList.add("is-ready");
+  container.removeAttribute("data-shuffle-pending");
+
+  console.log("[每日随机顺序] seed =", seed, "，已完成打乱并显示");
+}
+
+// 如果 DOM 已经解析完就立刻运行；否则等解析完马上运行
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", runShuffle, { once: true });
+} else {
+  runShuffle();
+}
