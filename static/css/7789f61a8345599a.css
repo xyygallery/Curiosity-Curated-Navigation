@@ -13,55 +13,80 @@
 }
 
 
-/* 按钮外观 */
+/* 按钮容器 */
 .circle-btn {
-  display: none; /* 默认隐藏，滚动后显示 */
+  display: none;              /* 初始隐藏，由 JS 控制显示 */
   position: fixed;
-  right: 30px;
-  bottom: 30px;
-  width: 64px;
-  height: 64px;
+  right: 24px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
+  border: 0;
   border-radius: 50%;
-  border: none;
   background: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 24px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
   cursor: pointer;
   z-index: 999;
-  transition: transform 0.2s ease;
-}
-.circle-btn:hover {
-  transform: scale(1.05);
+  /* 淡入&缩放出现 */
+  opacity: 0;
+  transform: scale(.92);
+  transition: opacity .25s ease, transform .25s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* 箭头 */
+/* 显示状态（JS 会加这个类） */
+.circle-btn.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.circle-btn:hover { transform: scale(1.05); }
+.circle-btn:active { transform: scale(.98); }
+
+/* 进度圆环 */
+.progress-circle {
+  position: absolute;
+  inset: 0;                   /* 占满按钮 */
+  transform: rotate(-90deg);  /* 从顶部开始绘制 */
+}
+
+/* 背景圈 */
+.circle-bg {
+  fill: none;
+  stroke: #eef1f4;
+  stroke-width: 3.6;
+  shape-rendering: geometricPrecision;
+}
+
+/* 进度圈 */
+.circle {
+  fill: none;
+  stroke: #16a34a;           /* 绿色，可换 Tailwind 的 emerald-600 */
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  /* 用 dasharray + dashoffset 控制进度，值在 JS 里设置 */
+  will-change: stroke-dashoffset;
+  transition: stroke-dashoffset .12s linear; /* 小过渡让动画更顺滑 */
+}
+
+/* 中心箭头（矢量，永远正中，不发虚） */
 .circle-btn .arrow {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -60%);
-  font-size: 20px;
-  color: #444;
+  width: 22px;
+  height: 22px;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%); /* 精准居中 */
+  color: #16a34a;
   pointer-events: none;
 }
 
-/* SVG 圆环 */
-.progress-circle {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg); /* 让进度条从顶部开始 */
+/* 减少动效时尊重系统偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .circle-btn, .circle {
+    transition: none !important;
+  }
 }
-.circle-bg {
-  fill: none;
-  stroke: #eee;
-  stroke-width: 3.8;
-}
-.circle {
-  fill: none;
-  stroke: #0f9d58; /* 绿色 */
-  stroke-width: 3.8;
-  stroke-linecap: round;
-  transition: stroke-dasharray 0.2s linear;
-}
+
 
 
 
