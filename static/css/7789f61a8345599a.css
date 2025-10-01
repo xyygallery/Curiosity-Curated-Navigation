@@ -39,3 +39,11 @@
   transform: scale(1.05);
 }
 
+
+#site-list[data-shuffle-pending] {
+  opacity: 0;
+}
+#site-list.is-ready {
+  opacity: 1;
+  transition: opacity .15s ease;
+}
