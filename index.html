@@ -5492,10 +5492,24 @@
 
         
 
-<!-- 顶部 -->
-<button id="btnToTop" onclick="scrollToTop()" title="返回顶部" class="circle-btn" style="bottom:160px;">
-  顶
+<!-- 返回顶部按钮 -->
+<button id="btnToTop" class="circle-btn" onclick="scrollToTop()">
+  <svg class="progress-circle" viewBox="0 0 36 36">
+    <!-- 背景圆 -->
+    <path class="circle-bg"
+          d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831"/>
+    <!-- 进度圆 -->
+    <path id="circle-progress" class="circle"
+          stroke-dasharray="0, 100"
+          d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831"/>
+  </svg>
+  <span class="arrow">↑</span>
 </button>
+
    
 
 
@@ -5512,6 +5526,7 @@
 </body>
 
 </html>
+
 
 
 
