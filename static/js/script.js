@@ -41,7 +41,7 @@
   window.addEventListener('resize', updateFloatingButtons);
 
 
-// ===== 随机打乱工具 =====
+// ===== 随机打乱区 =====
 function todaySeed() {
   const now = new Date();
   return Number(
@@ -50,6 +50,7 @@ function todaySeed() {
     ).padStart(2, "0")}`
   );
 }
+
 function makePRNG(seed) {
   let s = seed >>> 0;
   return function () {
@@ -57,6 +58,7 @@ function makePRNG(seed) {
     return s / 4294967296;
   };
 }
+
 function shuffleWith(seed, arr) {
   const rnd = makePRNG(seed);
   for (let i = arr.length - 1; i > 0; i--) {
@@ -65,6 +67,7 @@ function shuffleWith(seed, arr) {
   }
   return arr;
 }
+
 function getSeedFromURL() {
   const params = new URLSearchParams(location.search);
   const v = params.get("seed");
@@ -73,7 +76,6 @@ function getSeedFromURL() {
   return Number.isFinite(n) ? n : null;
 }
 
-// ===== 主流程：尽早运行 =====
 function runShuffle() {
   const container = document.querySelector("#site-list");
   if (!container) return;
@@ -82,22 +84,22 @@ function runShuffle() {
   const seed = getSeedFromURL() ?? todaySeed();
   const shuffled = shuffleWith(seed, items.slice());
 
-  // 重排
   const frag = document.createDocumentFragment();
   shuffled.forEach(el => frag.appendChild(el));
   container.innerHTML = "";
   container.appendChild(frag);
 
-  // 打乱完成 -> 显示
+  // 隐藏标记去掉，显示出来
   container.classList.add("is-ready");
   container.removeAttribute("data-shuffle-pending");
 
-  console.log("[每日随机顺序] seed =", seed, "，已完成打乱并显示");
+  console.log("[每日随机顺序] seed =", seed);
 }
 
-// 如果 DOM 已经解析完就立刻运行；否则等解析完马上运行
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", runShuffle, { once: true });
 } else {
   runShuffle();
 }
+// ===== 随机打乱区结束 =====
+
