@@ -106,14 +106,17 @@ function runShuffle() {
   const container = document.querySelector("#site-list");
   if (!container) return;
 
-  const items = Array.from(container.querySelectorAll("a"));
+  // 仅选择容器的“直接子级” a，避免嵌套结构影响初始顺序
+  const items = Array.from(container.querySelectorAll(":scope > a"));
+
   const seed = getSeedFromURL() ?? todaySeed();
   const shuffled = shuffleWith(seed, items.slice());
 
   const frag = document.createDocumentFragment();
   shuffled.forEach(el => frag.appendChild(el));
-  container.innerHTML = "";
-  container.appendChild(frag);
+
+  // 用 replaceChildren，保留已绑定事件监听
+  container.replaceChildren(frag);
 
   // 隐藏标记去掉，显示出来
   container.classList.add("is-ready");
