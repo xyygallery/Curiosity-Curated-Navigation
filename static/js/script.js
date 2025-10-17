@@ -134,12 +134,17 @@ if (document.readyState === "loading") {
 
 
 
-// 检查是否为移动设备并且屏幕宽度小于1024px
+// 检查是否为移动设备并且屏幕宽度小于 1024px
 if (/Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 1024) {
+    // 显示弹窗提示
+    alert('请使用电脑访问 :)');
+    
     // 替换当前历史记录，避免后退
     history.replaceState(null, '', location.href);
+    
     // 跳转到空白页面
     window.location.replace("about:blank");
 }
+
 
 
