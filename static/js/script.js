@@ -134,11 +134,15 @@ if (document.readyState === "loading") {
 
 
 
-// 强制电脑访问
+// 检查是否为移动设备并且屏幕宽度小于1024px
 if (/Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 1024) {
-    alert('请使用电脑访问此网站！');
-    window.location.href = "about:blank";  // 使页面为空，阻止访问
+    // 弹出警告提示
+    alert('请通过电脑端访问 :）');
+    // 跳转到空白页面并替换当前历史记录，避免后退
+    history.replaceState(null, '', location.href);  // 替换当前历史记录
+    window.location.href = "about:blank";  // 跳转到空白页面
 }
+
 
 
 
