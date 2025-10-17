@@ -132,3 +132,13 @@ if (document.readyState === "loading") {
 }
 // ===== 随机打乱区结束 =====
 
+
+
+// 强制电脑访问
+if (/Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 1024) {
+    alert('请使用电脑访问此网站！');
+    window.location.href = "about:blank";  // 使页面为空，阻止访问
+}
+
+
+
