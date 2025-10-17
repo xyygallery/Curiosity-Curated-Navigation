@@ -134,14 +134,12 @@ if (document.readyState === "loading") {
 
 
 
-// 检测是否为移动设备并且屏幕宽度小于 1024px
+// 检查是否为移动设备并且屏幕宽度小于1024px
 if (/Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 1024) {
-    // 通过 replaceState 替换历史记录，避免后退到当前页面
-    history.replaceState(null, '', window.location.href); // 替换当前历史记录
-    // 跳转到空白页面，强制用户不能访问内容
-    window.location.href = "about:blank";
+    // 替换当前历史记录，避免后退
+    history.replaceState(null, '', location.href);
+    // 跳转到空白页面
+    window.location.replace("about:blank");
 }
-
-
 
 
