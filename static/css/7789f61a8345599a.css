@@ -19,10 +19,10 @@
 .circle-btn {
   display: none;              /* 初始隐藏，由 JS 控制显示 */
   position: fixed;
-  right: 24px;
-  bottom: 24px;
-  width: 56px;
-  height: 56px;
+  right: 36px;
+  bottom: 36px;
+  width: 84px;
+  height: 84px;
   border: 0;
   border-radius: 50%;
   background: #fff;
@@ -74,8 +74,8 @@
 /* 中心箭头（矢量，永远正中，不发虚） */
 .circle-btn .arrow {
   position: absolute;
-  width: 22px;
-  height: 22px;
+  width: 33px;
+  height: 33px;
   left: 50%; top: 50%;
   transform: translate(-50%, -50%); /* 精准居中 */
   color: #000;
