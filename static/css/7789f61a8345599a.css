@@ -15,20 +15,19 @@
 }
 
 
-/* 按钮容器（顶部居中） */
+/* 按钮容器（右下角浮动） */
 .circle-btn {
   position: fixed;
-  left: 50%;
-  top: 20px;
+  right: 24px;          /* 改成右下角 */
+  bottom: 24px;
   width: 56px;
   height: 56px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25); /* 半透明白底 */
-  box-shadow:
-    0 4px 20px rgba(0, 0, 0, 0.08),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px) saturate(180%); /* 关键玻璃模糊效果 */
+  background: rgba(255, 255, 255, 0.15); /* 半透明玻璃感 */
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08),
+              inset 0 0 0 0.5px rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px) saturate(180%);
   -webkit-backdrop-filter: blur(10px) saturate(180%);
   cursor: pointer;
   z-index: 999;
@@ -36,10 +35,9 @@
   /* 初始隐藏 */
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, -16px) scale(0.95);
-  transition:
-    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scale(0.95);
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -47,17 +45,18 @@
 .circle-btn.show {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, 0) scale(1);
+  transform: scale(1);
 }
 
 /* 悬停和点击 */
 .circle-btn:hover {
-  transform: translate(-50%, 0) scale(1.05);
-  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.25);
 }
+
 .circle-btn:active {
-  transform: translate(-50%, 0) scale(0.96);
-  background: rgba(255, 255, 255, 0.45);
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 /* 圆环 */
