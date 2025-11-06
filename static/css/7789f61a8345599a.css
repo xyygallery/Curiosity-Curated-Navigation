@@ -17,10 +17,10 @@
 
 /* 按钮容器 */
 .circle-btn {
-  display: none;              /* 初始隐藏，由 JS 控制显示 */
+  display: none;               /* 初始隐藏，由 JS 控制显示 */
   position: fixed;
   right: 24px;
-  bottom: 24px;
+  top: 20px;                   /* 改为顶部固定 */
   width: 56px;
   height: 56px;
   border: 0;
@@ -29,27 +29,29 @@
   box-shadow: 0 10px 24px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
   cursor: pointer;
   z-index: 999;
-  /* 淡入&缩放出现 */
+
+  /* 初始状态：透明 + 上移一点，准备滑入 */
   opacity: 0;
-  transform: scale(.92);
+  transform: translateY(-10px) scale(.92);
   transition: opacity .25s ease, transform .25s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* 显示状态（JS 会加这个类） */
+/* 显示状态（由 JS 添加） */
 .circle-btn.show {
+  display: block;
   opacity: 1;
-  transform: scale(1);
+  transform: translateY(0) scale(1); /* 从上方滑入并放大 */
 }
 
-.circle-btn:hover { transform: scale(1.05); }
-.circle-btn:active { transform: scale(.98); }
+.circle-btn:hover { transform: translateY(0) scale(1.05); }
+.circle-btn:active { transform: translateY(0) scale(.98); }
 
 /* 进度圆环 */
 .progress-circle {
   position: absolute;
-  inset: 0;                   /* 占满按钮 */
-  transform: rotate(-90deg);  /* 从顶部开始绘制 */
+  inset: 0;                    /* 占满按钮 */
+  transform: rotate(-90deg);   /* 从顶部开始绘制 */
 }
 
 /* 背景圈 */
@@ -63,28 +65,29 @@
 /* 进度圈 */
 .circle {
   fill: none;
-  stroke: #000;           /* 绿色，可换 Tailwind 的 emerald-600 */
+  stroke: #000;                /* 颜色可改，比如 emerald-600 */
   stroke-width: 1.6;
   stroke-linecap: round;
-  /* 用 dasharray + dashoffset 控制进度，值在 JS 里设置 */
   will-change: stroke-dashoffset;
-  transition: stroke-dashoffset .12s linear; /* 小过渡让动画更顺滑 */
+  transition: stroke-dashoffset .12s linear;
 }
 
-/* 中心箭头（矢量，永远正中，不发虚） */
+/* 中心箭头（SVG 居中） */
 .circle-btn .arrow {
   position: absolute;
   width: 22px;
   height: 22px;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -50%); /* 精准居中 */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   color: #000;
   pointer-events: none;
 }
 
 /* 减少动效时尊重系统偏好 */
 @media (prefers-reduced-motion: reduce) {
-  .circle-btn, .circle {
+  .circle-btn,
+  .circle {
     transition: none !important;
   }
 }
