@@ -22,16 +22,20 @@
   top: 20px;
   width: 56px;
   height: 56px;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 10px 24px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
+  background: rgba(255, 255, 255, 0.25); /* 半透明白底 */
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px) saturate(180%); /* 关键玻璃模糊效果 */
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
   cursor: pointer;
   z-index: 999;
 
-  /* 初始隐藏状态 */
+  /* 初始隐藏 */
   opacity: 0;
-  pointer-events: none; /* 防止透明时可点击 */
+  pointer-events: none;
   transform: translate(-50%, -16px) scale(0.95);
   transition:
     opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
@@ -39,22 +43,24 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* 显示状态（由 JS 添加） */
+/* 显示状态 */
 .circle-btn.show {
   opacity: 1;
   pointer-events: auto;
   transform: translate(-50%, 0) scale(1);
 }
 
-/* 悬停轻微呼吸感 */
+/* 悬停和点击 */
 .circle-btn:hover {
   transform: translate(-50%, 0) scale(1.05);
+  background: rgba(255, 255, 255, 0.35);
 }
 .circle-btn:active {
-  transform: translate(-50%, 0) scale(0.97);
+  transform: translate(-50%, 0) scale(0.96);
+  background: rgba(255, 255, 255, 0.45);
 }
 
-/* 进度圆环 */
+/* 圆环 */
 .progress-circle {
   position: absolute;
   inset: 0;
@@ -64,22 +70,21 @@
 /* 背景圈 */
 .circle-bg {
   fill: none;
-  stroke: #eef1f4;
+  stroke: rgba(255, 255, 255, 0.4);
   stroke-width: 2;
-  shape-rendering: geometricPrecision;
 }
 
 /* 进度圈 */
 .circle {
   fill: none;
-  stroke: #000;
+  stroke: rgba(0, 0, 0, 0.8);
   stroke-width: 1.6;
   stroke-linecap: round;
   will-change: stroke-dashoffset;
-  transition: stroke-dashoffset .2s ease;
+  transition: stroke-dashoffset 0.2s ease;
 }
 
-/* 中心箭头 */
+/* 箭头 */
 .circle-btn .arrow {
   position: absolute;
   width: 22px;
@@ -87,11 +92,11 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  color: #000;
+  color: rgba(0, 0, 0, 0.9);
   pointer-events: none;
 }
 
-/* 系统减少动效时 */
+/* 减少动效 */
 @media (prefers-reduced-motion: reduce) {
   .circle-btn,
   .circle {
