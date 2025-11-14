@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>极简影厅</title>
+
+<style>
+/* ------------------------
+   顶部留白
+   ------------------------ */
+body {
+    margin: 0;
+    padding-top: 70px; /* 顶部留白，可按需调整 */
+    font-family: Lato, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.42857143;
+    color: #999;
+    background-color: #222;
+}
+
+/* ------------------------
+   页面淡入效果
+   ------------------------ */
+body {
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+body.is-ready { opacity: 1; }
+
+/* ------------------------
+   海报卡片列表
+   ------------------------ */
+.post-box-list {
+    display: grid;
+    grid-template-columns: repeat(4, 260px);
+    justify-content: center; /* 水平居中，左右留白保持 */
+    gap: 60px;
+}
+
+/* ------------------------
+   海报卡片
+   ------------------------ */
+.post-box {
+    background-color: #222;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.4s;
+}
+
+.post-box-container { position: relative; }
+.post-box-container.open { overflow-y: auto; }
+
+.post-box-image {
+    background-size: cover;
+    background-position: center;
+    height: 0;
+    padding-bottom: 141.5%; /* 保持比例 */
+    box-shadow: 0 0 35px 5px rgba(0,0,0,.4);
+    transition: box-shadow 0.4s;
+}
+
+.post-box-image:hover {
+    box-shadow: 0 0 35px 5px rgba(0,0,0,.5);
+}
+
+.post-box-image span {
+    display: block;
+    position: absolute;
+    top:0; bottom:0; left:0; right:0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 100%);
+    opacity: 0.85;
+    transition: opacity 0.8s;
+}
+
+.post-box:hover .post-box-image span { opacity: 1; }
+.post-box-image.ql_animate span { opacity: 0 !important; }
+
+/* ------------------------
+   海报文字
+   ------------------------ */
+.post-box-text {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    right: 25px;
+    transition: transform 0.4s, opacity 0.4s;
+}
+
+.post-box-text .post-box-title {
+    display: flex;           /* 标题 + 小字可横向排列 */
+    gap: 8px;
+    line-height: 0px;
+}
+
+.post-box-text .post-box-title a {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-decoration: none;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+}
+
+.post-box-text .post-box-title a:hover { text-decoration: none; }
+
+.post-box-subtitle {
+    color: #999;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* ------------------------
+   响应式自适应
+   ------------------------ */
+@media (max-width: 1024px) {
+    .post-box-list { grid-template-columns: repeat(3, 260px); gap: 40px; }
+}
+
+@media (max-width: 600px) {
+    .post-box-list { grid-template-columns: repeat(2, 260px); gap: 20px; }
+}
+
+@media (max-width: 400px) {
+    .post-box-list { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* 下方是距离影片失效的文字样式 */
+.countdown {
+    display: block;
+    color: #999;          /* 灰色 */
+    font-size: 0.875rem;  /* 比标题小，和小字差不多 */
+    margin-top: 4px;      /* 与标题或小字保持间距 */
+    font-weight: 400;
+}
+</style>
+
+<script>
+/* 淡入过渡动画 */
+window.addEventListener('load', function() {
+  document.body.classList.add('is-ready');
+});
+</script>
+<script>
+// 给所有 post-box 添加点击事件
+document.addEventListener('DOMContentLoaded', function() {
+    const boxes = document.querySelectorAll('.post-box');
+    boxes.forEach(box => {
+        const link = box.querySelector('a'); // 找到海报内部的 a 标签
+        if (link) {
+            const url = link.href; // 获取跳转地址
+            box.style.cursor = 'pointer'; // 鼠标变手形
+            box.addEventListener('click', function(e) {
+                // 防止点击 a 标签重复触发
+                if (e.target.tagName.toLowerCase() !== 'a') {
+                    window.open(url, '_blank'); // 新窗口打开
+                }
+            });
+        }
+    });
+});
+</script>
+
+</head>
+
+<body>
+
+<main id="main">
+    <div class="post-box-list">
+        <!-- 海报示例 -->
+        <article class="post-box">
+            <div class="post-box-container">
+                <div class="post-box-image" style="background-image: url(data/images/cadlz.jpg);">
+                    <span></span>
+                </div>
+                <div class="post-box-text">
+                    <h2 class="post-box-title">
+                        <a href="https://transfer.it/t/kqxqHqpD1Tja" target="_blank" rel="bookmark">长安的荔枝</a>
+                    </h2>
+                    <div class="countdown" data-expire="2026-02-12"></div>
+                </div>
+            </div>
+        </article>
+
+		 <article class="post-box">
+            <div class="post-box-container">
+                <div class="post-box-image" style="background-image: url(data/images/ggxbvs.jpg);">
+                    <span></span>
+                </div>
+                <div class="post-box-text">
+                    <h2 class="post-box-title">
+                        <a href="" target="_blank" rel="bookmark"></a>
+                    </h2>
+                </div>
+            </div>
+        </article>
+		
+		
+    </div>
+</main>
+<script>
+function updateCountdown() {
+    const countdowns = document.querySelectorAll('.countdown');
+    const now = new Date();
+    countdowns.forEach(cd => {
+        const expireDate = new Date(cd.dataset.expire + "T00:00:00");
+        const diff = expireDate - now;
+
+        if (diff > 0) {
+            // 只算完整天数，不包含当天未过完的部分
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            cd.textContent = `距离影片失效还有 ${days} 天`;
+        } else {
+            cd.textContent = '已失效';
+        }
+    });
+}
+
+// 页面加载 + 每小时更新一次
+updateCountdown();
+setInterval(updateCountdown, 3600 * 1000);
+</script>
+
+</body>
+</html>
