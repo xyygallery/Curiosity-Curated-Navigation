@@ -1,0 +1,101 @@
+/* ==========================
+   海报列表布局（父容器）
+   ========================== */
+.post-box-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 60px !important;           /* 主间距 */
+    justify-content: flex-start !important;
+}
+
+/* ==========================
+   海报卡片（每一张）
+   ========================== */
+.post-box {
+    background-color: #222;
+    flex: 1 1 calc((100% - 3*60px)/4) !important;  /* 一行 4 个 */
+    max-width: 260px;
+    margin: 0 0 20px 0 !important;
+    position: relative;
+    cursor: pointer;
+}
+
+/* 内容容器 */
+.post-box-container {
+    position: relative;
+}
+
+/* ==========================
+   海报图片
+   ========================== */
+.post-box-image {
+    background-size: cover;
+    background-position: center;
+    height: 0;
+    padding-bottom: 141.5%;
+    box-shadow: 0 0 35px 5px rgba(0,0,0,.4);
+    position: relative;
+}
+
+/* 遮罩 */
+.post-box-image span {
+    position: absolute;
+    top:0; left:0; right:0; bottom:0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #000 100%);
+    opacity: .85;
+    transition: opacity 0.4s;
+}
+
+.post-box:hover .post-box-image span {
+    opacity: 1;
+}
+
+/* ==========================
+   文字区域
+   ========================== */
+.post-box-text {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    right: 25px;
+}
+
+/* 标题 + 小字（横排） */
+.post-box-title {
+    display: flex;
+    gap: 8px;
+}
+
+.post-box-title a {
+    color: #fff;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+/* 小字 */
+.post-box-subtitle {
+    color: #999;
+    font-size: 14px;
+}
+
+
+/* ==========================
+   自适应
+   ========================== */
+@media (max-width: 1024px) {
+    .post-box {
+        flex: 1 1 calc((100% - 2*40px)/3) !important; /* 一行 3 个 */
+    }
+}
+
+@media (max-width: 600px) {
+    .post-box {
+        flex: 1 1 calc((100% - 20px)/2) !important;  /* 手机一行 2 个 */
+    }
+}
+
+@media (max-width: 400px) {
+    .post-box {
+        flex: 1 1 100% !important; /* 超小屏 1 个 */
+    }
+}
