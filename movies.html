@@ -212,27 +212,6 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </main>
 <script>
-function updateCountdown() {
-    const countdowns = document.querySelectorAll('.countdown');
-    const now = new Date();
-    countdowns.forEach(cd => {
-        const expireDate = new Date(cd.dataset.expire + "T00:00:00");
-        const diff = expireDate - now;
-
-        if (diff > 0) {
-            // 只算完整天数，不包含当天未过完的部分
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            cd.textContent = `距离影片失效还有 ${days} 天`;
-        } else {
-            cd.textContent = '已失效';
-        }
-    });
-}
-
-// 页面加载 + 每小时更新一次
-updateCountdown();
-setInterval(updateCountdown, 3600 * 1000);
-</script>
 
 </body>
 </html>
