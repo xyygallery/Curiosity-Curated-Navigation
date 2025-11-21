@@ -3,31 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <title>FFmpeg M3U8 命令生成器</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   body {
     font-family: Arial, sans-serif;
-    max-width: 500px;
-    margin: 40px auto;
-    padding: 20px;
+    margin: 20px;
+    padding: 10px;
     background: #f7f7f7;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
     border-radius: 10px;
     border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
-  h2 { text-align: center; }
-  label { display: block; margin-top: 15px; font-weight: bold; }
-  input, select {
-    width: 100%; padding: 8px; margin-top: 5px;
-    border: 1px solid #ccc; border-radius: 5px;
-  }
-  textarea {
-    width: 100%; height: 140px; margin-top: 10px;
-    padding: 10px; font-family: Consolas, monospace;
+  h2 { text-align: center; font-size: 1.6em; }
+  label { display: block; margin-top: 15px; font-weight: bold; font-size: 1em; }
+  input, select, textarea {
+    width: 100%; 
+    padding: 10px; 
+    margin-top: 5px;
+    border: 1px solid #ccc; 
     border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
   }
+  textarea { height: 140px; font-family: Consolas, monospace; }
   button {
-    width: 100%; margin-top: 15px; padding: 10px;
-    background: #3575f5; color: #fff; border: none;
-    border-radius: 5px; font-size: 16px;
+    width: 100%; 
+    margin-top: 15px; 
+    padding: 12px;
+    background: #3575f5; 
+    color: #fff; 
+    border: none;
+    border-radius: 5px; 
+    font-size: 1.1em;
     cursor: pointer;
   }
   button:hover { background: #285ed4; }
@@ -35,10 +48,14 @@
 </head>
 <body>
 
+<div class="container">
 <h2>FFmpeg M3U8 命令生成器</h2>
 
 <label>视频名称（自动加引号）</label>
 <input id="name" placeholder="例如：安多 第二季 第6集">
+
+<label>输出路径（可选，默认当前目录）</label>
+<input id="path" placeholder="例如：D:\Videos">
 
 <label>M3U8 链接</label>
 <input id="link" placeholder="粘贴 m3u8 链接">
@@ -55,10 +72,12 @@
 <textarea id="output" readonly></textarea>
 
 <button onclick="copyCmd()">复制命令</button>
+</div>
 
 <script>
 function generate() {
   const name = document.getElementById("name").value.trim();
+  const path = document.getElementById("path").value.trim();
   const link = document.getElementById("link").value.trim();
   const mode = document.getElementById("mode").value;
   const output = document.getElementById("output");
@@ -68,14 +87,17 @@ function generate() {
     return;
   }
 
+  // 生成完整输出路径，如果没有填写路径，则默认当前目录
+  const outFile = path ? `${path.replace(/\\$/,'\\')}\\${name}.mp4` : `${name}.mp4`;
+
   let cmd = '';
   if (mode === 'safe') {
     // 稳妥模式：重新编码，保证音画同步
     cmd = `ffmpeg -fflags +genpts -allowed_extensions ALL -i "${link}" ` +
-          `-c:v libx264 -preset fast -crf 23 -c:a aac -b:a 128k -movflags +faststart "${name}.mp4"`;
+          `-c:v libx264 -preset fast -crf 23 -c:a aac -b:a 128k -movflags +faststart "${outFile}"`;
   } else {
     // 极速模式：不重新编码，只处理时间戳
-    cmd = `ffmpeg -fflags +genpts -allowed_extensions ALL -i "${link}" -c copy "${name}.mp4"`;
+    cmd = `ffmpeg -fflags +genpts -allowed_extensions ALL -i "${link}" -c copy "${outFile}"`;
   }
 
   output.value = cmd;
