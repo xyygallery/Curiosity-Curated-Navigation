@@ -2,54 +2,23 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>FFmpeg M3U8 命令生成器</title>
+<title>FFmpeg HLS 下载器（稳妥+极速）</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    padding: 10px;
-    background: #f7f7f7;
-  }
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
+  body { font-family: Arial, sans-serif; margin: 20px; padding: 10px; background: #f7f7f7; }
+  .container { max-width: 600px; margin: 0 auto; padding: 20px; background: #fff; border-radius: 10px; border: 1px solid #ddd; }
   h2 { text-align: center; font-size: 1.6em; }
-  label { display: block; margin-top: 15px; font-weight: bold; font-size: 1em; }
-  input, select, textarea {
-    width: 100%; 
-    padding: 10px; 
-    margin-top: 5px;
-    border: 1px solid #ccc; 
-    border-radius: 5px;
-    font-size: 1em;
-    box-sizing: border-box;
-  }
+  label { display: block; margin-top: 15px; font-weight: bold; }
+  input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; font-size: 1em; box-sizing: border-box; }
   textarea { height: 140px; font-family: Consolas, monospace; }
-  button {
-    width: 100%; 
-    margin-top: 15px; 
-    padding: 12px;
-    background: #3575f5; 
-    color: #fff; 
-    border: none;
-    border-radius: 5px; 
-    font-size: 1.1em;
-    cursor: pointer;
-  }
+  button { width: 100%; margin-top: 15px; padding: 12px; background: #3575f5; color: #fff; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; }
   button:hover { background: #285ed4; }
 </style>
 </head>
 <body>
 
 <div class="container">
-<h2>FFmpeg M3U8 命令生成器</h2>
+<h2>FFmpeg HLS 下载器</h2>
 
 <label>视频名称（自动加引号）</label>
 <input id="name" placeholder="例如：安多 第二季 第6集">
@@ -60,10 +29,10 @@
 <label>M3U8 链接</label>
 <input id="link" placeholder="粘贴 m3u8 链接">
 
-<label>模式选择</label>
+<label>下载模式</label>
 <select id="mode">
-  <option value="safe">稳妥模式（推荐）</option>
-  <option value="fast">极速模式（保留原画质）</option>
+  <option value="safe">稳妥模式（音画同步，快速编码）</option>
+  <option value="fast">极速模式（保留原画质，可能音画不同步）</option>
 </select>
 
 <button onclick="generate()">生成命令</button>
@@ -87,16 +56,15 @@ function generate() {
     return;
   }
 
-  // 生成完整输出路径，如果没有填写路径，则默认当前目录
   const outFile = path ? `${path.replace(/\\$/,'\\')}\\${name}.mp4` : `${name}.mp4`;
-
   let cmd = '';
+
   if (mode === 'safe') {
-    // 稳妥模式：重新编码，保证音画同步
-    cmd = `ffmpeg -fflags +genpts -allowed_extensions ALL -i "${link}" ` +
-          `-c:v libx264 -preset fast -crf 23 -c:a aac -b:a 128k -movflags +faststart "${outFile}"`;
+    // 稳妥模式：重新编码，修复时间戳，忽略坏包
+    cmd = `ffmpeg -fflags +genpts -err_detect ignore_err -allowed_extensions ALL -i "${link}" ` +
+          `-c:v libx264 -preset ultrafast -crf 23 -c:a aac -b:a 128k -movflags +faststart "${outFile}"`;
   } else {
-    // 极速模式：不重新编码，只处理时间戳
+    // 极速模式：不重新编码，保留原画质
     cmd = `ffmpeg -fflags +genpts -allowed_extensions ALL -i "${link}" -c copy "${outFile}"`;
   }
 
