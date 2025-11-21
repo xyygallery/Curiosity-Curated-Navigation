@@ -160,19 +160,35 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
-// === 随机打乱海报顺序 ===
+// === 随机打乱海报（跳过 no-shuffle） ===
 document.addEventListener('DOMContentLoaded', function () {
     const container = document.querySelector('.post-box-list');
-    const items = Array.from(container.children);
 
-    // Fisher-Yates 洗牌算法（最稳！）
-    for (let i = items.length - 1; i > 0; i--) {
+    // 1. 获取所有要参与随机的
+    const shuffleItems = Array.from(container.children).filter(
+        el => !el.classList.contains('no-shuffle')
+    );
+
+    // 2. 固定项
+    const fixedItems = Array.from(container.children).filter(
+        el => el.classList.contains('no-shuffle')
+    );
+
+    // 3. 打乱可参与随机的
+    for (let i = shuffleItems.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        container.appendChild(items[j]);  
-        items.splice(j, 1);
+        const temp = shuffleItems[i];
+        shuffleItems[i] = shuffleItems[j];
+        shuffleItems[j] = temp;
     }
+
+    // 4. 重新按顺序插入：先随机的，再固定的
+    container.innerHTML = ''; 
+    shuffleItems.forEach(el => container.appendChild(el));
+    fixedItems.forEach(el => container.appendChild(el));
 });
 </script>
+
 
 </head>
 
@@ -209,19 +225,19 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         </article>
 		
-		 <article class="post-box">
-            <div class="post-box-container">
-                <div class="post-box-image" style="background-image: url(data/images/ggxbvs.png);">
-                    <span></span>
-                </div>
-                <div class="post-box-text">
-                    <h2 class="post-box-title">
-                        <a href="javascript:void(0);" target="_blank" rel="bookmark"></a>
-                    </h2>
-                </div>
-            </div>
-        </article>
-		
+		 <article class="post-box no-shuffle">
+    <div class="post-box-container">
+        <div class="post-box-image" style="background-image: url(data/images/ggxbvs.png);">
+            <span></span>
+        </div>
+        <div class="post-box-text">
+            <h2 class="post-box-title">
+                <a href="javascript:void(0);" target="_blank" rel="bookmark"></a>
+            </h2>
+        </div>
+    </div>
+</article>
+
 		
     </div>
 </main>
