@@ -65,7 +65,12 @@ body.is-ready { opacity: 1; }
 .post-box-image:hover {
     box-shadow: 0 0 35px 5px rgba(0,0,0,.5);
 }
-
+/* ------------------------
+   白色阴影效果
+   ------------------------ */	
+.has-source:hover {
+    box-shadow: 0 0 35px 8px rgba(255,255,255,0.28); 
+}
 
 .post-box-image span {
     display: block;
@@ -200,9 +205,9 @@ document.addEventListener('DOMContentLoaded', function () {
 <main id="main">
     <div class="post-box-list">
         <!-- 海报示例 -->
-        <article class="post-box has-resource">
+        <article class="post-box">
             <div class="post-box-container">
-                <div class="post-box-image" style="background-image: url(data/images/cadlz.jpg);">
+                <div class="post-box-image has-source" style="background-image: url(data/images/cadlz.jpg);">
                     <span></span>
                 </div>
                 <div class="post-box-text">
