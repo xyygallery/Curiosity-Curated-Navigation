@@ -99,24 +99,3 @@
         flex: 1 1 100% !important; /* 超小屏 1 个 */
     }
 }
-
-/* ===========================
-   有资源影片的呼吸光提示效果
-   =========================== */
-
-/* 常态：轻微淡绿色呼吸 */
-.has-resource .post-box-image {
-    animation: breathe 2.8s ease-in-out infinite;
-}
-
-/* 鼠标移上去：加强绿色光感 */
-.has-resource:hover .post-box-image {
-    box-shadow: 0 0 35px 8px rgba(80, 255, 180, .65) !important;
-}
-
-/* 呼吸光动画：不刺眼，非常柔和 */
-@keyframes breathe {
-    0%   { box-shadow: 0 0 22px rgba(80,255,180,0.15); }
-    50%  { box-shadow: 0 0 28px rgba(80,255,180,0.35); }
-    100% { box-shadow: 0 0 22px rgba(80,255,180,0.15); }
-}
