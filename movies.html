@@ -11,20 +11,14 @@
    ------------------------ */
 body {
     margin: 0;
-    padding-top: 70px; /* 顶部留白，可按需调整 */
+    padding-top: 70px;
     font-family: Lato, Helvetica, Arial, sans-serif;
     font-size: 16px;
     line-height: 1.42857143;
     color: #999;
     background-color: #222;
-}
-
-/* ------------------------
-   页面淡入效果
-   ------------------------ */
-body {
-  opacity: 0;
-  transition: opacity .5s ease;
+    opacity: 0;
+    transition: opacity .5s ease;
 }
 body.is-ready { opacity: 1; }
 
@@ -34,7 +28,7 @@ body.is-ready { opacity: 1; }
 .post-box-list {
     display: grid;
     grid-template-columns: repeat(4, 260px);
-    justify-content: center; /* 水平居中，左右留白保持 */
+    justify-content: center;
     gap: 60px;
 }
 
@@ -55,21 +49,27 @@ body.is-ready { opacity: 1; }
     background-size: cover;
     background-position: center;
     height: 0;
-    padding-bottom: 141.5%; /* 保持比例 */
+    padding-bottom: 141.5%;
     box-shadow: 0 0 35px 5px rgba(0,0,0,.4);
-    transition: box-shadow 0.4s;
-}
-/* 默认海报悬浮效果（无资源） */
-.post-box-image:hover {
-    box-shadow: 0 0 35px 5px rgba(0,0,0,.5);
-    transition: box-shadow .3s ease;
+    transition: box-shadow .28s ease;
 }
 
-/* 有资源的海报 → 覆盖默认效果 */
-.post-box-image.has-source:hover {
+/* 默认 hover（无资源） */
+.post-box:hover .post-box-image {
+    box-shadow: 0 0 35px 5px rgba(0,0,0,.5);
+}
+
+/* 有资源 → 白色亮光 */
+.post-box.has-source:hover .post-box-image {
     box-shadow: 0 0 35px 10px rgba(255,255,255,0.32);
 }
 
+/* 手机端：无 hover，因此有资源时轻微常亮 */
+@media (max-width: 768px) {
+    .post-box.has-source .post-box-image {
+        box-shadow: 0 0 12px rgba(255,255,255,0.06);
+    }
+}
 
 .post-box-image span {
     display: block;
@@ -79,9 +79,7 @@ body.is-ready { opacity: 1; }
     opacity: 0.85;
     transition: opacity 0.8s;
 }
-
 .post-box:hover .post-box-image span { opacity: 1; }
-.post-box-image.ql_animate span { opacity: 0 !important; }
 
 /* ------------------------
    海报文字
@@ -95,7 +93,7 @@ body.is-ready { opacity: 1; }
 }
 
 .post-box-text .post-box-title {
-    display: flex;           /* 标题 + 小字可横向排列 */
+    display: flex;
     gap: 8px;
     line-height: 0px;
 }
@@ -108,8 +106,6 @@ body.is-ready { opacity: 1; }
     text-shadow: 0 1px 1px rgba(0,0,0,.3);
 }
 
-.post-box-text .post-box-title a:hover { text-decoration: none; }
-
 .post-box-subtitle {
     color: #999;
     font-size: 14px;
@@ -117,203 +113,196 @@ body.is-ready { opacity: 1; }
 }
 
 /* ------------------------
-   响应式自适应
+   响应式
    ------------------------ */
 @media (max-width: 1024px) {
     .post-box-list { grid-template-columns: repeat(3, 260px); gap: 40px; }
 }
-
 @media (max-width: 600px) {
     .post-box-list { grid-template-columns: repeat(2, 260px); gap: 20px; }
 }
-
 @media (max-width: 400px) {
     .post-box-list { grid-template-columns: 1fr; gap: 20px; }
 }
 
-/* 下方是距离影片失效的文字样式 */
+/* 星星评分 */
 .countdown {
     display: block;
-    color: #999;          /* 灰色 */
-    font-size: 0.875rem;  /* 比标题小，和小字差不多 */
-    margin-top: 4px;      /* 与标题或小字保持间距 */
+    color: #999;
+    font-size: 0.875rem;
+    margin-top: 4px;
     font-weight: 400;
 }
 </style>
 
 <script>
-/* 淡入过渡动画 */
+/* 页面淡入动画 */
 window.addEventListener('load', function() {
   document.body.classList.add('is-ready');
 });
 </script>
+
 <script>
-// 给所有 post-box 添加点击事件
+/* 卡片整体变成可点击，点击跳转 a.href */
 document.addEventListener('DOMContentLoaded', function() {
     const boxes = document.querySelectorAll('.post-box');
     boxes.forEach(box => {
-        const link = box.querySelector('a'); // 找到海报内部的 a 标签
+        const link = box.querySelector('a');
         if (link) {
-            const url = link.href; // 获取跳转地址
-            box.style.cursor = 'pointer'; // 鼠标变手形
+            const url = link.href;
+            box.style.cursor = 'pointer';
             box.addEventListener('click', function(e) {
-                // 防止点击 a 标签重复触发
                 if (e.target.tagName.toLowerCase() !== 'a') {
-                    window.open(url, '_blank'); // 新窗口打开
+                    window.open(url, '_blank');
                 }
             });
         }
     });
 });
 </script>
+
 <script>
+/* 随机：每天仅随机一次，并用 localStorage 记住顺序 */
 document.addEventListener('DOMContentLoaded', function () {
     const container = document.querySelector('.post-box-list');
     const items = Array.from(container.children);
 
-    // localStorage 保存的键名
     const KEY_DATE = 'shuffle_date';
     const KEY_ORDER = 'shuffle_order';
 
-    // 获取今天日期（格式：YYYY-MM-DD）
     const today = new Date().toISOString().split('T')[0];
     const savedDate = localStorage.getItem(KEY_DATE);
     const savedOrder = localStorage.getItem(KEY_ORDER);
 
-    // === 如果是同一天 → 直接按保存的顺序恢复，不再打乱 ===
     if (savedDate === today && savedOrder) {
         const order = JSON.parse(savedOrder);
-
-        // 清空并按旧顺序插入
         container.innerHTML = '';
-        order.forEach(index => container.appendChild(items[index]));
+        order.forEach(i => container.appendChild(items[i]));
         return;
     }
 
-    // === 否则 → 今天第一次访问，重新随机 ===
-    const shuffled = items.slice(); // 拷贝数组用于打乱
-
+    const shuffled = items.slice();
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
 
-    // 清空并按新顺序插入
     container.innerHTML = '';
     shuffled.forEach(el => container.appendChild(el));
 
-    // 保存今天的日期 + 顺序（保存的是原始序号）
     const orderToSave = shuffled.map(el => items.indexOf(el));
     localStorage.setItem(KEY_DATE, today);
     localStorage.setItem(KEY_ORDER, JSON.stringify(orderToSave));
 });
 </script>
 
-
-
 </head>
 
 <body>
-
 <main id="main">
     <div class="post-box-list">
-        <!-- 海报示例 -->
-        <article class="post-box">
-            <div class="post-box-container">
-                <div class="post-box-image has-source" style="background-image: url(data/images/cadlz.jpg);">
-                    <span></span>
-                </div>
-                <div class="post-box-text">
-                    <h2 class="post-box-title">
-                        <a href="https://transfer.it/t/HhsxHywlXbjS" target="_blank" rel="bookmark">长安的荔枝</a>
-                    </h2>
-                    <div class="countdown">★★★</div>
-                </div>
-            </div>
-        </article>
 
-        <article class="post-box">
-            <div class="post-box-container">
-                <div class="post-box-image  has-source" style="background-image: url(data/images/ando2.jpg);">
-                    <span></span>
-                </div>
-                <div class="post-box-text">
-                    <h2 class="post-box-title">
-                        <a href="https://transfer.it/t/aziv2ihF2JxD" target="_blank" rel="bookmark">安多 第二季</a>
-                    </h2>
-                    <div class="countdown">★★★★</div>
-                </div>
-            </div>
-        </article>
-		 <article class="post-box">
-            <div class="post-box-container">
-                <div class="post-box-image" style="background-image: url(data/images/p2505928032.webp);">
-                    <span></span>
-                </div>
-                <div class="post-box-text">
-                    <h2 class="post-box-title">
-                        <a href="https://neodb.social/movie/2r0tdYNi9CW69JXlsgDiS8" target="_blank" rel="bookmark">大佛普拉斯</a>
-                    </h2>
-                    <div class="countdown">★★★★★</div>
-                </div>
-            </div>
-        </article>			
-		
-		 <article class="post-box">
-            <div class="post-box-container">
-                <div class="post-box-image" style="background-image: url(data/images/p2907916556.webp);">
-                    <span></span>
-                </div>
-                <div class="post-box-text">
-                    <h2 class="post-box-title">
-                        <a href="https://neodb.social/movie/0wpc4oEO4yEfXTRYfcubJ6" target="_blank" rel="bookmark">神偷奶爸 4</a>
-                    </h2>
-                    <div class="countdown">★★★</div>
-                </div>
-            </div>
-        </article>			
-		
-			 <article class="post-box">
-            <div class="post-box-container">
-                <div class="post-box-image" style="background-image: url(data/images/p686635022.webp);">
-                    <span></span>
-                </div>
-                <div class="post-box-text">
-                    <h2 class="post-box-title">
-                        <a href="https://neodb.social/movie/7Sc40KfOZXjSv1dJ6NPHSS" target="_blank" rel="bookmark">世界末日</a>
-                    </h2>
-                    <div class="countdown">★★★★</div>
-                </div>
-            </div>
-        </article>	
+<!-- ------------------------
+     你的卡片（已修复 countdown）
+   ------------------------ -->
 
- <article class="post-box">
-            <div class="post-box-container">
-                <div class="post-box-image" style="background-image: url(data/images/p2637809736.webp);">
-                    <span></span>
-                </div>
-                <div class="post-box-text">
-                    <h2 class="post-box-title">
-                        <a href="https://neodb.social/movie/5QAMCkcorofh65MEX5ssvF" target="_blank" rel="bookmark">电锯惊魂 9：漩涡</a>
-                    </h2>
-                    <div class="countdown">★★</div>
-                </div>
-            </div>
-        </article>	
-					
- <article class="post-box">
-            <div class="post-box-container">
-                <div class="post-box-image" style="background-image: url(data/images/p2499761124.webp);">
-                    <span></span>
-                </div>
-                <div class="post-box-text">
-                    <h2 class="post-box-title">
-                        <a href="https://neodb.social/movie/3ayAO1mG1gxNnB0PuI2pff" target="_blank" rel="bookmark">电锯惊魂 8：竖锯</a>
-                    </h2>
-                    <div class="countdown">★★★★★</div>
-                </div>
-            </div>
-        </article>	
+<article class="post-box has-source">
+    <div class="post-box-container">
+        <div class="post-box-image" style="background-image: url(data/images/cadlz.jpg);">
+            <span></span>
+        </div>
+        <div class="post-box-text">
+            <h2 class="post-box-title">
+                <a href="https://transfer.it/t/HhsxHywlXbjS" target="_blank" rel="bookmark">长安的荔枝</a>
+            </h2>
+            <div class="countdown">★★★</div>
+        </div>
+    </div>
+</article>
+
+<article class="post-box has-source">
+    <div class="post-box-container">
+        <div class="post-box-image" style="background-image: url(data/images/ando2.jpg);">
+            <span></span>
+        </div>
+        <div class="post-box-text">
+            <h2 class="post-box-title">
+                <a href="https://transfer.it/t/aziv2ihF2JxD" target="_blank" rel="bookmark">安多 第二季</a>
+            </h2>
+            <div class="countdown">★★★★</div>
+        </div>
+    </div>
+</article>
+
+<article class="post-box">
+    <div class="post-box-container">
+        <div class="post-box-image" style="background-image: url(data/images/p2505928032.webp);">
+            <span></span>
+        </div>
+        <div class="post-box-text">
+            <h2 class="post-box-title">
+                <a href="https://neodb.social/movie/2r0tdYNi9CW69JXlsgDiS8" target="_blank" rel="bookmark">大佛普拉斯</a>
+            </h2>
+            <div class="countdown">★★★★★</div>
+        </div>
+    </div>
+</article>
+
+<article class="post-box">
+    <div class="post-box-container">
+        <div class="post-box-image" style="background-image: url(data/images/p2907916556.webp);">
+            <span></span>
+        </div>
+        <div class="post-box-text">
+            <h2 class="post-box-title">
+                <a href="https://neodb.social/movie/0wpc4oEO4yEfXTRYfcubJ6" target="_blank" rel="bookmark">神偷奶爸 4</a>
+            </h2>
+            <div class="countdown">★★★</div>
+        </div>
+    </div>
+</article>
+
+<article class="post-box">
+    <div class="post-box-container">
+        <div class="post-box-image" style="background-image: url(data/images/p686635022.webp);">
+            <span></span>
+        </div>
+        <div class="post-box-text">
+            <h2 class="post-box-title">
+                <a href="https://neodb.social/movie/7Sc40KfOZXjSv1dJ6NPHSS" target="_blank" rel="bookmark">世界末日</a>
+            </h2>
+            <div class="countdown">★★★★</div>
+        </div>
+    </div>
+</article>
+
+<article class="post-box">
+    <div class="post-box-container">
+        <div class="post-box-image" style="background-image: url(data/images/p2637809736.webp);">
+            <span></span>
+        </div>
+        <div class="post-box-text">
+            <h2 class="post-box-title">
+                <a href="https://neodb.social/movie/5QAMCkcorofh65MEX5ssvF" target="_blank" rel="bookmark">电锯惊魂 9：漩涡</a>
+            </h2>
+            <div class="countdown">★★</div>
+        </div>
+    </div>
+</article>
+
+<article class="post-box">
+    <div class="post-box-container">
+        <div class="post-box-image" style="background-image: url(data/images/p2499761124.webp);">
+            <span></span>
+        </div>
+        <div class="post-box-text">
+            <h2 class="post-box-title">
+                <a href="https://neodb.social/movie/3ayAO1mG1gxNnB0PuI2pff" target="_blank" rel="bookmark">电锯惊魂 8：竖锯</a>
+            </h2>
+            <div class="countdown">★★★★★</div>
+        </div>
+    </div>
+</article>
 
 <article class="post-box">
     <div class="post-box-container">
@@ -329,10 +318,8 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 </article>
 
-					
     </div>
 </main>
-<script>
 
 </body>
 </html>
