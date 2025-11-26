@@ -54,22 +54,20 @@ body.is-ready { opacity: 1; }
     transition: box-shadow .28s ease;
 }
 
-/* 默认 hover（无资源） */
+/* ===== 普通海报 hover 效果 ===== */
 .post-box:hover .post-box-image {
-    box-shadow: 0 0 35px 5px rgba(0,0,0,.5);
+    transform: translateY(-3px);
+    opacity: .95;
+    transition: all .25s ease;
 }
 
-/* 有资源 → 白色亮光 */
+/* ===== 有资源海报：白光提示 ===== */
 .post-box.has-source:hover .post-box-image {
-    box-shadow: 0 0 35px 10px rgba(255,255,255,0.32);
+    box-shadow: 0 0 38px 12px rgba(255,255,255,0.25);
+    transform: translateY(-3px);
+    opacity: 1;
 }
 
-/* 手机端：无 hover，因此有资源时轻微常亮 */
-@media (max-width: 768px) {
-    .post-box.has-source .post-box-image {
-        box-shadow: 0 0 12px rgba(255,255,255,0.06);
-    }
-}
 
 .post-box-image span {
     display: block;
