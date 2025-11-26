@@ -162,40 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-/* 随机：每天仅随机一次，并用 localStorage 记住顺序 */
-document.addEventListener('DOMContentLoaded', function () {
-    const container = document.querySelector('.post-box-list');
-    const items = Array.from(container.children);
 
-    const KEY_DATE = 'shuffle_date';
-    const KEY_ORDER = 'shuffle_order';
-
-    const today = new Date().toISOString().split('T')[0];
-    const savedDate = localStorage.getItem(KEY_DATE);
-    const savedOrder = localStorage.getItem(KEY_ORDER);
-
-    if (savedDate === today && savedOrder) {
-        const order = JSON.parse(savedOrder);
-        container.innerHTML = '';
-        order.forEach(i => container.appendChild(items[i]));
-        return;
-    }
-
-    const shuffled = items.slice();
-    for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-
-    container.innerHTML = '';
-    shuffled.forEach(el => container.appendChild(el));
-
-    const orderToSave = shuffled.map(el => items.indexOf(el));
-    localStorage.setItem(KEY_DATE, today);
-    localStorage.setItem(KEY_ORDER, JSON.stringify(orderToSave));
-});
-</script>
 
 </head>
 
