@@ -168,34 +168,48 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
-// === 随机打乱海报（跳过 no-shuffle） ===
 document.addEventListener('DOMContentLoaded', function () {
     const container = document.querySelector('.post-box-list');
+    const items = Array.from(container.children);
 
-    // 1. 获取所有要参与随机的
-    const shuffleItems = Array.from(container.children).filter(
-        el => !el.classList.contains('no-shuffle')
-    );
+    // localStorage 保存的键名
+    const KEY_DATE = 'shuffle_date';
+    const KEY_ORDER = 'shuffle_order';
 
-    // 2. 固定项
-    const fixedItems = Array.from(container.children).filter(
-        el => el.classList.contains('no-shuffle')
-    );
+    // 获取今天日期（格式：YYYY-MM-DD）
+    const today = new Date().toISOString().split('T')[0];
+    const savedDate = localStorage.getItem(KEY_DATE);
+    const savedOrder = localStorage.getItem(KEY_ORDER);
 
-    // 3. 打乱可参与随机的
-    for (let i = shuffleItems.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const temp = shuffleItems[i];
-        shuffleItems[i] = shuffleItems[j];
-        shuffleItems[j] = temp;
+    // === 如果是同一天 → 直接按保存的顺序恢复，不再打乱 ===
+    if (savedDate === today && savedOrder) {
+        const order = JSON.parse(savedOrder);
+
+        // 清空并按旧顺序插入
+        container.innerHTML = '';
+        order.forEach(index => container.appendChild(items[index]));
+        return;
     }
 
-    // 4. 重新按顺序插入：先随机的，再固定的
-    container.innerHTML = ''; 
-    shuffleItems.forEach(el => container.appendChild(el));
-    fixedItems.forEach(el => container.appendChild(el));
+    // === 否则 → 今天第一次访问，重新随机 ===
+    const shuffled = items.slice(); // 拷贝数组用于打乱
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    // 清空并按新顺序插入
+    container.innerHTML = '';
+    shuffled.forEach(el => container.appendChild(el));
+
+    // 保存今天的日期 + 顺序（保存的是原始序号）
+    const orderToSave = shuffled.map(el => items.indexOf(el));
+    localStorage.setItem(KEY_DATE, today);
+    localStorage.setItem(KEY_ORDER, JSON.stringify(orderToSave));
 });
 </script>
+
 
 
 </head>
