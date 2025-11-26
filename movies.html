@@ -59,18 +59,17 @@ body.is-ready { opacity: 1; }
     box-shadow: 0 0 35px 5px rgba(0,0,0,.4);
     transition: box-shadow 0.4s;
 }
-/* ------------------------
-   默认阴影效果
-   ------------------------ */
+/* 默认海报悬浮效果（无资源） */
 .post-box-image:hover {
     box-shadow: 0 0 35px 5px rgba(0,0,0,.5);
+    transition: box-shadow .3s ease;
 }
-/* ------------------------
-   白色阴影效果
-   ------------------------ */	
-.has-source:hover {
-    box-shadow: 0 0 35px 8px rgba(255,255,255,0.28); 
+
+/* 有资源的海报 → 覆盖默认效果 */
+.post-box-image.has-source:hover {
+    box-shadow: 0 0 35px 10px rgba(255,255,255,0.32);
 }
+
 
 .post-box-image span {
     display: block;
