@@ -91,7 +91,6 @@
         box-sizing:border-box;
     }
 
-    /* 提示文字 */
     #msg {
         margin-top:15px;
         height:24px;
@@ -168,12 +167,13 @@ function generate() {
         return;
     }
 
-    const className = hasSource ? "post-box-image has-source" : "post-box-image";
+    /* 变化点：has-source 放在 article 上 */
+    const articleClass = hasSource ? 'post-box has-source' : 'post-box';
 
     const code =
-`<article class="post-box">
+`<article class="${articleClass}">
     <div class="post-box-container">
-        <div class="${className}" style="background-image: url(data/images/${poster});">
+        <div class="post-box-image" style="background-image: url(data/images/${poster});">
             <span></span>
         </div>
         <div class="post-box-text">
