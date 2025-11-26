@@ -1,51 +1,129 @@
-<div id="movie-generator" style="padding:20px; background:#222; color:#fff; max-width:500px; border-radius:10px;">
-    <h2 style="margin-top:0;">影片代码生成器</h2>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>海报代码生成器</title>
 
-    <label>影片名称：</label><br>
-    <input id="title" style="width:100%; margin:6px 0;"><br>
+<style>
+    body {
+        background:#f5f5f5;
+        font-family: Arial, sans-serif;
+        padding: 30px;
+        color:#333;
+    }
 
-    <label>影片链接（a 标签 href）：</label><br>
-    <input id="link" style="width:100%; margin:6px 0;"><br>
+    h1 {
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
 
-    <label>海报图片路径（例如 data/images/xxx.jpg）：</label><br>
-    <input id="img" style="width:100%; margin:6px 0;"><br>
+    .box {
+        background:#fff;
+        padding:20px;
+        border-radius:10px;
+        max-width:650px;
+        box-shadow:0 4px 15px rgba(0,0,0,0.08);
+        margin-bottom:30px;
+    }
 
-    <label>星级评分：</label>
-    <select id="stars" style="margin:6px 0;">
-        <option value="★">★（1）</option>
-        <option value="★★">★★（2）</option>
-        <option value="★★★">★★★（3）</option>
-        <option value="★★★★">★★★★（4）</option>
-        <option value="★★★★★" selected>★★★★★（5）</option>
+    label { font-weight:600; margin-top:12px; display:block; }
+
+    input, select {
+        width:100%;
+        padding:8px;
+        border-radius:6px;
+        border:1px solid #ccc;
+        margin-top:5px;
+        box-sizing:border-box;
+    }
+
+    button {
+        padding:8px 16px;
+        border:0;
+        border-radius:6px;
+        cursor:pointer;
+    }
+
+    .btn-gen { background:#4285f4; color:#fff; margin-top:20px; }
+    .btn-copy { background:#34a853; color:#fff; margin-top:10px; }
+
+    .result-item {
+        background:#fff;
+        padding:15px;
+        border-radius:8px;
+        box-shadow:0 3px 10px rgba(0,0,0,0.06);
+        margin-bottom:15px;
+    }
+
+    textarea {
+        width:100%;
+        height:140px;
+        border-radius:8px;
+        border:1px solid #ccc;
+        padding:10px;
+        font-family: Consolas, monospace;
+        font-size:14px;
+    }
+</style>
+
+</head>
+<body>
+
+<h1>海报代码生成器</h1>
+
+<div class="box">
+
+    <label>影片名称</label>
+    <input id="title" placeholder="例如：长安的荔枝">
+
+    <label>海报文件名（自动加 data/images/）</label>
+    <input id="poster" placeholder="例如：cadlz.jpg">
+
+    <label>下载链接</label>
+    <input id="link" placeholder="例如：https://xxxx">
+
+    <label>评分星星（1~5）</label>
+    <select id="stars">
+        <option value="★">★</option>
+        <option value="★★">★★</option>
+        <option value="★★★" selected>★★★</option>
+        <option value="★★★★">★★★★</option>
+        <option value="★★★★★">★★★★★</option>
     </select>
-    <br>
 
-    <label>
-        <input type="checkbox" id="hasSource">
-        有资源（添加 has-source）
-    </label>
-    <br><br>
+    <label>是否有资源？</label>
+    <select id="source">
+        <option value="no">❌ 无资源</option>
+        <option value="yes">✔ 有资源（加 has-source）</option>
+    </select>
 
-    <button onclick="generateCode()" style="padding:8px 14px; cursor:pointer;">生成代码</button>
+    <button class="btn-gen" onclick="generate()">生成代码</button>
 
-    <h3>生成结果：</h3>
-    <textarea id="output" style="width:100%; height:180px; margin-top:6px; font-size:14px;"></textarea>
 </div>
 
-<script>
-function generateCode() {
-    const title = document.getElementById('title').value.trim();
-    const link  = document.getElementById('link').value.trim();
-    const img   = document.getElementById('img').value.trim();
-    const stars = document.getElementById('stars').value;
-    const hasSource = document.getElementById('hasSource').checked;
+<h2>生成结果（会自动累计保存）</h2>
+<div id="result"></div>
 
-    const className = hasSource ? 'post-box-image has-source' : 'post-box-image';
+<script>
+function generate() {
+    const title = document.getElementById("title").value.trim();
+    const poster = document.getElementById("poster").value.trim();
+    const link = document.getElementById("link").value.trim();
+    const stars = document.getElementById("stars").value;
+    const hasSource = document.getElementById("source").value === "yes";
+
+    if (!title || !poster || !link) {
+        alert("影片名称、海报文件名、下载链接都要填哦！");
+        return;
+    }
+
+    const className = hasSource ? "post-box-image has-source" : "post-box-image";
 
     const code =
 `<article class="post-box">
     <div class="post-box-container">
-        <div class="${className}" style="background-image: url(${img});">
+        <div class="${className}" style="background-image: url(data/images/${poster});">
             <span></span>
         </div>
         <div class="post-box-text">
@@ -57,6 +135,31 @@ function generateCode() {
     </div>
 </article>`;
 
-    document.getElementById('output').value = code;
+    // 创建一个展示块
+    const box = document.createElement("div");
+    box.className = "result-item";
+
+    // 加入 textarea + copy 按钮
+    box.innerHTML = `
+        <textarea>${code}</textarea>
+        <button class="btn-copy" onclick="copyText(this)">复制代码</button>
+    `;
+
+    document.getElementById("result").prepend(box);
+}
+
+function copyText(btn) {
+    const text = btn.previousElementSibling.value;
+    navigator.clipboard.writeText(text).then(()=>{
+        btn.textContent = "已复制！";
+        btn.style.background = "#1b8f3c";
+        setTimeout(()=>{
+            btn.textContent = "复制代码";
+            btn.style.background = "#34a853";
+        },1300);
+    });
 }
 </script>
+
+</body>
+</html>
