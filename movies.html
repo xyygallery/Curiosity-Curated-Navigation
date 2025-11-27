@@ -113,9 +113,13 @@ body.is-ready { opacity: 1; }
     font-weight: 400;
 }
 
-   .post-box-list {
-    padding-bottom: 60px; /* 60px 可自由调整，40-80都可以 */
+/* 让 main 占满视口（考虑你 body 的 top padding）并留出底部安全距离 */
+main#main {
+  min-height: calc(100vh - 70px); /* 减去 body 的 padding-top:70px */
+  box-sizing: border-box;
+  padding-bottom: 60px; /* 页面底部的留白 */
 }
+
 
 /* ------------------------
    响应式
