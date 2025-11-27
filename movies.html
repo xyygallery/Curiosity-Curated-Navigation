@@ -128,7 +128,11 @@ main#main {
     .post-box-list { grid-template-columns: repeat(3, 260px); gap: 40px; }
 }
 @media (max-width: 600px) {
-    .post-box-list { grid-template-columns: repeat(2, 260px); gap: 20px; }
+    .post-box-list {
+        grid-template-columns: repeat(2, 260px);
+        column-gap: 20px; /* 左右间距（原 gap 的横向） */
+        row-gap: 40px;    /* ↑↑↑ 新增：上下间距改大一点 */
+    }
 }
 @media (max-width: 400px) {
     .post-box-list { grid-template-columns: 1fr; gap: 20px; }
