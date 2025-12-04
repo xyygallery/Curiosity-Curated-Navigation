@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>宝宝记录（iOS 优化版）</title>
+<title>奕奕宝宝日常记录</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 :root {
@@ -67,7 +67,7 @@ button:active { opacity: .8; }
 </head>
 <body>
 
-<h2>宝宝记录（iOS 优化 + 撤回）</h2>
+<h2>奕奕宝宝日常记录</h2>
 
 <!-- 奶量 -->
 <div class="section">
@@ -140,13 +140,16 @@ document.addEventListener("DOMContentLoaded", function() {
     function addMilk() {
         const mixEl = document.getElementById("milkMix");
         const leftEl = document.getElementById("milkLeft");
-        const mix = parseInt(mixEl.value);
+        const inputMix = parseInt(mixEl.value);
         const left = parseInt(leftEl.value);
-        if (!mix && mix!==0) { alert("请输入冲调奶量"); return; }
-        if (left<0 || left>mix) { alert("剩余奶量不合理"); return; }
-        const drink = mix - left + 10; // 喝掉奶量 +10ml
-        const waste = left;
-        milk.push({mix, left, drink, waste, time: now()});
+        if (!inputMix && inputMix!==0) { alert("请输入冲调奶量"); return; }
+        if (left<0 || left>inputMix) { alert("剩余奶量不合理"); return; }
+
+        const actualMix = inputMix + 10; // 冲调总量加10ml
+        const drink = actualMix - left; // 喝掉量 = 冲调总量 - 剩余
+        const waste = left; // 浪费 = 剩余
+
+        milk.push({mix: actualMix, left, drink, waste, time: now()});
         save(); updateMilk();
         mixEl.value=""; leftEl.value="";
     }
