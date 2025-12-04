@@ -1,52 +1,49 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>奕奕宝宝的奶量大便辅食记录本</title>
 
 <style>
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-        background: #ffe6ef;
         margin: 0;
-        padding: 15px;
-        line-height: 1.6;
+        background: #ffe6ef;
+        padding-bottom: 70px; /* 留位置给底部导航栏 */
     }
 
     h1 {
         text-align: center;
         font-size: 22px;
         font-weight: 700;
-        margin-bottom: 20px;
         color: #d63384;
+        margin: 15px 0 20px;
     }
 
     .card {
         background: #fff;
+        margin: 15px;
         padding: 15px;
-        margin-bottom: 18px;
         border-radius: 12px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     label {
-        font-weight: 600;
-        color: #d63384;
-        margin-bottom: 6px;
         display: block;
-        text-align: left;
+        margin-bottom: 6px;
+        color: #d63384;
+        font-weight: 600;
     }
 
-    select, input[type="number"] {
+    input, select {
         width: 100%;
+        box-sizing: border-box;
         padding: 12px;
-        margin-top: 5px;
         margin-bottom: 10px;
         border: 1px solid #ccc;
         border-radius: 8px;
         font-size: 16px;
-        box-sizing: border-box;     /* ★ 防止溢出 */
     }
 
     button {
@@ -57,30 +54,50 @@
         color: #fff;
         font-size: 17px;
         border-radius: 10px;
-        margin-top: 8px;
         cursor: pointer;
+        margin-top: 8px;
         font-weight: 600;
-        box-sizing: border-box;
     }
-    button:active {
-        background: #e63e89;
-    }
+    button:active { background: #e63e89; }
 
-    .stats-block {
-        text-align: center;
-        margin-top: 10px;
-    }
-    .stats-block div {
-        margin: 6px 0;
-        font-size: 16px;
-    }
-
-    /* 统计模块 */
-    .range-select {
+    /* 底部导航栏 */
+    .nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 65px;
         display: flex;
-        flex-direction: column;
-        gap: 8px;
+        background: #ffffff;
+        border-top: 1px solid #ddd;
     }
+
+    .nav button {
+        flex: 1;
+        border-radius: 0;
+        border: none;
+        background: #fff;
+        color: #d63384;
+        font-size: 15px;
+        padding: 8px 0;
+    }
+
+    .nav button.active {
+        color: #ff4f9a;
+        font-weight: bold;
+        background: #ffe0f0;
+    }
+
+    /* 隐藏模块 */
+    .page {
+        display: none;
+    }
+    .page.active {
+        display: block;
+    }
+
+    .stats-block { text-align: center; }
+    .stats-block div { margin: 6px 0; }
 </style>
 </head>
 
@@ -88,102 +105,123 @@
 
 <h1>奕奕宝宝的奶量大便辅食记录本</h1>
 
-<!-- 奶量记录 -->
-<div class="card">
-    <label>冲调奶量</label>
-    <select id="prep">
-        <option value="30">30ml / 1勺</option>
-        <option value="60">60ml / 2勺</option>
-        <option value="90">90ml / 3勺</option>
-        <option value="120">120ml / 4勺</option>
-        <option value="150">150ml / 5勺</option>
-        <option value="180">180ml / 6勺</option>
-        <option value="210">210ml / 7勺</option>
-        <option value="240">240ml / 8勺</option>
-        <option value="270">270ml / 9勺</option>
-        <option value="300">300ml / 10勺</option>
-    </select>
+<!-- 奶量页面 -->
+<div id="page-milk" class="page active">
+    <div class="card">
+        <label>冲调奶量</label>
+        <select id="prep">
+            <option value="30">30ml / 1勺</option>
+            <option value="60">60ml / 2勺</option>
+            <option value="90">90ml / 3勺</option>
+            <option value="120">120ml / 4勺</option>
+            <option value="150">150ml / 5勺</option>
+            <option value="180">180ml / 6勺</option>
+            <option value="210">210ml / 7勺</option>
+            <option value="240">240ml / 8勺</option>
+            <option value="270">270ml / 9勺</option>
+            <option value="300">300ml / 10勺</option>
+        </select>
 
-    <label>剩余奶量（默认0）</label>
-    <input type="number" id="left" inputmode="numeric" value="0"/>
+        <label>剩余奶量（默认0）</label>
+        <input id="left" type="number" inputmode="numeric" value="0">
 
-    <button onclick="recordMilk()">记录奶量</button>
-    <button onclick="undo('milk')" style="background:#999">撤回上一次奶量记录</button>
+        <button onclick="recordMilk()">记录奶量</button>
+        <button onclick="undo('milk')" style="background:#999;">撤回上一次奶量记录</button>
+    </div>
 </div>
 
-<!-- 大便记录 -->
-<div class="card">
-    <label>大便状态</label>
-    <select id="pooType">
-        <option value="">请选择</option>
-        <option value="正常">正常</option>
-        <option value="稀">稀</option>
-        <option value="干">干</option>
-        <option value="粘">粘</option>
-    </select>
+<!-- 大便页面 -->
+<div id="page-poo" class="page">
+    <div class="card">
+        <label>大便状态</label>
+        <select id="pooType">
+            <option value="">请选择</option>
+            <option value="正常">正常</option>
+            <option value="稀">稀</option>
+            <option value="干">干</option>
+            <option value="粘">粘</option>
+        </select>
 
-    <button onclick="recordPoo()">记录大便</button>
-    <button onclick="undo('poo')" style="background:#999">撤回上一次大便记录</button>
+        <button onclick="recordPoo()">记录大便</button>
+        <button onclick="undo('poo')" style="background:#999;">撤回上一次大便记录</button>
+    </div>
 </div>
 
-<!-- 辅食记录 -->
-<div class="card">
-    <label>辅食内容</label>
-    <input type="text" id="food" placeholder="如：南瓜泥 / 粥 / 面条" />
+<!-- 辅食页面 -->
+<div id="page-food" class="page">
+    <div class="card">
+        <label>辅食内容</label>
+        <input id="food" type="text" placeholder="如：南瓜泥 / 粥 / 面条">
 
-    <button onclick="recordFood()">记录辅食</button>
-    <button onclick="undo('food')" style="background:#999">撤回上一次辅食记录</button>
+        <button onclick="recordFood()">记录辅食</button>
+        <button onclick="undo('food')" style="background:#999;">撤回上一次辅食记录</button>
+    </div>
 </div>
 
-<!-- 统计 -->
-<div class="card">
-    <h2 style="text-align:center;color:#d63384;margin-top:0;">今日统计</h2>
-    <div class="stats-block" id="todayStats"></div>
+<!-- 统计页面 -->
+<div id="page-stats" class="page">
+    <div class="card">
+        <h2 style="text-align:center;color:#d63384;margin-top:0;">今日统计</h2>
+        <div id="todayStats" class="stats-block"></div>
 
-    <h2 style="text-align:center;color:#d63384;margin-top:20px;">选择日期范围统计</h2>
-
-    <div class="range-select">
+        <h2 style="text-align:center;color:#d63384;margin-top:20px;">时间范围统计</h2>
         <input type="date" id="startDate">
         <input type="date" id="endDate">
         <button onclick="calcRange()">查看统计</button>
-    </div>
 
-    <div id="rangeStats" class="stats-block"></div>
+        <div id="rangeStats" class="stats-block"></div>
+    </div>
+</div>
+
+<!-- 底部导航栏 -->
+<div class="nav">
+    <button id="tab-milk" class="active" onclick="switchTab('milk')">🍼 奶量</button>
+    <button id="tab-poo" onclick="switchTab('poo')">💩 大便</button>
+    <button id="tab-food" onclick="switchTab('food')">🍜 辅食</button>
+    <button id="tab-stats" onclick="switchTab('stats')">📊 统计</button>
 </div>
 
 
 <script>
-/* ========== 初始化数据 ========== */
+/* ---- 页面切换 ---- */
+function switchTab(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+
+    document.getElementById("page-" + name).classList.add("active");
+    document.getElementById("tab-" + name).classList.add("active");
+}
+
+/* ---- 数据加载 ---- */
 const load = (k) => JSON.parse(localStorage.getItem(k) || "[]");
 let milk = load("milk");
-let poo = load("poo");
+let poo  = load("poo");
 let food = load("food");
 
-/* ========== 保存 ========== */
 function save() {
     localStorage.setItem("milk", JSON.stringify(milk));
     localStorage.setItem("poo", JSON.stringify(poo));
     localStorage.setItem("food", JSON.stringify(food));
 }
 
-/* ========== 奶量记录 ========== */
+/* ---- 奶量记录 ---- */
 function recordMilk() {
     const prep = Number(document.getElementById("prep").value);
     const left = Number(document.getElementById("left").value || 0);
 
-    const actualPrep = prep + 10; // 因奶粉体积增加
-
+    const actualPrep = prep + 10;
     const drank = Math.max(actualPrep - left, 0);
     const waste = Math.max(left, 0);
 
     milk.push({ time: Date.now(), prep: actualPrep, drank, waste });
     save();
     updateToday();
+
     document.getElementById("left").value = 0;
     alert("奶量记录成功！");
 }
 
-/* ========== 大便记录 ========== */
+/* ---- 大便记录 ---- */
 function recordPoo() {
     const type = document.getElementById("pooType").value;
     if (!type) return alert("请先选择大便状态！");
@@ -191,11 +229,12 @@ function recordPoo() {
     poo.push({ time: Date.now(), type });
     save();
     updateToday();
+
     document.getElementById("pooType").value = "";
-    alert("记录成功！");
+    alert("大便记录成功！");
 }
 
-/* ========== 辅食 ========== */
+/* ---- 辅食记录 ---- */
 function recordFood() {
     const content = document.getElementById("food").value.trim();
     if (!content) return alert("请输入辅食内容");
@@ -203,20 +242,21 @@ function recordFood() {
     food.push({ time: Date.now(), content });
     save();
     updateToday();
+
     document.getElementById("food").value = "";
-    alert("记录成功！");
+    alert("辅食记录成功！");
 }
 
-/* ========== 撤回功能 ========== */
+/* ---- 撤回 ---- */
 function undo(type) {
     if (type === "milk" && milk.length) milk.pop();
-    if (type === "poo" && poo.length) poo.pop();
+    if (type === "poo"  && poo.length) poo.pop();
     if (type === "food" && food.length) food.pop();
     save();
     updateToday();
 }
 
-/* ========== 今日统计 ========== */
+/* ---- 今日统计 ---- */
 function updateToday() {
     const start = new Date();
     start.setHours(0,0,0,0);
@@ -228,16 +268,14 @@ function updateToday() {
 
     const drank = m.reduce((a,b)=>a+b.drank,0);
     const waste = m.reduce((a,b)=>a+b.waste,0);
-
-    const last = m.length ? (Date.now() - m[m.length-1].time)/60000 : null;
+    const last  = m.length ? Math.floor((Date.now() - m[m.length-1].time)/60000) : null;
 
     document.getElementById("todayStats").innerHTML = `
         <div>今日喝奶：<b>${drank}</b> ml</div>
         <div>今日浪费：<b>${waste}</b> ml</div>
         <div>今日大便：<b>${p.length}</b> 次</div>
         <div>今日辅食：<b>${f.length}</b> 次</div>
-        <div>上次喝奶间隔：<b>${last ? Math.floor(last)+" 分钟" : "无"}</b></div>
-
+        <div>上次喝奶间隔：<b>${last ? last+' 分钟' : '无'}</b></div>
         <hr style="margin:15px 0;">
         <div>累计喝奶：<b>${milk.reduce((a,b)=>a+b.drank,0)}</b> ml</div>
         <div>累计浪费：<b>${milk.reduce((a,b)=>a+b.waste,0)}</b> ml</div>
@@ -245,14 +283,15 @@ function updateToday() {
 }
 updateToday();
 
-/* ========== 时间范围统计 ========== */
+/* ---- 日期范围统计 ---- */
 function calcRange() {
     const s = document.getElementById("startDate").value;
     const e = document.getElementById("endDate").value;
-    if (!s || !e) return alert("请选择完整的时间范围");
+
+    if (!s || !e) return alert("请选择完整日期范围！");
 
     const st = new Date(s).getTime();
-    const et = new Date(e).getTime() + 86400000 - 1;
+    const et = new Date(e).getTime() + 86399999;
 
     const m = milk.filter(i => i.time >= st && i.time <= et);
     const p = poo.filter(i => i.time >= st && i.time <= et);
