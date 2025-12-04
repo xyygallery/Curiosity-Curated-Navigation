@@ -38,7 +38,7 @@
         text-align: left;
     }
 
-    select, input[type="number"] {
+    select, input[type="number"], input[type="text"], input[type="date"] {
         width: 100%;
         padding: 12px;
         margin-top: 5px;
@@ -46,7 +46,7 @@
         border: 1px solid #ccc;
         border-radius: 8px;
         font-size: 16px;
-        box-sizing: border-box;     /* ★ 防止溢出 */
+        box-sizing: border-box;
     }
 
     button {
@@ -66,6 +66,17 @@
         background: #e63e89;
     }
 
+    /* 撤回按钮样式 */
+    button.undo {
+        width: auto;
+        padding: 6px 10px;
+        font-size: 14px;
+        background: #999;
+        color: #fff;
+        border-radius: 6px;
+        margin-top: 6px;
+    }
+
     .stats-block {
         text-align: center;
         margin-top: 10px;
@@ -75,11 +86,29 @@
         font-size: 16px;
     }
 
-    /* 统计模块 */
     .range-select {
         display: flex;
         flex-direction: column;
         gap: 8px;
+    }
+
+    /* 小提示文字 */
+    .toast {
+        position: fixed;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.7);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 1000;
+    }
+    .toast.show {
+        opacity: 1;
     }
 </style>
 </head>
@@ -108,7 +137,7 @@
     <input type="number" id="left" inputmode="numeric" value="0"/>
 
     <button onclick="recordMilk()">记录奶量</button>
-    <button onclick="undo('milk')" style="background:#999">撤回上一次奶量记录</button>
+    <button onclick="undo('milk')" class="undo">撤回上一次奶量记录</button>
 </div>
 
 <!-- 大便记录 -->
@@ -123,7 +152,7 @@
     </select>
 
     <button onclick="recordPoo()">记录大便</button>
-    <button onclick="undo('poo')" style="background:#999">撤回上一次大便记录</button>
+    <button onclick="undo('poo')" class="undo">撤回上一次大便记录</button>
 </div>
 
 <!-- 辅食记录 -->
@@ -132,7 +161,7 @@
     <input type="text" id="food" placeholder="如：南瓜泥 / 粥 / 面条" />
 
     <button onclick="recordFood()">记录辅食</button>
-    <button onclick="undo('food')" style="background:#999">撤回上一次辅食记录</button>
+    <button onclick="undo('food')" class="undo">撤回上一次辅食记录</button>
 </div>
 
 <!-- 统计 -->
@@ -151,93 +180,108 @@
     <div id="rangeStats" class="stats-block"></div>
 </div>
 
+<!-- 小提示容器 -->
+<div id="toast" class="toast"></div>
 
 <script>
-/* ========== 初始化数据 ========== */
-const load = (k) => JSON.parse(localStorage.getItem(k) || "[]");
+/* ---- 数据初始化 ---- */
+const load = k => JSON.parse(localStorage.getItem(k)||"[]");
 let milk = load("milk");
 let poo = load("poo");
 let food = load("food");
 
-/* ========== 保存 ========== */
 function save() {
     localStorage.setItem("milk", JSON.stringify(milk));
     localStorage.setItem("poo", JSON.stringify(poo));
     localStorage.setItem("food", JSON.stringify(food));
 }
 
-/* ========== 奶量记录 ========== */
+/* ---- 小提示 ---- */
+function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"),2000);
+}
+
+/* ---- 记录奶量 ---- */
 function recordMilk() {
     const prep = Number(document.getElementById("prep").value);
-    const left = Number(document.getElementById("left").value || 0);
+    const left = Number(document.getElementById("left").value||0);
+    const actualPrep = prep + 10;
+    const drank = Math.max(actualPrep-left,0);
+    const waste = Math.max(left,0);
 
-    const actualPrep = prep + 10; // 因奶粉体积增加
-
-    const drank = Math.max(actualPrep - left, 0);
-    const waste = Math.max(left, 0);
-
-    milk.push({ time: Date.now(), prep: actualPrep, drank, waste });
+    milk.push({time:Date.now(),prep:actualPrep,drank,waste});
     save();
     updateToday();
     document.getElementById("left").value = 0;
-    alert("奶量记录成功！");
+    showToast("奶量记录成功！");
 }
 
-/* ========== 大便记录 ========== */
+/* ---- 记录大便 ---- */
 function recordPoo() {
     const type = document.getElementById("pooType").value;
-    if (!type) return alert("请先选择大便状态！");
-
-    poo.push({ time: Date.now(), type });
+    if(!type) return showToast("请先选择大便状态！");
+    poo.push({time:Date.now(),type});
     save();
     updateToday();
-    document.getElementById("pooType").value = "";
-    alert("记录成功！");
+    document.getElementById("pooType").value="";
+    showToast("大便记录成功！");
 }
 
-/* ========== 辅食 ========== */
+/* ---- 记录辅食 ---- */
 function recordFood() {
     const content = document.getElementById("food").value.trim();
-    if (!content) return alert("请输入辅食内容");
-
-    food.push({ time: Date.now(), content });
+    if(!content) return showToast("请输入辅食内容");
+    food.push({time:Date.now(),content});
     save();
     updateToday();
-    document.getElementById("food").value = "";
-    alert("记录成功！");
+    document.getElementById("food").value="";
+    showToast("辅食记录成功！");
 }
 
-/* ========== 撤回功能 ========== */
+/* ---- 撤回 ---- */
 function undo(type) {
-    if (type === "milk" && milk.length) milk.pop();
-    if (type === "poo" && poo.length) poo.pop();
-    if (type === "food" && food.length) food.pop();
+    if(type==="milk") {
+        if(!milk.length) return showToast("没有奶量记录可撤回");
+        if(!confirm("确认撤回最后一次奶量记录吗？")) return;
+        milk.pop();
+        showToast("奶量记录已撤回");
+    }
+    if(type==="poo") {
+        if(!poo.length) return showToast("没有大便记录可撤回");
+        poo.pop();
+        showToast("大便记录已撤回");
+    }
+    if(type==="food") {
+        if(!food.length) return showToast("没有辅食记录可撤回");
+        food.pop();
+        showToast("辅食记录已撤回");
+    }
     save();
     updateToday();
 }
 
-/* ========== 今日统计 ========== */
+/* ---- 今日统计 ---- */
 function updateToday() {
-    const start = new Date();
-    start.setHours(0,0,0,0);
+    const start = new Date(); start.setHours(0,0,0,0);
     const ts = start.getTime();
 
-    const m = milk.filter(i => i.time >= ts);
-    const p = poo.filter(i => i.time >= ts);
-    const f = food.filter(i => i.time >= ts);
+    const m = milk.filter(i=>i.time>=ts);
+    const p = poo.filter(i=>i.time>=ts);
+    const f = food.filter(i=>i.time>=ts);
 
     const drank = m.reduce((a,b)=>a+b.drank,0);
     const waste = m.reduce((a,b)=>a+b.waste,0);
+    const last = m.length ? Math.floor((Date.now()-m[m.length-1].time)/60000) : null;
 
-    const last = m.length ? (Date.now() - m[m.length-1].time)/60000 : null;
-
-    document.getElementById("todayStats").innerHTML = `
+    document.getElementById("todayStats").innerHTML=`
         <div>今日喝奶：<b>${drank}</b> ml</div>
         <div>今日浪费：<b>${waste}</b> ml</div>
         <div>今日大便：<b>${p.length}</b> 次</div>
         <div>今日辅食：<b>${f.length}</b> 次</div>
-        <div>上次喝奶间隔：<b>${last ? Math.floor(last)+" 分钟" : "无"}</b></div>
-
+        <div>上次喝奶间隔：<b>${last ? last+" 分钟":"无"}</b></div>
         <hr style="margin:15px 0;">
         <div>累计喝奶：<b>${milk.reduce((a,b)=>a+b.drank,0)}</b> ml</div>
         <div>累计浪费：<b>${milk.reduce((a,b)=>a+b.waste,0)}</b> ml</div>
@@ -245,20 +289,19 @@ function updateToday() {
 }
 updateToday();
 
-/* ========== 时间范围统计 ========== */
+/* ---- 时间范围统计 ---- */
 function calcRange() {
-    const s = document.getElementById("startDate").value;
-    const e = document.getElementById("endDate").value;
-    if (!s || !e) return alert("请选择完整的时间范围");
+    const s=document.getElementById("startDate").value;
+    const e=document.getElementById("endDate").value;
+    if(!s||!e) return showToast("请选择完整的时间范围");
+    const st=new Date(s).getTime();
+    const et=new Date(e).getTime()+86400000-1;
 
-    const st = new Date(s).getTime();
-    const et = new Date(e).getTime() + 86400000 - 1;
+    const m = milk.filter(i=>i.time>=st && i.time<=et);
+    const p = poo.filter(i=>i.time>=st && i.time<=et);
+    const f = food.filter(i=>i.time>=st && i.time<=et);
 
-    const m = milk.filter(i => i.time >= st && i.time <= et);
-    const p = poo.filter(i => i.time >= st && i.time <= et);
-    const f = food.filter(i => i.time >= st && i.time <= et);
-
-    document.getElementById("rangeStats").innerHTML = `
+    document.getElementById("rangeStats").innerHTML=`
         <div>期间喝奶：<b>${m.reduce((a,b)=>a+b.drank,0)}</b> ml</div>
         <div>期间浪费：<b>${m.reduce((a,b)=>a+b.waste,0)}</b> ml</div>
         <div>期间大便：<b>${p.length}</b> 次</div>
@@ -266,6 +309,5 @@ function calcRange() {
     `;
 }
 </script>
-
 </body>
 </html>
