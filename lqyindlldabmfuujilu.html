@@ -115,14 +115,13 @@ button.undo {
 }
 .toast.show { opacity: 1; }
 
-/* 折叠内容样式 + 动画 */
 .collapsible-content {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease;
 }
 .collapsible-content.open {
-    max-height: 500px; /* 适当大于内容高度即可 */
+    max-height: 600px; /* 适当大于内容高度即可 */
 }
 </style>
 </head>
@@ -192,15 +191,17 @@ button.undo {
     </div>
 </div>
 
-<!-- 时间范围统计 -->
+<!-- 时间范围统计（折叠） -->
 <div class="card">
-    <h2 style="text-align:center;color:#d63384;margin-top:0;">选择日期范围统计</h2>
-    <div class="range-select">
-        <input type="date" id="startDate">
-        <input type="date" id="endDate">
-        <button onclick="calcRange()">查看统计</button>
+    <div class="module-title" onclick="toggleCollapse('rangeContent')">📊 时间范围统计 (点击展开)</div>
+    <div id="rangeContent" class="collapsible-content">
+        <div class="range-select">
+            <input type="date" id="startDate">
+            <input type="date" id="endDate">
+            <button onclick="calcRange()">查看统计</button>
+        </div>
+        <div id="rangeStats" class="stats-block"></div>
     </div>
-    <div id="rangeStats" class="stats-block"></div>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -212,6 +213,7 @@ let milk = load("milk");
 let poo = load("poo");
 let food = load("food");
 
+/* ---- 保存 ---- */
 function save() {
     localStorage.setItem("milk", JSON.stringify(milk));
     localStorage.setItem("poo", JSON.stringify(poo));
@@ -226,7 +228,7 @@ function showToast(msg) {
     setTimeout(()=>t.classList.remove("show"),2000);
 }
 
-/* ---- 折叠功能 (自动互斥) ---- */
+/* ---- 折叠功能 (互斥) ---- */
 function toggleCollapse(id){
     const all = document.querySelectorAll('.collapsible-content');
     all.forEach(c=>{
