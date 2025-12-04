@@ -59,18 +59,23 @@ button:active { opacity: .8; }
     line-height: 1.6;
 }
 .bold { font-weight: bold; }
+.undo-btn {
+    background: #ffb6d1;
+    margin-top: 4px;
+}
 </style>
 </head>
 <body>
 
-<h2>宝宝记录（iOS 优化版）</h2>
+<h2>宝宝记录（iOS 优化 + 撤回）</h2>
 
 <!-- 奶量 -->
 <div class="section">
 <h2>喝奶记录</h2>
-<input id="milkMix" type="number" placeholder="冲调奶量（ml）">
-<input id="milkLeft" type="number" placeholder="剩余奶量（ml）">
+<input id="milkMix" type="number" inputmode="numeric" placeholder="冲调奶量（ml）">
+<input id="milkLeft" type="number" inputmode="numeric" placeholder="剩余奶量（ml）">
 <button id="milkBtn">记录奶量</button>
+<button id="milkUndo" class="undo-btn">撤回奶量</button>
 
 <div class="stats">
 今日喝奶：<span id="milkToday">0</span> ml<br>
@@ -86,6 +91,7 @@ button:active { opacity: .8; }
 <div class="section">
 <h2>大便记录</h2>
 <select id="pooStatus">
+  <option value="">请选择状态</option>
   <option value="正常">正常</option>
   <option value="稀">稀</option>
   <option value="干">干</option>
@@ -93,6 +99,7 @@ button:active { opacity: .8; }
 </select>
 <input id="pooNote" placeholder="备注（可空）">
 <button id="pooBtn">记录大便</button>
+<button id="pooUndo" class="undo-btn">撤回大便</button>
 
 <div class="stats">
 今日次数：<span id="pooToday">0</span>
@@ -105,6 +112,7 @@ button:active { opacity: .8; }
 <h2>辅食记录</h2>
 <input id="foodInput" placeholder="辅食内容（如 南瓜泥）">
 <button id="foodBtn">记录辅食</button>
+<button id="foodUndo" class="undo-btn">撤回辅食</button>
 
 <div class="stats">
 今日辅食次数：<span id="foodToday">0</span>
@@ -136,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const left = parseInt(leftEl.value);
         if (!mix && mix!==0) { alert("请输入冲调奶量"); return; }
         if (left<0 || left>mix) { alert("剩余奶量不合理"); return; }
-        const drink = mix - left;
+        const drink = mix - left + 10; // 喝掉奶量 +10ml
         const waste = left;
         milk.push({mix, left, drink, waste, time: now()});
         save(); updateMilk();
@@ -166,6 +174,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const noteEl = document.getElementById("pooNote");
         const status = statusEl.value;
         const note = noteEl.value.trim();
+        if (!status){ alert("请先选择大便状态"); return; }
         poo.push({status, note, time: now()});
         save(); updatePoo();
         noteEl.value="";
@@ -198,6 +207,17 @@ document.addEventListener("DOMContentLoaded", function() {
         const today = new Date().toISOString().slice(0,10);
         document.getElementById("foodToday").textContent = food.filter(i=>i.time.startsWith(today)).length;
     }
+
+    // 撤回功能
+    document.getElementById("milkUndo").addEventListener("click", function() {
+        if(milk.length>0){ milk.pop(); save(); updateMilk(); }
+    });
+    document.getElementById("pooUndo").addEventListener("click", function() {
+        if(poo.length>0){ poo.pop(); save(); updatePoo(); }
+    });
+    document.getElementById("foodUndo").addEventListener("click", function() {
+        if(food.length>0){ food.pop(); save(); updateFood(); }
+    });
 
     // 按钮绑定
     document.getElementById("milkBtn").addEventListener("click", addMilk);
