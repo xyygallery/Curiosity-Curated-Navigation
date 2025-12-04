@@ -6,118 +6,124 @@
 <title>奕奕宝宝的奶量大便辅食记录本</title>
 
 <style>
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-        background: #ffe6ef;
-        margin: 0;
-        padding: 15px;
-        line-height: 1.6;
-    }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    background: #ffe6ef;
+    margin: 0;
+    padding: 15px;
+    line-height: 1.6;
+}
 
-    h1 {
-        text-align: center;
-        font-size: 22px;
-        font-weight: 700;
-        margin-bottom: 20px;
-        color: #d63384;
-    }
+h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #d63384;
+}
 
-    .card {
-        background: #fff;
-        padding: 20px;
-        margin-bottom: 25px; /* 增加模块间距 */
-        border-radius: 16px; /* 圆角加大 */
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* 阴影加深 */
-    }
+.card {
+    background: #fff0f5;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
 
-    .module-title {
-        font-size: 20px; /* 稍大 */
-        font-weight: 700;
-        color: #d63384;
-        margin-bottom: 12px;
-        border-bottom: 2px solid #ff9ac8;
-        padding-bottom: 6px;
-    }
+.module-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #d63384;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #ff9ac8;
+    padding-bottom: 6px;
+    cursor: pointer;
+}
 
-    label {
-        font-weight: 600;
-        color: #d63384;
-        margin-bottom: 6px;
-        display: block;
-        text-align: left;
-    }
+label {
+    font-weight: 600;
+    color: #d63384;
+    margin-bottom: 6px;
+    display: block;
+    text-align: left;
+}
 
-    select, input[type="number"], input[type="text"], input[type="date"] {
-        width: 100%;
-        padding: 12px;
-        margin-top: 5px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 16px;
-        box-sizing: border-box;
-    }
+select, input[type="number"], input[type="text"], input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
 
-    button {
-        width: 100%;
-        padding: 14px;
-        background: #ff4f9a;
-        border: none;
-        color: #fff;
-        font-size: 17px;
-        border-radius: 10px;
-        margin-top: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        box-sizing: border-box;
-    }
-    button:active { background: #e63e89; }
+button {
+    width: 100%;
+    padding: 14px;
+    background: #ff4f9a;
+    border: none;
+    color: #fff;
+    font-size: 17px;
+    border-radius: 10px;
+    margin-top: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+button:active { background: #e63e89; }
 
-    button.undo {
-        width: auto;
-        padding: 6px 10px;
-        font-size: 14px;
-        background: #999;
-        color: #fff;
-        border-radius: 6px;
-        margin-top: 6px;
-    }
+button.undo {
+    width: auto;
+    padding: 6px 10px;
+    font-size: 14px;
+    background: #999;
+    color: #fff;
+    border-radius: 6px;
+    margin-top: 6px;
+}
 
-    .stats-block {
-        text-align: center;
-        margin-top: 10px;
-    }
-    .stats-block div {
-        margin: 6px 0;
-        font-size: 16px;
-    }
+.stats-block {
+    text-align: center;
+    margin-top: 10px;
+}
+.stats-block div {
+    margin: 6px 0;
+    font-size: 16px;
+}
 
-    .range-select {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
+.range-select {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 
-    .toast {
-        position: fixed;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.7);
-        color: #fff;
-        padding: 8px 12px;
-        border-radius: 8px;
-        font-size: 14px;
-        opacity: 0;
-        transition: opacity 0.3s;
-        z-index: 1000;
-    }
-    .toast.show { opacity: 1; }
+.toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1000;
+}
+.toast.show { opacity: 1; }
 
-    /* 模块背景色淡化 */
-    .milk-module { background: #fff0f5; }
-    .poo-module  { background: #fff5e6; }
-    .food-module { background: #f0fff5; }
+/* 折叠内容样式 + 动画 */
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+.collapsible-content.open {
+    max-height: 500px; /* 适当大于内容高度即可 */
+}
 </style>
 </head>
 
@@ -126,7 +132,7 @@
 <h1>奕奕宝宝的奶量大便辅食记录本</h1>
 
 <!-- 奶量记录 -->
-<div class="card milk-module">
+<div class="card">
     <div class="module-title">🍼 奶量记录</div>
     <label>冲调奶量</label>
     <select id="prep">
@@ -150,38 +156,45 @@
     <button onclick="undo('milk')" class="undo">撤回上一次奶量记录</button>
 </div>
 
-<!-- 大便记录 -->
-<div class="card poo-module">
-    <div class="module-title">💩 大便记录</div>
-    <label>大便状态</label>
-    <select id="pooType">
-        <option value="">请选择</option>
-        <option value="正常">正常</option>
-        <option value="稀">稀</option>
-        <option value="干">干</option>
-        <option value="粘">粘</option>
-    </select>
-
-    <button onclick="recordPoo()">记录大便</button>
-    <button onclick="undo('poo')" class="undo">撤回上一次大便记录</button>
-</div>
-
-<!-- 辅食记录 -->
-<div class="card food-module">
-    <div class="module-title">🍜 辅食记录</div>
-    <label>辅食内容</label>
-    <input type="text" id="food" placeholder="如：南瓜泥 / 粥 / 面条" />
-
-    <button onclick="recordFood()">记录辅食</button>
-    <button onclick="undo('food')" class="undo">撤回上一次辅食记录</button>
-</div>
-
-<!-- 统计 -->
+<!-- 今日统计 -->
 <div class="card">
     <h2 style="text-align:center;color:#d63384;margin-top:0;">今日统计</h2>
     <div class="stats-block" id="todayStats"></div>
+</div>
 
-    <h2 style="text-align:center;color:#d63384;margin-top:20px;">选择日期范围统计</h2>
+<!-- 大便记录（折叠） -->
+<div class="card">
+    <div class="module-title" onclick="toggleCollapse('pooContent')">💩 大便记录 (点击展开)</div>
+    <div id="pooContent" class="collapsible-content">
+        <label>大便状态</label>
+        <select id="pooType">
+            <option value="">请选择</option>
+            <option value="正常">正常</option>
+            <option value="稀">稀</option>
+            <option value="干">干</option>
+            <option value="粘">粘</option>
+        </select>
+
+        <button onclick="recordPoo()">记录大便</button>
+        <button onclick="undo('poo')" class="undo">撤回上一次大便记录</button>
+    </div>
+</div>
+
+<!-- 辅食记录（折叠） -->
+<div class="card">
+    <div class="module-title" onclick="toggleCollapse('foodContent')">🍜 辅食记录 (点击展开)</div>
+    <div id="foodContent" class="collapsible-content">
+        <label>辅食内容</label>
+        <input type="text" id="food" placeholder="如：南瓜泥 / 粥 / 面条" />
+
+        <button onclick="recordFood()">记录辅食</button>
+        <button onclick="undo('food')" class="undo">撤回上一次辅食记录</button>
+    </div>
+</div>
+
+<!-- 时间范围统计 -->
+<div class="card">
+    <h2 style="text-align:center;color:#d63384;margin-top:0;">选择日期范围统计</h2>
     <div class="range-select">
         <input type="date" id="startDate">
         <input type="date" id="endDate">
@@ -190,7 +203,6 @@
     <div id="rangeStats" class="stats-block"></div>
 </div>
 
-<!-- 小提示容器 -->
 <div id="toast" class="toast"></div>
 
 <script>
@@ -212,6 +224,15 @@ function showToast(msg) {
     t.textContent = msg;
     t.classList.add("show");
     setTimeout(()=>t.classList.remove("show"),2000);
+}
+
+/* ---- 折叠功能 (自动互斥) ---- */
+function toggleCollapse(id){
+    const all = document.querySelectorAll('.collapsible-content');
+    all.forEach(c=>{
+        if(c.id!==id) c.classList.remove('open');
+    });
+    document.getElementById(id).classList.toggle('open');
 }
 
 /* ---- 记录奶量 ---- */
