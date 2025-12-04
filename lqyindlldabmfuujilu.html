@@ -10,57 +10,59 @@
     --pink-light: #ffe8f3;
     --text-dark: #444;
 }
+* { box-sizing: border-box; }
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
     background: #fff0f7;
     margin: 0;
     padding: 15px;
+    -webkit-tap-highlight-color: transparent;
 }
 .main-title {
     text-align: center;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 24px;
     color: var(--pink);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 .section {
     background: white;
-    padding: 20px;
-    margin-bottom: 16px;
-    border-radius: 16px;
-    box-shadow: 0 3px 8px rgba(255,140,180,0.3);
+    padding: 18px;
+    margin-bottom: 14px;
+    border-radius: 14px;
+    box-shadow: 0 3px 8px rgba(255,140,180,0.18);
 }
 h2 {
-    margin: 0 0 12px;
-    font-size: 20px;
+    margin: 0 0 10px;
+    font-size: 18px;
     color: var(--pink);
-    font-weight: bold;
+    font-weight: 700;
 }
 input, select, button {
     width: 100%;
-    padding: 18px;       
-    font-size: 20px;     
-    border-radius: 16px; 
+    padding: 16px;
+    font-size: 18px;
+    border-radius: 12px;
     margin: 8px 0;
     border: 2px solid #ffd1e8;
     background: #fffafd;
-    box-sizing: border-box;
 }
 button {
     background: var(--pink);
     color: white;
-    font-size: 22px;     
-    font-weight: bold;
+    font-size: 20px;
+    font-weight: 700;
+    border: none;
 }
-button:active { opacity: .8; }
+button:active { opacity: .9; }
 .item {
     padding: 10px 0;
     border-bottom: 1px solid #ffd8eb;
-    font-size: 16px;
+    font-size: 15px;
     color: var(--text-dark);
 }
 .stats {
-    font-size: 16px;
+    font-size: 15px;
     margin-top: 10px;
     line-height: 1.6;
 }
@@ -69,9 +71,45 @@ button:active { opacity: .8; }
     background: #ffb6d1;
     margin-top: 4px;
 }
-label { font-size: 16px; margin-top: 8px; display:block; word-break: break-word; }
-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size:16px; }
+
+/* ---------- 关键：防止日期控件溢出 ---------- */
+.row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+.row .col {
+    flex: 1 1 0;
+    min-width: 0; /* 关键：允许缩小，避免溢出 */
+}
+.row label { display:block; font-size:14px; margin:0 0 6px 0; color:#666; }
+.date-inline {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+.date-inline input[type="date"] {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ffdce9;
+    background: #fff;
+    width: 100%;
+    min-width: 0; /* 关键 */
+}
+
+/* 表格适配手机 */
+table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size:14px; }
 th, td { border: 1px solid #ffd1e8; padding: 8px; text-align: center; word-break: break-word; }
+
+/* 小屏幕微调 */
+@media (max-width:420px){
+    .main-title { font-size: 22px; }
+    input, select, button { padding: 14px; font-size: 17px; border-radius: 12px; }
+    .stats { font-size: 14px; }
+}
 </style>
 </head>
 <body>
@@ -80,84 +118,86 @@ th, td { border: 1px solid #ffd1e8; padding: 8px; text-align: center; word-break
 
 <!-- 奶量 -->
 <div class="section">
-<h2>喝奶记录</h2>
-<select id="milkMix">
-  <option value="30">30 ML / 1 勺</option>
-  <option value="60">60 ML / 2 勺</option>
-  <option value="90">90 ML / 3 勺</option>
-  <option value="120">120 ML / 4 勺</option>
-  <option value="150">150 ML / 5 勺</option>
-  <option value="180">180 ML / 6 勺</option>
-  <option value="210">210 ML / 7 勺</option>
-  <option value="240">240 ML / 8 勺</option>
-  <option value="270">270 ML / 9 勺</option>
-  <option value="300">300 ML / 10 勺</option>
-</select>
-<input id="milkLeft" type="number" inputmode="numeric" placeholder="剩余奶量（ml，可选，默认0）">
-<button id="milkBtn">记录奶量</button>
-<button id="milkUndo" class="undo-btn">撤回奶量</button>
+  <h2>喝奶记录</h2>
+  <select id="milkMix" aria-label="冲调奶量">
+    <option value="30">30 ML / 1 勺</option>
+    <option value="60">60 ML / 2 勺</option>
+    <option value="90">90 ML / 3 勺</option>
+    <option value="120">120 ML / 4 勺</option>
+    <option value="150">150 ML / 5 勺</option>
+    <option value="180">180 ML / 6 勺</option>
+    <option value="210">210 ML / 7 勺</option>
+    <option value="240">240 ML / 8 勺</option>
+    <option value="270">270 ML / 9 勺</option>
+    <option value="300">300 ML / 10 勺</option>
+  </select>
 
-<div class="stats">
-今日喝奶：<span id="milkToday">0</span> ml<br>
-今日浪费：<span id="wasteToday">0</span> ml<br>
-累计喝奶：<span id="milkTotal">0</span> ml<br>
-累计浪费：<span id="wasteTotal">0</span> ml<br>
-上次间隔：<span id="milkGap">无</span>
-</div>
-<div id="milkList"></div>
+  <input id="milkLeft" type="number" inputmode="numeric" placeholder="剩余奶量（ml，可选，默认0）" aria-label="剩余奶量">
+  <button id="milkBtn" aria-label="记录奶量">记录奶量</button>
+  <button id="milkUndo" class="undo-btn" aria-label="撤回奶量">撤回奶量</button>
+
+  <div class="stats">
+    今日喝奶：<span id="milkToday">0</span> ml<br>
+    今日浪费：<span id="wasteToday">0</span> ml<br>
+    累计喝奶：<span id="milkTotal">0</span> ml<br>
+    累计浪费：<span id="wasteTotal">0</span> ml<br>
+    上次间隔：<span id="milkGap">无</span>
+  </div>
+  <div id="milkList"></div>
 </div>
 
 <!-- 大便 -->
 <div class="section">
-<h2>大便记录</h2>
-<select id="pooStatus">
-  <option value="">请选择状态</option>
-  <option value="正常">正常</option>
-  <option value="稀">稀</option>
-  <option value="干">干</option>
-  <option value="其他">其他</option>
-</select>
-<input id="pooNote" placeholder="备注（可空）">
-<button id="pooBtn">记录大便</button>
-<button id="pooUndo" class="undo-btn">撤回大便</button>
+  <h2>大便记录</h2>
+  <select id="pooStatus" aria-label="大便状态">
+    <option value="">请选择状态</option>
+    <option value="正常">正常</option>
+    <option value="稀">稀</option>
+    <option value="干">干</option>
+    <option value="其他">其他</option>
+  </select>
+  <input id="pooNote" placeholder="备注（可空）" aria-label="大便备注">
+  <button id="pooBtn" aria-label="记录大便">记录大便</button>
+  <button id="pooUndo" class="undo-btn" aria-label="撤回大便">撤回大便</button>
 
-<div class="stats">
-今日次数：<span id="pooToday">0</span>
-</div>
-<div id="pooList"></div>
+  <div class="stats">
+    今日次数：<span id="pooToday">0</span>
+  </div>
+  <div id="pooList"></div>
 </div>
 
 <!-- 辅食 -->
 <div class="section">
-<h2>辅食记录</h2>
-<input id="foodInput" placeholder="辅食内容（如 南瓜泥）">
-<button id="foodBtn">记录辅食</button>
-<button id="foodUndo" class="undo-btn">撤回辅食</button>
+  <h2>辅食记录</h2>
+  <input id="foodInput" placeholder="辅食内容（如 南瓜泥）" aria-label="辅食内容">
+  <button id="foodBtn" aria-label="记录辅食">记录辅食</button>
+  <button id="foodUndo" class="undo-btn" aria-label="撤回辅食">撤回辅食</button>
 
-<div class="stats">
-今日辅食次数：<span id="foodToday">0</span>
-</div>
-<div id="foodList"></div>
+  <div class="stats">
+    今日辅食次数：<span id="foodToday">0</span>
+  </div>
+  <div id="foodList"></div>
 </div>
 
-<!-- 总计统计 -->
+<!-- 按天统计表格模块（保留） -->
 <div class="section">
-<h2>统计数据（总计）</h2>
-<label>开始日期：<input type="date" id="statStart"></label>
-<label>结束日期：<input type="date" id="statEnd"></label>
-<button id="statBtn">查看总计统计</button>
+  <h2>按天统计表格</h2>
 
-<div class="stats" id="statResult"></div>
-</div>
+  <!-- 使用行/列灵活布局，防止溢出 -->
+  <div class="row">
+    <div class="col">
+      <label for="statStartDay">开始日期</label>
+      <input id="statStartDay" type="date">
+    </div>
+    <div class="col">
+      <label for="statEndDay">结束日期</label>
+      <input id="statEndDay" type="date">
+    </div>
+  </div>
 
-<!-- 按天统计表格 -->
-<div class="section">
-<h2>按天统计表格</h2>
-<label>开始日期：<input type="date" id="statStartDay"></label>
-<label>结束日期：<input type="date" id="statEndDay"></label>
-<button id="statDayBtn">查看按天统计</button>
+  <button id="statDayBtn" style="margin-top:8px;">查看按天统计</button>
 
-<div class="stats" id="statDayResult"></div>
+  <div class="stats" id="statDayResult"></div>
 </div>
 
 <script>
@@ -165,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let milk = JSON.parse(localStorage.getItem("milk") || "[]");
     let poo  = JSON.parse(localStorage.getItem("poo") || "[]");
-    let food = JSON.parse(localStorage.getItem("food") || "[]");
+    let food = JSON.parse(localStorage.getItem("food") || "[]');
 
     function save() {
         localStorage.setItem("milk", JSON.stringify(milk));
@@ -256,24 +296,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("pooBtn").addEventListener("click", addPoo);
     document.getElementById("foodBtn").addEventListener("click", addFood);
 
-    // 总计统计
-    document.getElementById("statBtn").addEventListener("click", ()=>{
-        const start = document.getElementById("statStart").value;
-        const end = document.getElementById("statEnd").value;
-        if(!start||!end){alert("请选择开始和结束日期");return;}
-        const milkRange = milk.filter(i=>i.time.slice(0,10)>=start && i.time.slice(0,10)<=end);
-        const milkDrinkSum = milkRange.reduce((a,b)=>a+b.drink,0);
-        const milkWasteSum = milkRange.reduce((a,b)=>a+b.waste,0);
-        const pooRange = poo.filter(i=>i.time.slice(0,10)>=start && i.time.slice(0,10)<=end);
-        const foodRange = food.filter(i=>i.time.slice(0,10)>=start && i.time.slice(0,10)<=end);
-        document.getElementById("statResult").innerHTML = `
-            <b>奶量喝掉总计：</b>${milkDrinkSum} ml<br>
-            <b>奶量浪费总计：</b>${milkWasteSum} ml<br>
-            <b>大便次数：</b>${pooRange.length}<br>
-            <b>辅食次数：</b>${foodRange.length}
-        `;
-    });
-
     // 按天统计表格
     document.getElementById("statDayBtn").addEventListener("click", ()=>{
         const start = document.getElementById("statStartDay").value;
@@ -282,9 +304,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const startDate = new Date(start);
         const endDate = new Date(end);
         let html = `<table>
-                    <tr>
-                    <th>日期</th><th>奶量喝掉(ml)</th><th>奶量浪费(ml)</th><th>大便次数</th><th>辅食次数</th>
-                    </tr>`;
+                    <tr><th>日期</th><th>奶量喝掉(ml)</th><th>奶量浪费(ml)</th><th>大便次数</th><th>辅食次数</th></tr>`;
         for(let d=new Date(startDate); d<=endDate; d.setDate(d.getDate()+1)){
             const dayStr = d.toISOString().slice(0,10);
             const milkDay = milk.filter(i=>i.time.startsWith(dayStr));
@@ -298,6 +318,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("statDayResult").innerHTML = html;
     });
 
+    // 初始加载
     updateMilk();
     updatePoo();
     updateFood();
