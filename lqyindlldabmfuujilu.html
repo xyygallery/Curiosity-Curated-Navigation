@@ -60,6 +60,17 @@
     }
     button:active { background: #e63e89; }
 
+    /* 撤回按钮缩小 */
+    button.undo {
+        width: auto;
+        padding: 6px 10px;
+        font-size: 14px;
+        background: #999;
+        color: #fff;
+        border-radius: 6px;
+        margin-top: 6px;
+    }
+
     /* 底部导航栏 */
     .nav {
         position: fixed;
@@ -98,6 +109,25 @@
 
     .stats-block { text-align: center; }
     .stats-block div { margin: 6px 0; }
+
+    /* 小提示文字 */
+    .toast {
+        position: fixed;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.7);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 1000;
+    }
+    .toast.show {
+        opacity: 1;
+    }
 </style>
 </head>
 
@@ -126,7 +156,7 @@
         <input id="left" type="number" inputmode="numeric" value="0">
 
         <button onclick="recordMilk()">记录奶量</button>
-        <button onclick="undo('milk')" style="background:#999;">撤回上一次奶量记录</button>
+        <button onclick="undo('milk')" class="undo">撤回上一次奶量记录</button>
     </div>
 </div>
 
@@ -143,7 +173,7 @@
         </select>
 
         <button onclick="recordPoo()">记录大便</button>
-        <button onclick="undo('poo')" style="background:#999;">撤回上一次大便记录</button>
+        <button onclick="undo('poo')" class="undo">撤回上一次大便记录</button>
     </div>
 </div>
 
@@ -154,7 +184,7 @@
         <input id="food" type="text" placeholder="如：南瓜泥 / 粥 / 面条">
 
         <button onclick="recordFood()">记录辅食</button>
-        <button onclick="undo('food')" style="background:#999;">撤回上一次辅食记录</button>
+        <button onclick="undo('food')" class="undo">撤回上一次辅食记录</button>
     </div>
 </div>
 
@@ -181,6 +211,8 @@
     <button id="tab-stats" onclick="switchTab('stats')">📊 统计</button>
 </div>
 
+<!-- 小提示容器 -->
+<div id="toast" class="toast"></div>
 
 <script>
 /* ---- 页面切换 ---- */
@@ -204,6 +236,14 @@ function save() {
     localStorage.setItem("food", JSON.stringify(food));
 }
 
+/* ---- 提示函数 ---- */
+function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"), 2000);
+}
+
 /* ---- 奶量记录 ---- */
 function recordMilk() {
     const prep = Number(document.getElementById("prep").value);
@@ -218,40 +258,53 @@ function recordMilk() {
     updateToday();
 
     document.getElementById("left").value = 0;
-    alert("奶量记录成功！");
+    showToast("奶量记录成功！");
 }
 
 /* ---- 大便记录 ---- */
 function recordPoo() {
     const type = document.getElementById("pooType").value;
-    if (!type) return alert("请先选择大便状态！");
+    if (!type) return showToast("请先选择大便状态！");
 
     poo.push({ time: Date.now(), type });
     save();
     updateToday();
 
     document.getElementById("pooType").value = "";
-    alert("大便记录成功！");
+    showToast("大便记录成功！");
 }
 
 /* ---- 辅食记录 ---- */
 function recordFood() {
     const content = document.getElementById("food").value.trim();
-    if (!content) return alert("请输入辅食内容");
+    if (!content) return showToast("请输入辅食内容");
 
     food.push({ time: Date.now(), content });
     save();
     updateToday();
 
     document.getElementById("food").value = "";
-    alert("辅食记录成功！");
+    showToast("辅食记录成功！");
 }
 
 /* ---- 撤回 ---- */
 function undo(type) {
-    if (type === "milk" && milk.length) milk.pop();
-    if (type === "poo"  && poo.length) poo.pop();
-    if (type === "food" && food.length) food.pop();
+    if (type === "milk") {
+        if (!milk.length) return showToast("没有奶量记录可撤回");
+        if (!confirm("确认撤回最后一次奶量记录吗？")) return;
+        milk.pop();
+        showToast("奶量记录已撤回");
+    }
+    if (type === "poo") {
+        if (!poo.length) return showToast("没有大便记录可撤回");
+        poo.pop();
+        showToast("大便记录已撤回");
+    }
+    if (type === "food") {
+        if (!food.length) return showToast("没有辅食记录可撤回");
+        food.pop();
+        showToast("辅食记录已撤回");
+    }
     save();
     updateToday();
 }
@@ -288,7 +341,7 @@ function calcRange() {
     const s = document.getElementById("startDate").value;
     const e = document.getElementById("endDate").value;
 
-    if (!s || !e) return alert("请选择完整日期范围！");
+    if (!s || !e) return showToast("请选择完整日期范围！");
 
     const st = new Date(s).getTime();
     const et = new Date(e).getTime() + 86399999;
