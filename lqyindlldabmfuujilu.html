@@ -24,10 +24,19 @@
 
     .card {
         background: #fff;
-        padding: 15px;
-        margin-bottom: 18px;
-        border-radius: 12px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 25px; /* 增加模块间距 */
+        border-radius: 16px; /* 圆角加大 */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* 阴影加深 */
+    }
+
+    .module-title {
+        font-size: 20px; /* 稍大 */
+        font-weight: 700;
+        color: #d63384;
+        margin-bottom: 12px;
+        border-bottom: 2px solid #ff9ac8;
+        padding-bottom: 6px;
     }
 
     label {
@@ -62,11 +71,8 @@
         font-weight: 600;
         box-sizing: border-box;
     }
-    button:active {
-        background: #e63e89;
-    }
+    button:active { background: #e63e89; }
 
-    /* 撤回按钮样式 */
     button.undo {
         width: auto;
         padding: 6px 10px;
@@ -92,7 +98,6 @@
         gap: 8px;
     }
 
-    /* 小提示文字 */
     .toast {
         position: fixed;
         bottom: 80px;
@@ -107,9 +112,12 @@
         transition: opacity 0.3s;
         z-index: 1000;
     }
-    .toast.show {
-        opacity: 1;
-    }
+    .toast.show { opacity: 1; }
+
+    /* 模块背景色淡化 */
+    .milk-module { background: #fff0f5; }
+    .poo-module  { background: #fff5e6; }
+    .food-module { background: #f0fff5; }
 </style>
 </head>
 
@@ -118,9 +126,11 @@
 <h1>奕奕宝宝的奶量大便辅食记录本</h1>
 
 <!-- 奶量记录 -->
-<div class="card">
+<div class="card milk-module">
+    <div class="module-title">🍼 奶量记录</div>
     <label>冲调奶量</label>
     <select id="prep">
+        <option value="">请选择冲调量</option>
         <option value="30">30ml / 1勺</option>
         <option value="60">60ml / 2勺</option>
         <option value="90">90ml / 3勺</option>
@@ -141,7 +151,8 @@
 </div>
 
 <!-- 大便记录 -->
-<div class="card">
+<div class="card poo-module">
+    <div class="module-title">💩 大便记录</div>
     <label>大便状态</label>
     <select id="pooType">
         <option value="">请选择</option>
@@ -156,7 +167,8 @@
 </div>
 
 <!-- 辅食记录 -->
-<div class="card">
+<div class="card food-module">
+    <div class="module-title">🍜 辅食记录</div>
     <label>辅食内容</label>
     <input type="text" id="food" placeholder="如：南瓜泥 / 粥 / 面条" />
 
@@ -170,13 +182,11 @@
     <div class="stats-block" id="todayStats"></div>
 
     <h2 style="text-align:center;color:#d63384;margin-top:20px;">选择日期范围统计</h2>
-
     <div class="range-select">
         <input type="date" id="startDate">
         <input type="date" id="endDate">
         <button onclick="calcRange()">查看统计</button>
     </div>
-
     <div id="rangeStats" class="stats-block"></div>
 </div>
 
@@ -206,7 +216,9 @@ function showToast(msg) {
 
 /* ---- 记录奶量 ---- */
 function recordMilk() {
-    const prep = Number(document.getElementById("prep").value);
+    const prepSelect = document.getElementById("prep");
+    if(!prepSelect.value) return showToast("请先选择冲调奶量！");
+    const prep = Number(prepSelect.value);
     const left = Number(document.getElementById("left").value||0);
     const actualPrep = prep + 10;
     const drank = Math.max(actualPrep-left,0);
@@ -216,6 +228,7 @@ function recordMilk() {
     save();
     updateToday();
     document.getElementById("left").value = 0;
+    prepSelect.value = "";
     showToast("奶量记录成功！");
 }
 
