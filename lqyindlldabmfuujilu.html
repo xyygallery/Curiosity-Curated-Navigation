@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>奕奕宝宝日常记录</title>
+<title>奕奕宝宝的奶量大便辅食记录本</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 :root {
@@ -15,6 +15,13 @@ body {
     background: #fff0f7;
     margin: 0;
     padding: 15px;
+}
+.main-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    color: var(--pink);
+    margin-bottom: 20px;
 }
 .section {
     background: white;
@@ -63,11 +70,14 @@ button:active { opacity: .8; }
     background: #ffb6d1;
     margin-top: 4px;
 }
+label { font-size: 16px; margin-top: 8px; display:block; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { border: 1px solid #ffd1e8; padding: 6px; text-align: center; }
 </style>
 </head>
 <body>
 
-<h2>奕奕宝宝日常记录</h2>
+<h1 class="main-title">奕奕宝宝的奶量大便辅食记录本</h1>
 
 <!-- 奶量 -->
 <div class="section">
@@ -84,7 +94,6 @@ button:active { opacity: .8; }
   <option value="270">270 ML / 9 勺</option>
   <option value="300">300 ML / 10 勺</option>
 </select>
-<!-- 可选修改剩余奶量 -->
 <input id="milkLeft" type="number" inputmode="numeric" placeholder="剩余奶量（ml，可选，默认0）">
 <button id="milkBtn">记录奶量</button>
 <button id="milkUndo" class="undo-btn">撤回奶量</button>
@@ -132,10 +141,31 @@ button:active { opacity: .8; }
 <div id="foodList"></div>
 </div>
 
+<!-- 底部总计统计模块 -->
+<div class="section">
+<h2>统计数据（总计）</h2>
+<label>开始日期：<input type="date" id="statStart"></label>
+<label>结束日期：<input type="date" id="statEnd"></label>
+<button id="statBtn">查看总计统计</button>
+
+<div class="stats" id="statResult">
+<!-- 总计统计显示 -->
+</div>
+</div>
+
+<!-- 按天统计表格模块 -->
+<div class="section">
+<h2>按天统计表格</h2>
+<label>开始日期：<input type="date" id="statStartDay"></label>
+<label>结束日期：<input type="date" id="statEndDay"></label>
+<button id="statDayBtn">查看按天统计</button>
+
+<div class="stats" id="statDayResult"></div>
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
-    // 数据初始化
     let milk = JSON.parse(localStorage.getItem("milk") || "[]");
     let poo  = JSON.parse(localStorage.getItem("poo") || "[]");
     let food = JSON.parse(localStorage.getItem("food") || "[]");
@@ -145,7 +175,6 @@ document.addEventListener("DOMContentLoaded", function() {
         localStorage.setItem("poo", JSON.stringify(poo));
         localStorage.setItem("food", JSON.stringify(food));
     }
-
     function now() { return new Date().toISOString().slice(0,16).replace("T"," "); }
 
     // 奶量记录
@@ -153,13 +182,13 @@ document.addEventListener("DOMContentLoaded", function() {
         const mixEl = document.getElementById("milkMix");
         const leftEl = document.getElementById("milkLeft");
         const inputMix = parseInt(mixEl.value);
-        const left = parseInt(leftEl.value) || 0; // 默认0
+        const left = parseInt(leftEl.value) || 0;
         if (!inputMix && inputMix!==0) { alert("请选择冲调奶量"); return; }
         if (left<0 || left>inputMix+10) { alert("剩余奶量不合理"); return; }
 
-        const actualMix = inputMix + 10; // 冲调总量加10ml
-        const drink = actualMix - left; // 实际喝掉
-        const waste = left; // 浪费
+        const actualMix = inputMix + 10;
+        const drink = actualMix - left;
+        const waste = left;
 
         milk.push({mix: actualMix, left, drink, waste, time: now()});
         save(); updateMilk();
@@ -194,7 +223,6 @@ document.addEventListener("DOMContentLoaded", function() {
         save(); updatePoo();
         noteEl.value="";
     }
-
     function updatePoo() {
         const pooList = document.getElementById("pooList");
         pooList.innerHTML = poo.map(i =>
@@ -213,7 +241,6 @@ document.addEventListener("DOMContentLoaded", function() {
         save(); updateFood();
         foodEl.value="";
     }
-
     function updateFood() {
         const foodList = document.getElementById("foodList");
         foodList.innerHTML = food.map(i =>
@@ -238,6 +265,59 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("milkBtn").addEventListener("click", addMilk);
     document.getElementById("pooBtn").addEventListener("click", addPoo);
     document.getElementById("foodBtn").addEventListener("click", addFood);
+
+    // 总计统计
+    document.getElementById("statBtn").addEventListener("click", function() {
+        const start = document.getElementById("statStart").value;
+        const end = document.getElementById("statEnd").value;
+        if (!start || !end) { alert("请选择开始和结束日期"); return; }
+
+        const milkRange = milk.filter(i => i.time.slice(0,10) >= start && i.time.slice(0,10) <= end);
+        const milkDrinkSum = milkRange.reduce((a,b)=>a+b.drink,0);
+        const milkWasteSum = milkRange.reduce((a,b)=>a+b.waste,0);
+        const pooRange = poo.filter(i => i.time.slice(0,10) >= start && i.time.slice(0,10) <= end);
+        const foodRange = food.filter(i => i.time.slice(0,10) >= start && i.time.slice(0,10) <= end);
+
+        const statResult = document.getElementById("statResult");
+        statResult.innerHTML = `
+            <b>奶量喝掉总计：</b>${milkDrinkSum} ml<br>
+            <b>奶量浪费总计：</b>${milkWasteSum} ml<br>
+            <b>大便次数：</b>${pooRange.length}<br>
+            <b>辅食次数：</b>${foodRange.length}
+        `;
+    });
+
+    // 按天统计表格
+    document.getElementById("statDayBtn").addEventListener("click", function() {
+        const start = document.getElementById("statStartDay").value;
+        const end = document.getElementById("statEndDay").value;
+        if (!start || !end) { alert("请选择开始和结束日期"); return; }
+
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        let html = `<table>
+                    <tr>
+                    <th>日期</th><th>奶量喝掉(ml)</th><th>奶量浪费(ml)</th><th>大便次数</th><th>辅食次数</th>
+                    </tr>`;
+
+        for(let d = new Date(startDate); d <= endDate; d.setDate(d.getDate()+1)) {
+            const dayStr = d.toISOString().slice(0,10);
+            const milkDay = milk.filter(i=>i.time.startsWith(dayStr));
+            const milkDrinkSum = milkDay.reduce((a,b)=>a+b.drink,0);
+            const milkWasteSum = milkDay.reduce((a,b)=>a+b.waste,0);
+            const pooDay = poo.filter(i=>i.time.startsWith(dayStr));
+            const foodDay = food.filter(i=>i.time.startsWith(dayStr));
+            html += `<tr>
+                    <td>${dayStr}</td>
+                    <td>${milkDrinkSum}</td>
+                    <td>${milkWasteSum}</td>
+                    <td>${pooDay.length}</td>
+                    <td>${foodDay.length}</td>
+                    </tr>`;
+        }
+        html += `</table>`;
+        document.getElementById("statDayResult").innerHTML = html;
+    });
 
     // 初始加载
     updateMilk();
