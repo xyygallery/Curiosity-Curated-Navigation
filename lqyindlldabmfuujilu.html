@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>奕奕宝宝的奶量大便辅食记录本</title>
+<title>宝宝的奶量大便辅食记录本</title>
 
 <style>
 body {
@@ -128,30 +128,30 @@ button.undo {
 
 <body>
 
-<h1>奕奕宝宝的奶量大便辅食记录本</h1>
+<h1>宝宝的奶量大便辅食记录本</h1>
 
 <!-- 奶量记录 -->
 <div class="card">
     <div class="module-title">🍼 奶量记录</div>
     <label>冲调奶量</label>
     <select id="prep">
-        <option value="">请选择冲调量</option>
-        <option value="30">30ml / 1勺</option>
-        <option value="60">60ml / 2勺</option>
-        <option value="90">90ml / 3勺</option>
-        <option value="120">120ml / 4勺</option>
-        <option value="150">150ml / 5勺</option>
-        <option value="180">180ml / 6勺</option>
-        <option value="210">210ml / 7勺</option>
-        <option value="240">240ml / 8勺</option>
-        <option value="270">270ml / 9勺</option>
-        <option value="300">300ml / 10勺</option>
+        <option value="">请选择冲奶量</option>
+        <option value="30">30ML / 1勺</option>
+        <option value="60">60ML / 2勺</option>
+        <option value="90">90ML / 3勺</option>
+        <option value="120">120ML / 4勺</option>
+        <option value="150">150ML / 5勺</option>
+        <option value="180">180ML / 6勺</option>
+        <option value="210">210ML / 7勺</option>
+        <option value="240">240ML / 8勺</option>
+        <option value="270">270ML / 9勺</option>
+        <option value="300">300ML / 10勺</option>
     </select>
 
-    <label>剩余奶量（默认0）</label>
-    <input type="number" id="left" inputmode="numeric" value="0"/>
+    <label>剩余奶量（默认 0）</label>
+    <input type="number" id="left" inputmode="numeric" value=""/>
 
-    <button onclick="recordMilk()">记录奶量</button>
+    <button onclick="recordMilk()">记录</button>
     <button onclick="undo('milk')" class="undo">撤回上一次奶量记录</button>
 </div>
 
@@ -163,7 +163,7 @@ button.undo {
 
 <!-- 大便记录（折叠） -->
 <div class="card">
-    <div class="module-title" onclick="toggleCollapse('pooContent')">💩 大便记录 (点击展开)</div>
+    <div class="module-title" onclick="toggleCollapse('pooContent')">💩 大便</div>
     <div id="pooContent" class="collapsible-content">
         <label>大便状态</label>
         <select id="pooType">
@@ -174,26 +174,26 @@ button.undo {
             <option value="粘">粘</option>
         </select>
 
-        <button onclick="recordPoo()">记录大便</button>
+        <button onclick="recordPoo()">记录</button>
         <button onclick="undo('poo')" class="undo">撤回上一次大便记录</button>
     </div>
 </div>
 
 <!-- 辅食记录（折叠） -->
 <div class="card">
-    <div class="module-title" onclick="toggleCollapse('foodContent')">🍜 辅食记录 (点击展开)</div>
+    <div class="module-title" onclick="toggleCollapse('foodContent')">🍜 辅食</div>
     <div id="foodContent" class="collapsible-content">
         <label>辅食内容</label>
         <input type="text" id="food" placeholder="如：南瓜泥 / 粥 / 面条" />
 
-        <button onclick="recordFood()">记录辅食</button>
+        <button onclick="recordFood()">记录</button>
         <button onclick="undo('food')" class="undo">撤回上一次辅食记录</button>
     </div>
 </div>
 
 <!-- 时间范围统计（折叠） -->
 <div class="card">
-    <div class="module-title" onclick="toggleCollapse('rangeContent')">📊 时间范围统计 (点击展开)</div>
+    <div class="module-title" onclick="toggleCollapse('rangeContent')">📊 时间统计</div>
     <div id="rangeContent" class="collapsible-content">
         <div class="range-select">
             <input type="date" id="startDate">
@@ -330,8 +330,8 @@ function updateToday() {
     const last = m.length ? Math.floor((Date.now()-m[m.length-1].time)/60000) : null;
 
     document.getElementById("todayStats").innerHTML=`
-        <div>今日喝奶：<b>${drank}</b> ml</div>
-        <div>今日浪费：<b>${waste}</b> ml</div>
+        <div>今日喝奶：<b>${drank}</b> ML</div>
+        <div>今日浪费：<b>${waste}</b> ML</div>
         <div>今日大便：<b>${p.length}</b> 次</div>
         <div>今日辅食：<b>${f.length}</b> 次</div>
         <div>上次喝奶间隔：<b>${last ? last+" 分钟":"无"}</b></div>
