@@ -236,24 +236,41 @@ function toggleCollapse(id){
     });
     document.getElementById(id).classList.toggle('open');
 }
-
+    
 /* ---- 记录奶量 ---- */
 function recordMilk() {
     const prepSelect = document.getElementById("prep");
-    if(!prepSelect.value) return showToast("请先选择冲调奶量！");
-    const prep = Number(prepSelect.value);
-    const left = Number(document.getElementById("left").value||0);
-    const actualPrep = prep + 10;
-    const drank = Math.max(actualPrep-left,0);
-    const waste = Math.max(left,0);
+    if(!prepSelect.value) return showToast("请先选择冲奶量！");
 
-    milk.push({time:Date.now(),prep:actualPrep,drank,waste});
+    const prep = Number(prepSelect.value);      // 冲奶量（未膨胀）
+    const left = Number(document.getElementById("left").value || 0);
+
+    // 喝入和浪费的原始量
+    const rawDrank = Math.max(prep - left, 0);
+    const rawWaste = Math.max(left, 0);
+
+    // 奶粉膨胀逻辑：固定每次加 10ml
+    const expandAmount = 10;
+    const expandRate = expandAmount / prep;   // 每 1ml 奶粉对应的膨胀比例
+
+    // 按比例增加膨胀量
+    const drank = rawDrank + rawDrank * expandRate;
+    const waste = rawWaste + rawWaste * expandRate;
+
+    milk.push({
+        time: Date.now(),
+        prep: prep + expandAmount, // 冲奶量膨胀后的实际体积
+        drank: Math.round(drank),
+        waste: Math.round(waste)
+    });
+
     save();
     updateToday();
     document.getElementById("left").value = 0;
     prepSelect.value = "";
     showToast("奶量记录成功！");
 }
+
 
 /* ---- 记录大便 ---- */
 function recordPoo() {
