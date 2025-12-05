@@ -132,10 +132,10 @@ button.undo {
 
 <!-- 奶量记录 -->
 <div class="card">
-    <div class="module-title">🍼 奶量</div>
-    <label>冲奶量</label>
+    <div class="module-title">🍼 奶量记录</div>
+    <label>冲调奶量</label>
     <select id="prep">
-        <option value="">请选择冲奶量</option>
+        <option value="">请选择冲调量</option>
         <option value="30">30ml / 1勺</option>
         <option value="60">60ml / 2勺</option>
         <option value="90">90ml / 3勺</option>
@@ -148,11 +148,11 @@ button.undo {
         <option value="300">300ml / 10勺</option>
     </select>
 
-    <label>剩余奶量（默认 0）</label>
+    <label>剩余奶量（默认0）</label>
     <input type="number" id="left" inputmode="numeric" value="0"/>
 
-    <button onclick="recordMilk()">记录</button>
-    <button onclick="undo('milk')" class="undo">撤回上一次记录</button>
+    <button onclick="recordMilk()">记录奶量</button>
+    <button onclick="undo('milk')" class="undo">撤回上一次奶量记录</button>
 </div>
 
 <!-- 今日统计 -->
@@ -163,7 +163,7 @@ button.undo {
 
 <!-- 大便记录（折叠） -->
 <div class="card">
-    <div class="module-title" onclick="toggleCollapse('pooContent')">💩 大便</div>
+    <div class="module-title" onclick="toggleCollapse('pooContent')">💩 大便记录 (点击展开)</div>
     <div id="pooContent" class="collapsible-content">
         <label>大便状态</label>
         <select id="pooType">
@@ -174,26 +174,26 @@ button.undo {
             <option value="粘">粘</option>
         </select>
 
-        <button onclick="recordPoo()">记录</button>
-        <button onclick="undo('poo')" class="undo">撤回上一次记录</button>
+        <button onclick="recordPoo()">记录大便</button>
+        <button onclick="undo('poo')" class="undo">撤回上一次大便记录</button>
     </div>
 </div>
 
 <!-- 辅食记录（折叠） -->
 <div class="card">
-    <div class="module-title" onclick="toggleCollapse('foodContent')">🍜 辅食</div>
+    <div class="module-title" onclick="toggleCollapse('foodContent')">🍜 辅食记录 (点击展开)</div>
     <div id="foodContent" class="collapsible-content">
-        <label>辅食</label>
+        <label>辅食内容</label>
         <input type="text" id="food" placeholder="如：南瓜泥 / 粥 / 面条" />
 
-        <button onclick="recordFood()">记录</button>
-        <button onclick="undo('food')" class="undo">撤回上一次记录</button>
+        <button onclick="recordFood()">记录辅食</button>
+        <button onclick="undo('food')" class="undo">撤回上一次辅食记录</button>
     </div>
 </div>
 
 <!-- 时间范围统计（折叠） -->
 <div class="card">
-    <div class="module-title" onclick="toggleCollapse('rangeContent')">📊 数据统计</div>
+    <div class="module-title" onclick="toggleCollapse('rangeContent')">📊 时间范围统计 (点击展开)</div>
     <div id="rangeContent" class="collapsible-content">
         <div class="range-select">
             <input type="date" id="startDate">
@@ -240,7 +240,7 @@ function toggleCollapse(id){
 /* ---- 记录奶量 ---- */
 function recordMilk() {
     const prepSelect = document.getElementById("prep");
-    if(!prepSelect.value) return showToast("请先选择冲奶量！");
+    if(!prepSelect.value) return showToast("请先选择冲调奶量！");
     const prep = Number(prepSelect.value);
     const left = Number(document.getElementById("left").value||0);
     const actualPrep = prep + 10;
@@ -312,16 +312,16 @@ function updateToday() {
     const waste = m.reduce((a,b)=>a+b.waste,0);
     const last = m.length ? Math.floor((Date.now()-m[m.length-1].time)/60000) : null;
 
-    document.getElementById("todayStats").innerHTML=
-        <div>今日喝奶：<b>${drank}</b> ML</div>
-        <div>今日浪费：<b>${waste}</b> ML</div>
+    document.getElementById("todayStats").innerHTML=`
+        <div>今日喝奶：<b>${drank}</b> ml</div>
+        <div>今日浪费：<b>${waste}</b> ml</div>
         <div>今日大便：<b>${p.length}</b> 次</div>
         <div>今日辅食：<b>${f.length}</b> 次</div>
-        <div>上次喝奶时间：<b>${last ? last+" 分钟":"无"}</b></div>
+        <div>上次喝奶间隔：<b>${last ? last+" 分钟":"无"}</b></div>
         <hr style="margin:15px 0;">
         <div>累计喝奶：<b>${milk.reduce((a,b)=>a+b.drank,0)}</b> ml</div>
         <div>累计浪费：<b>${milk.reduce((a,b)=>a+b.waste,0)}</b> ml</div>
-    ;
+    `;
 }
 updateToday();
 
@@ -337,12 +337,12 @@ function calcRange() {
     const p = poo.filter(i=>i.time>=st && i.time<=et);
     const f = food.filter(i=>i.time>=st && i.time<=et);
 
-    document.getElementById("rangeStats").innerHTML=
-        <div>期间喝奶：<b>${m.reduce((a,b)=>a+b.drank,0)}</b> ML</div>
-        <div>期间浪费：<b>${m.reduce((a,b)=>a+b.waste,0)}</b> ML</div>
+    document.getElementById("rangeStats").innerHTML=`
+        <div>期间喝奶：<b>${m.reduce((a,b)=>a+b.drank,0)}</b> ml</div>
+        <div>期间浪费：<b>${m.reduce((a,b)=>a+b.waste,0)}</b> ml</div>
         <div>期间大便：<b>${p.length}</b> 次</div>
         <div>期间辅食：<b>${f.length}</b> 次</div>
-    ;
+    `;
 }
 </script>
 </body>
