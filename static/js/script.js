@@ -65,64 +65,110 @@ function scrollToTop() {
 
 
 
+// ========== 随机打乱（增强版） ==========
 
+// ---- 1. 字符串 Hash → 32bit ----
+function hash32(str) {
+  // FNV-1a
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  return h >>> 0;
+}
 
-// ===== 随机打乱区 =====
+// ---- 2. 每日 seed（安全，不溢出） ----
 function todaySeed() {
   const now = new Date();
-  return Number(
-    `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
-      now.getDate()
-    ).padStart(2, "0")}`
-  );
+  const s = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+  return hash32(s);
 }
 
-function makePRNG(seed) {
-  let s = seed >>> 0;
-  return function () {
-    s = (1664525 * s + 1013904223) >>> 0;
-    return s / 4294967296;
-  };
-}
-
-function shuffleWith(seed, arr) {
-  const rnd = makePRNG(seed);
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(rnd() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
+// ---- 3. 获取 URL seed ----
 function getSeedFromURL() {
   const params = new URLSearchParams(location.search);
   const v = params.get("seed");
   if (!v) return null;
   const n = Number(v);
-  return Number.isFinite(n) ? n : null;
+  return Number.isFinite(n) ? n >>> 0 : null;
 }
 
+// ---- 4. 高质量 PRNG：Mulberry32 ----
+function makePRNG(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0; 
+    a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// ---- 5. 加权 Fisher–Yates 洗牌：最近更新更容易前排 ----
+//
+// 权重计算：
+//   w = 1 + (recencyBoost * recentFactor)
+//   recentFactor = e^(-days/decay)
+// 其中 decay 控制衰减时间（例如 14 天半衰）
+// boost 控制影响程度（例如 0.4 = 40% 影响）
+//
+function weightedShuffle(arr, rnd, getWeight) {
+  // 先根据 rnd × weight 做排序（不是纯 Fisher–Yates）
+  // 这是更稳定的大规模加权洗牌算法
+  return arr
+    .map(item => ({ item, key: Math.log(rnd()) / getWeight(item) }))
+    .sort((a, b) => a.key - b.key)
+    .map(o => o.item);
+}
+
+// ---- 6. 从元素上读取更新时间（例如 data-updated="2025-12-10"） ----
+function readUpdatedDate(el) {
+  const v = el.dataset.updated;
+  if (!v) return null;
+
+  const d = new Date(v);
+  return Number.isFinite(d.getTime()) ? d : null;
+}
+
+// ---- 7. 总运行逻辑 ----
 function runShuffle() {
   const container = document.querySelector("#site-list");
   if (!container) return;
 
-  // 仅选择容器的“直接子级” a，避免嵌套结构影响初始顺序
   const items = Array.from(container.querySelectorAll(":scope > a"));
 
   const seed = getSeedFromURL() ?? todaySeed();
-  const shuffled = shuffleWith(seed, items.slice());
+  const rnd = makePRNG(seed);
 
-  const frag = document.createDocumentFragment();
-  shuffled.forEach(el => frag.appendChild(el));
+  const today = new Date();
 
-  // 用 replaceChildren，保留已绑定事件监听
-  container.replaceChildren(frag);
+  // ------ 权重参数（你可自由调整） ------
+  const recencyBoost = 0.4;   // 最近越近越可能前排，但不会超过 40% 影响
+  const decayDays = 14;       // 14天衰减 —— 半个月后影响几乎消失
 
-  // 隐藏标记去掉，显示出来
+  function weightFn(el) {
+    const updated = readUpdatedDate(el);
+    if (!updated) return 1;
+
+    const diffDays = (today - updated) / 86400000;
+    if (diffDays < 0) return 1; // 防未来日期
+
+    const recencyFactor = Math.exp(-diffDays / decayDays);
+    return 1 + recencyBoost * recencyFactor;
+  }
+
+  const shuffled = weightedShuffle(items, rnd, weightFn);
+
+  container.replaceChildren(...shuffled);
+
   container.classList.add("is-ready");
   container.removeAttribute("data-shuffle-pending");
 
-  console.log("[每日随机顺序] seed =", seed);
+  console.log(
+    `[每日随机顺序] seed = ${seed} (${getSeedFromURL() ? "from URL" : "daily"})`
+  );
 }
 
 if (document.readyState === "loading") {
@@ -130,9 +176,7 @@ if (document.readyState === "loading") {
 } else {
   runShuffle();
 }
-// ===== 随机打乱区结束 =====
 
-
-
+// ========== 随机打乱（增强版）结束 ==========
 
 
