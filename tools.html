@@ -14,7 +14,7 @@ body {
   padding: 20px;
 }
 
-h1 {
+h1, h2 {
   font-weight: 500;
 }
 
@@ -74,9 +74,21 @@ pre {
   border: 1px solid #eee;
   padding: 15px;
   border-radius: 8px;
-  margin-top: 20px;
+  margin-top: 15px;
   font-size: 13px;
   overflow-x: auto;
+}
+
+.btn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.copy-msg {
+  font-size: 13px;
+  color: #0070f3;
+  display: none;
 }
 </style>
 </head>
@@ -85,61 +97,68 @@ pre {
 
 <h1>HTML 代码生成器（问卷模式）</h1>
 
-<!-- Step 1：URL -->
-<div class="step active" data-step="0">
+<!-- Step 1 URL -->
+<div class="step active">
   <label>URL</label>
   <input id="url" placeholder="https://example.com">
   <div class="msg" id="urlMsg">❌ URL 必须以 http:// 或 https:// 开头</div>
   <button onclick="nextStep()">下一步</button>
 </div>
 
-<!-- Step 2：标题 -->
-<div class="step" data-step="1">
+<!-- Step 2 Title -->
+<div class="step">
   <label>标题（最多 7 个中文）</label>
-  <input id="title" placeholder="例如：98.js">
+  <input id="title">
   <div class="msg" id="titleMsg">⚠️ 标题最多 7 个中文</div>
   <button onclick="nextStep()">下一步</button>
 </div>
 
-<!-- Step 3：描述 -->
-<div class="step" data-step="2">
+<!-- Step 3 Desc -->
+<div class="step">
   <label>描述（最多 11 个中文）</label>
-  <input id="desc" placeholder="例如：Windows 98 模拟">
+  <input id="desc">
   <div class="msg" id="descMsg">⚠️ 描述最多 11 个中文</div>
   <button onclick="nextStep()">下一步</button>
 </div>
 
-<!-- Step 4：日期 -->
-<div class="step" data-step="3">
+<!-- Step 4 Date -->
+<div class="step">
   <label>收录日期</label>
   <input type="date" id="date">
   <button onclick="generate()">生成代码</button>
 </div>
 
-<!-- Step 5：结果 -->
-<div class="step" data-step="4">
-  <h2>生成结果</h2>
+<!-- Step 5 Result -->
+<div class="step">
+  <h2>当前生成的代码</h2>
   <pre id="output"></pre>
 </div>
+
+<hr>
+
+<h2>累计生成的所有代码</h2>
+<div class="btn-row">
+  <button onclick="copyAll()">复制全部</button>
+  <span class="copy-msg" id="copyMsg">✅ 已复制</span>
+</div>
+<pre id="allOutput"></pre>
 
 <script>
 let currentStep = 0;
 const steps = document.querySelectorAll('.step');
+let allCodes = [];
 
-function showStep(index) {
-  steps.forEach((step, i) => {
-    step.classList.toggle('active', i === index);
-  });
+function showStep(i) {
+  steps.forEach((s, idx) => s.classList.toggle('active', idx === i));
 }
 
-// 中文数量限制
-function limitChinese(input, limit, msgEl) {
+function limitChinese(input, limit, msg) {
   input.addEventListener('input', () => {
     const chars = input.value.match(/[\u4e00-\u9fa5]/g) || [];
     if (chars.length > limit) {
       input.value = input.value.slice(0, -1);
-      msgEl.style.display = 'block';
-      setTimeout(() => msgEl.style.display = 'none', 2000);
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 2000);
     }
   });
 }
@@ -147,7 +166,6 @@ function limitChinese(input, limit, msgEl) {
 limitChinese(title, 7, titleMsg);
 limitChinese(desc, 11, descMsg);
 
-// 下一步校验
 function nextStep() {
   if (currentStep === 0) {
     if (!/^https?:\/\//.test(url.value.trim())) {
@@ -156,7 +174,6 @@ function nextStep() {
       return;
     }
   }
-
   if (currentStep === 1 && !title.value.trim()) return;
   if (currentStep === 2 && !desc.value.trim()) return;
 
@@ -164,19 +181,17 @@ function nextStep() {
   showStep(currentStep);
 }
 
-// 日期默认今天
 function getTodayISO() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 date.value = getTodayISO();
 
-function formatDateDisplay(dateStr) {
-  const [y, m, d] = dateStr.split("-");
+function formatDateDisplay(str) {
+  const [y,m,d] = str.split("-");
   return `${parseInt(y)}/${parseInt(m)}/${parseInt(d)}`;
 }
 
-// 生成代码
 function generate() {
   const dateText = formatDateDisplay(date.value);
 
@@ -188,8 +203,25 @@ function generate() {
 `.trim();
 
   output.textContent = code;
-  currentStep = 4;
+  allCodes.push(code);
+  allOutput.textContent = allCodes.join("\n\n");
+
+  // 重置，准备下一个
+  url.value = "";
+  title.value = "";
+  desc.value = "";
+  date.value = getTodayISO();
+
+  currentStep = 0;
   showStep(currentStep);
+}
+
+function copyAll() {
+  if (!allCodes.length) return;
+  navigator.clipboard.writeText(allCodes.join("\n\n")).then(() => {
+    copyMsg.style.display = 'inline';
+    setTimeout(() => copyMsg.style.display = 'none', 2000);
+  });
 }
 </script>
 
