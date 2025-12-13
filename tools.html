@@ -2,40 +2,35 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>HTML Generator</title>
+<title>Generator</title>
 
 <style>
 body {
   margin: 0;
-  padding: 60px 20px;
+  padding: 80px 20px;
   background: #fff;
   color: #111;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI";
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
 }
 
-/* 主体 */
 .app {
-  max-width: 560px;
+  max-width: 520px;
   margin: 0 auto;
 }
 
-/* 单步 */
 .step {
   display: none;
-  align-items: center;
-  gap: 14px;
 }
 
 .step.active {
-  display: flex;
+  display: block;
 }
 
-/* 输入框 */
 input {
   width: 420px;
   max-width: 100%;
-  font-size: 18px;
-  padding: 8px 4px;
+  font-size: 20px;
+  padding: 6px 2px;
   border: none;
   outline: none;
   background: transparent;
@@ -45,37 +40,14 @@ input::placeholder {
   color: #aaa;
 }
 
-/* 操作按钮（符号） */
-.action {
-  font-size: 22px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.action:hover {
-  opacity: 0.6;
-}
-
-/* 累计区 */
 .all {
-  margin-top: 80px;
+  margin-top: 100px;
 }
 
 pre {
-  white-space: pre-wrap;
   font-size: 13px;
   line-height: 1.6;
-}
-
-/* 复制 */
-.copy {
-  cursor: pointer;
-  font-size: 20px;
-  margin-bottom: 10px;
-  display: inline-block;
-}
-.copy:hover {
-  opacity: .6;
+  white-space: pre-wrap;
 }
 </style>
 </head>
@@ -84,33 +56,23 @@ pre {
 
 <div class="app">
 
-  <!-- URL -->
   <div class="step active">
     <input id="url" placeholder="https://example.com">
-    <span class="action" onclick="next()">→</span>
   </div>
 
-  <!-- Title -->
   <div class="step">
     <input id="title" placeholder="标题">
-    <span class="action" onclick="next()">→</span>
   </div>
 
-  <!-- Desc -->
   <div class="step">
     <input id="desc" placeholder="描述">
-    <span class="action" onclick="next()">→</span>
   </div>
 
-  <!-- Date -->
   <div class="step">
     <input type="date" id="date">
-    <span class="action" onclick="generate()">→</span>
   </div>
 
-  <!-- 累计 -->
   <div class="all">
-    <span class="copy" onclick="copyAll()">📋</span>
     <pre id="allOutput"></pre>
   </div>
 
@@ -123,14 +85,7 @@ let allCodes = [];
 
 function show() {
   steps.forEach((s,i)=>s.classList.toggle('active', i===step));
-}
-
-function next() {
-  if (step === 0 && !/^https?:\/\//.test(url.value.trim())) return;
-  if (step === 1 && !title.value.trim()) return;
-  if (step === 2 && !desc.value.trim()) return;
-  step++;
-  show();
+  steps[step].querySelector('input').focus();
 }
 
 function today() {
@@ -144,9 +99,13 @@ function formatDate(s){
   return `${parseInt(y)}/${parseInt(m)}/${parseInt(d)}`;
 }
 
-function generate() {
+function generate(force = false) {
+  if (!url.value || !title.value || !desc.value) return;
+
+  const dateText = force ? formatDate(today()) : formatDate(date.value);
+
   const code = `
-<a href="${url.value}" title="收录日期：${formatDate(date.value)}">
+<a href="${url.value}" target="_blank" title="收录日期：${dateText}">
   <h2>${title.value} -></h2>
   <p>${desc.value}</p>
 </a>`.trim();
@@ -154,16 +113,53 @@ function generate() {
   allCodes.push(code);
   allOutput.textContent = allCodes.join("\n\n");
 
+  // 重置
   url.value = title.value = desc.value = '';
   date.value = today();
   step = 0;
   show();
 }
 
-function copyAll() {
-  if (!allCodes.length) return;
-  navigator.clipboard.writeText(allCodes.join("\n\n"));
-}
+document.addEventListener('keydown', e => {
+  const input = steps[step].querySelector('input');
+
+  // Esc：清空当前输入
+  if (e.key === 'Escape') {
+    input.value = '';
+    return;
+  }
+
+  // Ctrl + Enter：强制生成（跳过日期）
+  if (e.key === 'Enter' && e.ctrlKey) {
+    generate(true);
+    return;
+  }
+
+  // Ctrl + C：复制全部
+  if (e.key.toLowerCase() === 'c' && e.ctrlKey) {
+    if (allCodes.length) {
+      navigator.clipboard.writeText(allCodes.join("\n\n"));
+    }
+    return;
+  }
+
+  // Enter：正常流程
+  if (e.key === 'Enter') {
+    if (step === 0 && !/^https?:\/\//.test(url.value.trim())) return;
+    if (step === 1 && !title.value.trim()) return;
+    if (step === 2 && !desc.value.trim()) return;
+
+    if (step < 3) {
+      step++;
+      show();
+    } else {
+      generate();
+    }
+  }
+});
+
+// 初始化聚焦
+show();
 </script>
 
 </body>
