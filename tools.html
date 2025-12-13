@@ -37,7 +37,7 @@ input {
   border: none;
   outline: none;
   background: transparent;
-  pointer-events: none; /* 不可直接点击输入 */
+  pointer-events: none;
   text-align: center;
 }
 
@@ -56,7 +56,7 @@ pre {
   white-space: pre-wrap;
 }
 
-/* 隐藏的全局接收 textarea */
+/* 隐藏的全局 textarea 捕获输入 */
 #globalInput {
   position: absolute;
   left: -9999px;
@@ -71,7 +71,7 @@ pre {
 
 <div class="app">
 
-  <div class="step active"><input id="url" placeholder="https://example.com"></div>
+  <div class="step active"><input id="url" placeholder="实例域名"></div>
   <div class="step"><input id="title" placeholder="标题"></div>
   <div class="step"><input id="desc" placeholder="描述"></div>
   <div class="step"><input id="date" placeholder="YYYY-MM-DD"></div>
@@ -80,7 +80,6 @@ pre {
     <pre id="allOutput"></pre>
   </div>
 
-  <!-- 隐藏 textarea 用于捕获中文输入 -->
   <textarea id="globalInput" autofocus></textarea>
 
 </div>
@@ -90,8 +89,6 @@ let step = 0;
 const steps = document.querySelectorAll('.step');
 const fields = ['url','title','desc','date'];
 let allCodes = [];
-
-// buffer 用于显示当前输入内容
 let buffer = '';
 
 function render() {
@@ -99,19 +96,16 @@ function render() {
   document.getElementById(fields[step]).value = buffer;
 }
 
-// 初始化日期
 function today() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
-// 格式化日期
 function formatDate(s){
   const [y,m,d]=s.split("-");
   return `${parseInt(y)}/${parseInt(m)}/${parseInt(d)}`;
 }
 
-// 生成代码
 function generate(forceDate=false) {
   const urlVal = document.getElementById('url').value;
   const titleVal = document.getElementById('title').value;
@@ -121,22 +115,23 @@ function generate(forceDate=false) {
   if (!urlVal || !titleVal || !descVal) return;
 
   const code = `
-<a href="${urlVal}" target="_blank" title="收录日期：${dateVal}">
-  <h2>${titleVal} -></h2>
-  <p>${descVal}</p>
+<a href="${urlVal}" class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30" target="_blank" rel="noopener noreferrer" title="收录日期：${dateVal}"> 
+    <h2 class="mb-3 text-2xl font-light">
+       ${titleVal} 
+        <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none ml-2">-&gt;</span>
+    </h2>
+    <p class="m-0 max-w-[30ch] text-sm opacity-50">${descVal}</p> 
 </a>`.trim();
 
   allCodes.push(code);
   allOutput.textContent = allCodes.join("\n\n");
 
-  // 清空 buffer 和 input
   fields.forEach(id => document.getElementById(id).value = '');
   buffer = '';
   step = 0;
   render();
 }
 
-// 全局 input 监听
 const globalInput = document.getElementById('globalInput');
 globalInput.focus();
 
@@ -145,22 +140,18 @@ globalInput.addEventListener('input', e => {
   render();
 });
 
-// 全局按键
 document.addEventListener('keydown', e => {
 
-  // Ctrl + C 复制全部
   if (e.ctrlKey && e.key.toLowerCase() === 'c') {
     if (allCodes.length) navigator.clipboard.writeText(allCodes.join("\n\n"));
     return;
   }
 
-  // Ctrl + Enter 强制生成
   if (e.ctrlKey && e.key === 'Enter') {
     generate(true);
     return;
   }
 
-  // Enter 下一步 / 生成
   if (e.key === 'Enter') {
     if (step === 0 && !/^https?:\/\//.test(buffer)) return;
     if (step < 3) {
@@ -177,15 +168,14 @@ document.addEventListener('keydown', e => {
     return;
   }
 
-  // Backspace 删除
   if (e.key === 'Backspace') {
     buffer = buffer.slice(0,-1);
     render();
     return;
   }
+
 });
 
-// 保持 globalInput 焦点
 setInterval(()=>globalInput.focus(), 100);
 render();
 </script>
