@@ -2,134 +2,80 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>HTML 代码生成器</title>
+<title>HTML Generator</title>
 
 <style>
-:root {
-  --border: #eaeaea;
-  --text-sub: #777;
-  --primary: #0070f3;
-}
-
 body {
-  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-  background: #f6f7f8;
-  color: #111;
   margin: 0;
-  padding: 40px 20px;
-}
-
-/* 整体卡片 */
-.app {
-  max-width: 620px;
-  margin: 0 auto;
+  padding: 60px 20px;
   background: #fff;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  padding: 28px 28px 32px;
+  color: #111;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI";
 }
 
-/* 标题 */
-h1 {
-  font-size: 18px;
-  font-weight: 500;
-  margin: 0 0 6px;
+/* 主体 */
+.app {
+  max-width: 560px;
+  margin: 0 auto;
 }
 
-.subtitle {
-  font-size: 13px;
-  color: var(--text-sub);
-  margin-bottom: 24px;
-}
-
-/* 步骤提示 */
-.step-indicator {
-  font-size: 13px;
-  color: var(--text-sub);
-  margin-bottom: 10px;
-}
-
-/* 单步容器 */
+/* 单步 */
 .step {
   display: none;
+  align-items: center;
+  gap: 14px;
 }
 
 .step.active {
-  display: block;
-}
-
-/* 输入区 */
-.label {
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-
-input {
-  width: 100%;
-  font-size: 15px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-}
-
-input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0,118,255,.12);
-}
-
-/* 错误 */
-.msg {
-  font-size: 13px;
-  color: #e00;
-  margin-top: 6px;
-  display: none;
-}
-
-/* 按钮 */
-button {
-  margin-top: 16px;
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  background: var(--primary);
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #0059c9;
-}
-
-/* 分割 */
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: 28px 0;
-}
-
-/* 输出区 */
-pre {
-  background: #fafafa;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px;
-  font-size: 13px;
-  overflow-x: auto;
-}
-
-.copy-row {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
 }
 
-.copy-msg {
+/* 输入框 */
+input {
+  width: 420px;
+  max-width: 100%;
+  font-size: 18px;
+  padding: 8px 4px;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+/* 操作按钮（符号） */
+.action {
+  font-size: 22px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.action:hover {
+  opacity: 0.6;
+}
+
+/* 累计区 */
+.all {
+  margin-top: 80px;
+}
+
+pre {
+  white-space: pre-wrap;
   font-size: 13px;
-  color: var(--primary);
-  display: none;
+  line-height: 1.6;
+}
+
+/* 复制 */
+.copy {
+  cursor: pointer;
+  font-size: 20px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.copy:hover {
+  opacity: .6;
 }
 </style>
 </head>
@@ -138,105 +84,69 @@ pre {
 
 <div class="app">
 
-  <h1>HTML 代码生成器</h1>
-  <div class="subtitle">按步骤填写，连续生成，最后一次性复制</div>
-
-  <div class="step-indicator" id="stepText">步骤 1 / 4 · URL</div>
-
-  <!-- Step 1 -->
+  <!-- URL -->
   <div class="step active">
-    <div class="label">URL</div>
     <input id="url" placeholder="https://example.com">
-    <div class="msg" id="urlMsg">URL 必须以 http:// 或 https:// 开头</div>
-    <button onclick="nextStep()">下一步</button>
+    <span class="action" onclick="next()">→</span>
   </div>
 
-  <!-- Step 2 -->
+  <!-- Title -->
   <div class="step">
-    <div class="label">标题（最多 7 个中文）</div>
-    <input id="title">
-    <div class="msg" id="titleMsg">标题最多 7 个中文</div>
-    <button onclick="nextStep()">下一步</button>
+    <input id="title" placeholder="标题">
+    <span class="action" onclick="next()">→</span>
   </div>
 
-  <!-- Step 3 -->
+  <!-- Desc -->
   <div class="step">
-    <div class="label">描述（最多 11 个中文）</div>
-    <input id="desc">
-    <div class="msg" id="descMsg">描述最多 11 个中文</div>
-    <button onclick="nextStep()">下一步</button>
+    <input id="desc" placeholder="描述">
+    <span class="action" onclick="next()">→</span>
   </div>
 
-  <!-- Step 4 -->
+  <!-- Date -->
   <div class="step">
-    <div class="label">收录日期</div>
     <input type="date" id="date">
-    <button onclick="generate()">生成代码</button>
+    <span class="action" onclick="generate()">→</span>
   </div>
 
-  <div class="divider"></div>
-
-  <div class="copy-row">
-    <button onclick="copyAll()">复制全部</button>
-    <span class="copy-msg" id="copyMsg">已复制</span>
+  <!-- 累计 -->
+  <div class="all">
+    <span class="copy" onclick="copyAll()">📋</span>
+    <pre id="allOutput"></pre>
   </div>
-
-  <pre id="allOutput"></pre>
 
 </div>
 
 <script>
-let currentStep = 0;
+let step = 0;
 const steps = document.querySelectorAll('.step');
-const stepText = document.getElementById('stepText');
-const stepNames = ['URL', '标题', '描述', '收录日期'];
 let allCodes = [];
 
-function updateStep() {
-  steps.forEach((s,i)=>s.classList.toggle('active', i===currentStep));
-  stepText.textContent = `步骤 ${currentStep+1} / 4 · ${stepNames[currentStep]}`;
+function show() {
+  steps.forEach((s,i)=>s.classList.toggle('active', i===step));
 }
 
-function limitChinese(input, limit, msg) {
-  input.addEventListener('input', ()=>{
-    const c = input.value.match(/[\u4e00-\u9fa5]/g)||[];
-    if (c.length > limit) {
-      input.value = input.value.slice(0,-1);
-      msg.style.display='block';
-      setTimeout(()=>msg.style.display='none',2000);
-    }
-  });
+function next() {
+  if (step === 0 && !/^https?:\/\//.test(url.value.trim())) return;
+  if (step === 1 && !title.value.trim()) return;
+  if (step === 2 && !desc.value.trim()) return;
+  step++;
+  show();
 }
 
-limitChinese(title,7,titleMsg);
-limitChinese(desc,11,descMsg);
-
-function nextStep() {
-  if (currentStep===0 && !/^https?:\/\//.test(url.value.trim())) {
-    urlMsg.style.display='block';
-    setTimeout(()=>urlMsg.style.display='none',2000);
-    return;
-  }
-  if (currentStep===1 && !title.value.trim()) return;
-  if (currentStep===2 && !desc.value.trim()) return;
-  currentStep++;
-  updateStep();
-}
-
-function getTodayISO(){
-  const d=new Date();
+function today() {
+  const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-date.value=getTodayISO();
+date.value = today();
 
-function formatDate(str){
-  const [y,m,d]=str.split('-');
+function formatDate(s){
+  const [y,m,d]=s.split("-");
   return `${parseInt(y)}/${parseInt(m)}/${parseInt(d)}`;
 }
 
-function generate(){
-  const code=`
-<a href="${url.value}" target="_blank" title="收录日期：${formatDate(date.value)}">
+function generate() {
+  const code = `
+<a href="${url.value}" title="收录日期：${formatDate(date.value)}">
   <h2>${title.value} -></h2>
   <p>${desc.value}</p>
 </a>`.trim();
@@ -245,17 +155,14 @@ function generate(){
   allOutput.textContent = allCodes.join("\n\n");
 
   url.value = title.value = desc.value = '';
-  date.value = getTodayISO();
-  currentStep = 0;
-  updateStep();
+  date.value = today();
+  step = 0;
+  show();
 }
 
-function copyAll(){
-  if(!allCodes.length) return;
-  navigator.clipboard.writeText(allCodes.join("\n\n")).then(()=>{
-    copyMsg.style.display='inline';
-    setTimeout(()=>copyMsg.style.display='none',2000);
-  });
+function copyAll() {
+  if (!allCodes.length) return;
+  navigator.clipboard.writeText(allCodes.join("\n\n"));
 }
 </script>
 
