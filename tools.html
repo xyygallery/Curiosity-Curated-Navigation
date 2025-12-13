@@ -10,7 +10,7 @@ body {
   padding: 80px 20px;
   background: #fff;
   color: #111;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  font-family: system-ui, -apple-system;
 }
 
 .app {
@@ -18,6 +18,7 @@ body {
   margin: 0 auto;
 }
 
+/* 输入显示区（不接受焦点） */
 .step {
   display: none;
 }
@@ -34,12 +35,14 @@ input {
   border: none;
   outline: none;
   background: transparent;
+  pointer-events: none;   /* 关键 */
 }
 
 input::placeholder {
   color: #aaa;
 }
 
+/* 输出 */
 .all {
   margin-top: 100px;
 }
@@ -56,21 +59,10 @@ pre {
 
 <div class="app">
 
-  <div class="step active">
-    <input id="url" placeholder="https://example.com">
-  </div>
-
-  <div class="step">
-    <input id="title" placeholder="标题">
-  </div>
-
-  <div class="step">
-    <input id="desc" placeholder="描述">
-  </div>
-
-  <div class="step">
-    <input type="date" id="date">
-  </div>
+  <div class="step active"><input id="url" placeholder="https://example.com"></div>
+  <div class="step"><input id="title" placeholder="标题"></div>
+  <div class="step"><input id="desc" placeholder="描述"></div>
+  <div class="step"><input id="date" placeholder="YYYY-MM-DD"></div>
 
   <div class="all">
     <pre id="allOutput"></pre>
@@ -79,87 +71,107 @@ pre {
 </div>
 
 <script>
+/* ===== 状态 ===== */
 let step = 0;
 const steps = document.querySelectorAll('.step');
+const fields = ['url','title','desc','date'];
+let buffer = '';
 let allCodes = [];
 
-function show() {
+/* ===== UI 更新 ===== */
+function render() {
   steps.forEach((s,i)=>s.classList.toggle('active', i===step));
-  steps[step].querySelector('input').focus();
+  document.getElementById(fields[step]).value = buffer;
 }
 
+/* ===== 日期 ===== */
 function today() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
-date.value = today();
 
-function formatDate(s){
-  const [y,m,d]=s.split("-");
-  return `${parseInt(y)}/${parseInt(m)}/${parseInt(d)}`;
-}
+/* ===== 生成 ===== */
+function generate(forceDate=false) {
+  const url = document.getElementById('url').value;
+  const title = document.getElementById('title').value;
+  const desc = document.getElementById('desc').value;
+  const date = forceDate ? today() : document.getElementById('date').value || today();
 
-function generate(force = false) {
-  if (!url.value || !title.value || !desc.value) return;
-
-  const dateText = force ? formatDate(today()) : formatDate(date.value);
+  if (!url || !title || !desc) return;
 
   const code = `
-<a href="${url.value}" target="_blank" title="收录日期：${dateText}">
-  <h2>${title.value} -></h2>
-  <p>${desc.value}</p>
+<a href="${url}" target="_blank" title="收录日期：${date}">
+  <h2>${title} -></h2>
+  <p>${desc}</p>
 </a>`.trim();
 
   allCodes.push(code);
   allOutput.textContent = allCodes.join("\n\n");
 
   // 重置
-  url.value = title.value = desc.value = '';
-  date.value = today();
+  fields.forEach(id => document.getElementById(id).value = '');
+  buffer = '';
   step = 0;
-  show();
+  render();
 }
 
+/* ===== 全局键盘捕获 ===== */
 document.addEventListener('keydown', e => {
-  const input = steps[step].querySelector('input');
-
-  // Esc：清空当前输入
-  if (e.key === 'Escape') {
-    input.value = '';
-    return;
-  }
-
-  // Ctrl + Enter：强制生成（跳过日期）
-  if (e.key === 'Enter' && e.ctrlKey) {
-    generate(true);
-    return;
-  }
 
   // Ctrl + C：复制全部
-  if (e.key.toLowerCase() === 'c' && e.ctrlKey) {
+  if (e.ctrlKey && e.key.toLowerCase() === 'c') {
     if (allCodes.length) {
       navigator.clipboard.writeText(allCodes.join("\n\n"));
     }
     return;
   }
 
-  // Enter：正常流程
-  if (e.key === 'Enter') {
-    if (step === 0 && !/^https?:\/\//.test(url.value.trim())) return;
-    if (step === 1 && !title.value.trim()) return;
-    if (step === 2 && !desc.value.trim()) return;
+  // Ctrl + Enter：强制生成
+  if (e.ctrlKey && e.key === 'Enter') {
+    generate(true);
+    return;
+  }
 
+  // Enter：下一步 / 生成
+  if (e.key === 'Enter') {
+    if (step === 0 && !/^https?:\/\//.test(buffer)) return;
     if (step < 3) {
+      document.getElementById(fields[step]).value = buffer;
+      buffer = '';
       step++;
-      show();
+      render();
     } else {
+      document.getElementById(fields[step]).value = buffer;
       generate();
     }
+    return;
+  }
+
+  // Backspace
+  if (e.key === 'Backspace') {
+    buffer = buffer.slice(0, -1);
+    render();
+    return;
+  }
+
+  // 普通字符
+  if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+    buffer += e.key;
+    render();
   }
 });
 
-// 初始化聚焦
-show();
+/* ===== 粘贴 ===== */
+document.addEventListener('paste', e => {
+  const text = e.clipboardData.getData('text');
+  buffer += text;
+  render();
+  e.preventDefault();
+});
+
+/* 初始化 */
+buffer = '';
+render();
 </script>
 
 </body>
