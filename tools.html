@@ -7,20 +7,25 @@
 <style>
 body {
   margin: 0;
-  padding: 80px 20px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: #fff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
   color: #111;
-  font-family: system-ui, -apple-system;
 }
 
+/* 整个工具容器 */
 .app {
-  max-width: 520px;
-  margin: 0 auto;
+  text-align: center;
+  width: 600px;
 }
 
-/* 输入显示区（不接受焦点） */
+/* 输入显示区 */
 .step {
   display: none;
+  margin: 20px 0;
 }
 
 .step.active {
@@ -28,14 +33,14 @@ body {
 }
 
 input {
-  width: 420px;
-  max-width: 100%;
-  font-size: 20px;
-  padding: 6px 2px;
+  width: 500px;
+  font-size: 28px;
+  padding: 12px 6px;
   border: none;
   outline: none;
   background: transparent;
-  pointer-events: none;   /* 关键 */
+  pointer-events: none;
+  text-align: center;
 }
 
 input::placeholder {
@@ -44,11 +49,12 @@ input::placeholder {
 
 /* 输出 */
 .all {
-  margin-top: 100px;
+  margin-top: 60px;
+  text-align: left;
 }
 
 pre {
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.6;
   white-space: pre-wrap;
 }
@@ -71,26 +77,27 @@ pre {
 </div>
 
 <script>
-/* ===== 状态 ===== */
 let step = 0;
 const steps = document.querySelectorAll('.step');
 const fields = ['url','title','desc','date'];
 let buffer = '';
 let allCodes = [];
 
-/* ===== UI 更新 ===== */
 function render() {
   steps.forEach((s,i)=>s.classList.toggle('active', i===step));
   document.getElementById(fields[step]).value = buffer;
 }
 
-/* ===== 日期 ===== */
 function today() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
-/* ===== 生成 ===== */
+function formatDate(s){
+  const [y,m,d]=s.split("-");
+  return `${parseInt(y)}/${parseInt(m)}/${parseInt(d)}`;
+}
+
 function generate(forceDate=false) {
   const url = document.getElementById('url').value;
   const title = document.getElementById('title').value;
@@ -108,31 +115,25 @@ function generate(forceDate=false) {
   allCodes.push(code);
   allOutput.textContent = allCodes.join("\n\n");
 
-  // 重置
   fields.forEach(id => document.getElementById(id).value = '');
   buffer = '';
   step = 0;
   render();
 }
 
-/* ===== 全局键盘捕获 ===== */
 document.addEventListener('keydown', e => {
+  const input = steps[step].querySelector('input');
 
-  // Ctrl + C：复制全部
   if (e.ctrlKey && e.key.toLowerCase() === 'c') {
-    if (allCodes.length) {
-      navigator.clipboard.writeText(allCodes.join("\n\n"));
-    }
+    if (allCodes.length) navigator.clipboard.writeText(allCodes.join("\n\n"));
     return;
   }
 
-  // Ctrl + Enter：强制生成
   if (e.ctrlKey && e.key === 'Enter') {
     generate(true);
     return;
   }
 
-  // Enter：下一步 / 生成
   if (e.key === 'Enter') {
     if (step === 0 && !/^https?:\/\//.test(buffer)) return;
     if (step < 3) {
@@ -147,21 +148,18 @@ document.addEventListener('keydown', e => {
     return;
   }
 
-  // Backspace
   if (e.key === 'Backspace') {
     buffer = buffer.slice(0, -1);
     render();
     return;
   }
 
-  // 普通字符
   if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
     buffer += e.key;
     render();
   }
 });
 
-/* ===== 粘贴 ===== */
 document.addEventListener('paste', e => {
   const text = e.clipboardData.getData('text');
   buffer += text;
@@ -169,10 +167,10 @@ document.addEventListener('paste', e => {
   e.preventDefault();
 });
 
-/* 初始化 */
 buffer = '';
 render();
 </script>
 
 </body>
 </html>
+
