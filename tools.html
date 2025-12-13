@@ -1,208 +1,194 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>HTML 代码生成器</title>
-  <style>
-    body {
-      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-      background: #fafafa;
-      color: #333;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-      line-height: 1.6;
-    }
-    h1, h2 {
-      font-weight: 500;
-      color: #111;
-    }
-    label {
-      display: block;
-      margin: 15px 0 5px;
-      font-size: 14px;
-      color: #555;
-    }
-    input {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-      transition: all 0.2s ease;
-      box-sizing: border-box;
-    }
-    input:focus {
-      outline: none;
-      border-color: #0070f3;
-      box-shadow: 0 0 0 3px rgba(0, 118, 255, 0.1);
-    }
-    button {
-      background: #0070f3;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 18px;
-      font-size: 14px;
-      margin-top: 15px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    button:hover {
-      background: #0059c9;
-    }
-    pre {
-      background: #fff;
-      border: 1px solid #eee;
-      padding: 15px;
-      margin-top: 15px;
-      border-radius: 8px;
-      font-size: 13px;
-      line-height: 1.5;
-      overflow-x: auto;
-    }
-    #allCopyMsg, #errorMsg, #descMsg, #titleMsg, #urlMsg {
-      margin-left: 10px;
-      font-size: 13px;
-      display: none;
-      transition: opacity 0.3s ease;
-    }
-    #allCopyMsg { color: #0070f3; }
-    #errorMsg, #descMsg, #titleMsg, #urlMsg { color: #e00; }
-    .btn-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>HTML 代码生成器（问卷式）</title>
+
+<style>
+body {
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  background: #fafafa;
+  color: #333;
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+h1 {
+  font-weight: 500;
+}
+
+.step {
+  display: none;
+  margin-top: 30px;
+}
+
+.step.active {
+  display: block;
+}
+
+label {
+  font-size: 14px;
+  color: #555;
+}
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #0070f3;
+  box-shadow: 0 0 0 3px rgba(0,118,255,.1);
+}
+
+button {
+  background: #0070f3;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  margin-top: 18px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0059c9;
+}
+
+.msg {
+  font-size: 13px;
+  color: #e00;
+  margin-top: 8px;
+  display: none;
+}
+
+pre {
+  background: #fff;
+  border: 1px solid #eee;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-size: 13px;
+  overflow-x: auto;
+}
+</style>
 </head>
+
 <body>
-  <h1>HTML 代码生成器</h1>
 
-  <label>标题</label>
-  <input type="text" id="title" placeholder="例如：98.js">
-  <span id="titleMsg">⚠️ 标题最多 7 个中文</span>
+<h1>HTML 代码生成器（问卷模式）</h1>
 
-  <label>描述</label>
-  <input type="text" id="desc" placeholder="例如：Windows 98 模拟">
-  <span id="descMsg">⚠️ 描述最多 11 个中文</span>
+<!-- Step 1 -->
+<div class="step active" data-step="0">
+  <label>标题（最多 7 个中文）</label>
+  <input id="title" placeholder="例如：98.js">
+  <div class="msg" id="titleMsg">⚠️ 标题最多 7 个中文</div>
+  <button onclick="nextStep()">下一步</button>
+</div>
 
+<!-- Step 2 -->
+<div class="step" data-step="1">
+  <label>描述（最多 11 个中文）</label>
+  <input id="desc" placeholder="例如：Windows 98 模拟">
+  <div class="msg" id="descMsg">⚠️ 描述最多 11 个中文</div>
+  <button onclick="nextStep()">下一步</button>
+</div>
+
+<!-- Step 3 -->
+<div class="step" data-step="2">
   <label>URL</label>
-  <input type="text" id="url" placeholder="例如：https://98.js.org/">
-  <span id="urlMsg">❌ URL 必须以 http:// 或 https:// 开头</span>
+  <input id="url" placeholder="https://example.com">
+  <div class="msg" id="urlMsg">❌ URL 必须以 http:// 或 https:// 开头</div>
+  <button onclick="nextStep()">下一步</button>
+</div>
 
+<!-- Step 4 -->
+<div class="step" data-step="3">
   <label>收录日期</label>
   <input type="date" id="date">
+  <button onclick="generate()">生成代码</button>
+</div>
 
-  <div class="btn-row">
-    <button onclick="generate()">生成</button>
-    <span id="errorMsg">❌ 请完整填写所有内容：nkKMD3FwjAGZEbrHmJ5N48ac9RueW6fdSVvTz2ByPXpsUhYtx7gqC</span>
-  </div>
-
-  <h2>最后生成的代码</h2>
+<!-- Result -->
+<div class="step" data-step="4">
+  <h2>生成结果</h2>
   <pre id="output"></pre>
+</div>
 
-  <h2>累计生成的所有代码</h2>
-  <div class="btn-row">
-    <button onclick="copyAll()">复制全部</button>
-    <span id="allCopyMsg">✅ 全部已复制</span>
-  </div>
-  <pre id="allOutput"></pre>
+<script>
+let currentStep = 0;
+const steps = document.querySelectorAll('.step');
 
-  <script>
-    let allCodes = [];
+function showStep(index) {
+  steps.forEach((s, i) => {
+    s.classList.toggle('active', i === index);
+  });
+}
 
-    // 获取今天日期，返回 YYYY-MM-DD
-    function getTodayISO() {
-      const today = new Date();
-      const y = today.getFullYear();
-      const m = String(today.getMonth() + 1).padStart(2, "0");
-      const d = String(today.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
+function limitChinese(input, limit, msgEl) {
+  input.addEventListener('input', () => {
+    const chars = input.value.match(/[\u4e00-\u9fa5]/g) || [];
+    if (chars.length > limit) {
+      input.value = input.value.slice(0, -1);
+      msgEl.style.display = 'block';
+      setTimeout(() => msgEl.style.display = 'none', 2000);
     }
+  });
+}
 
-    // 格式化为 YYYY/M/D
-    function formatDateDisplay(dateStr) {
-      const [y, m, d] = dateStr.split("-");
-      return `${parseInt(y)}/${parseInt(m)}/${parseInt(d)}`;
+limitChinese(title, 7, titleMsg);
+limitChinese(desc, 11, descMsg);
+
+function nextStep() {
+  if (currentStep === 0 && !title.value.trim()) return;
+  if (currentStep === 1 && !desc.value.trim()) return;
+
+  if (currentStep === 2) {
+    if (!/^https?:\/\//.test(url.value.trim())) {
+      urlMsg.style.display = 'block';
+      setTimeout(() => urlMsg.style.display = 'none', 2000);
+      return;
     }
+  }
 
-    window.onload = function() {
-      document.getElementById('date').value = getTodayISO();
-    };
+  currentStep++;
+  showStep(currentStep);
+}
 
-    // 限制中文数量
-    function limitChinese(input, limit, msgEl) {
-      input.addEventListener('input', () => {
-        const value = input.value;
-        const chineseChars = value.match(/[\u4e00-\u9fa5]/g) || [];
-        if (chineseChars.length > limit) {
-          input.value = value.slice(0, value.length - 1);
-          msgEl.style.display = "inline";
-          setTimeout(() => { msgEl.style.display = "none"; }, 2000);
-        }
-      });
-    }
+function getTodayISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
 
-    // 应用限制
-    limitChinese(document.getElementById('title'), 7, document.getElementById('titleMsg'));
-    limitChinese(document.getElementById('desc'), 11, document.getElementById('descMsg'));
+date.value = getTodayISO();
 
-    function generate() {
-      const title = document.getElementById('title').value.trim();
-      const desc = document.getElementById('desc').value.trim();
-      const url = document.getElementById('url').value.trim();
-      const dateRaw = document.getElementById('date').value.trim();
+function formatDateDisplay(dateStr) {
+  const [y,m,d] = dateStr.split("-");
+  return `${parseInt(y)}/${parseInt(m)}/${parseInt(d)}`;
+}
 
-      const errorMsg = document.getElementById('errorMsg');
-      const urlMsg = document.getElementById('urlMsg');
+function generate() {
+  const dateText = formatDateDisplay(date.value);
 
-      if (!title || !desc || !url || !dateRaw) {
-        errorMsg.style.display = "inline";
-        errorMsg.style.opacity = "1";
-        setTimeout(() => { errorMsg.style.opacity = "0"; }, 2000);
-        return;
-      }
-
-      if (!/^https?:\/\//.test(url)) {
-        urlMsg.style.display = "inline";
-        urlMsg.style.opacity = "1";
-        setTimeout(() => { urlMsg.style.opacity = "0"; }, 2500);
-        return;
-      }
-
-      const date = formatDateDisplay(dateRaw);
-
-      const code = `
-<a href="${url}" class="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30" target="_blank" rel="noopener noreferrer" title="收录日期：${date}">
-    <h2 class="mb-3 text-2xl font-light">
-       ${title}
-        <span class="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none ml-2">-&gt;</span>
-    </h2>
-    <p class="m-0 max-w-[30ch] text-sm opacity-50">${desc}</p>
+  const code = `
+<a href="${url.value}" target="_blank" title="收录日期：${dateText}">
+  <h2>${title.value} -></h2>
+  <p>${desc.value}</p>
 </a>
-      `.trim();
+`.trim();
 
-      document.getElementById('output').textContent = code;
-      allCodes.push(code);
-      document.getElementById('allOutput').textContent = allCodes.join("\n\n");
+  output.textContent = code;
+  currentStep = 4;
+  showStep(currentStep);
+}
+</script>
 
-      // 清空表单并重置日期
-      document.getElementById('title').value = "";
-      document.getElementById('desc').value = "";
-      document.getElementById('url').value = "";
-      document.getElementById('date').value = getTodayISO();
-    }
-
-    function copyAll() {
-      if (allCodes.length === 0) return;
-      navigator.clipboard.writeText(allCodes.join("\n\n")).then(() => {
-        const msg = document.getElementById('allCopyMsg');
-        msg.style.display = "inline";
-        msg.style.opacity = "1";
-        setTimeout(() => { msg.style.opacity = "0"; }, 2000);
-      });
-    }
-  </script>
 </body>
 </html>
