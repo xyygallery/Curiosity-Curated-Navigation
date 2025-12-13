@@ -12,17 +12,15 @@ body {
   justify-content: center;
   align-items: center;
   background: #fff;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  font-family: system-ui, -apple-system;
   color: #111;
 }
 
-/* 整个工具容器 */
 .app {
   text-align: center;
   width: 600px;
 }
 
-/* 输入显示区 */
 .step {
   display: none;
   margin: 20px 0;
@@ -39,7 +37,7 @@ input {
   border: none;
   outline: none;
   background: transparent;
-  pointer-events: none;
+  pointer-events: none; /* 不可直接点击输入 */
   text-align: center;
 }
 
@@ -47,7 +45,6 @@ input::placeholder {
   color: #aaa;
 }
 
-/* 输出 */
 .all {
   margin-top: 60px;
   text-align: left;
@@ -57,6 +54,15 @@ pre {
   font-size: 16px;
   line-height: 1.6;
   white-space: pre-wrap;
+}
+
+/* 隐藏的全局接收 textarea */
+#globalInput {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
 }
 </style>
 </head>
@@ -74,103 +80,115 @@ pre {
     <pre id="allOutput"></pre>
   </div>
 
+  <!-- 隐藏 textarea 用于捕获中文输入 -->
+  <textarea id="globalInput" autofocus></textarea>
+
 </div>
 
 <script>
 let step = 0;
 const steps = document.querySelectorAll('.step');
 const fields = ['url','title','desc','date'];
-let buffer = '';
 let allCodes = [];
+
+// buffer 用于显示当前输入内容
+let buffer = '';
 
 function render() {
   steps.forEach((s,i)=>s.classList.toggle('active', i===step));
   document.getElementById(fields[step]).value = buffer;
 }
 
+// 初始化日期
 function today() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
+// 格式化日期
 function formatDate(s){
   const [y,m,d]=s.split("-");
   return `${parseInt(y)}/${parseInt(m)}/${parseInt(d)}`;
 }
 
+// 生成代码
 function generate(forceDate=false) {
-  const url = document.getElementById('url').value;
-  const title = document.getElementById('title').value;
-  const desc = document.getElementById('desc').value;
-  const date = forceDate ? today() : document.getElementById('date').value || today();
+  const urlVal = document.getElementById('url').value;
+  const titleVal = document.getElementById('title').value;
+  const descVal = document.getElementById('desc').value;
+  const dateVal = forceDate ? today() : document.getElementById('date').value || today();
 
-  if (!url || !title || !desc) return;
+  if (!urlVal || !titleVal || !descVal) return;
 
   const code = `
-<a href="${url}" target="_blank" title="收录日期：${date}">
-  <h2>${title} -></h2>
-  <p>${desc}</p>
+<a href="${urlVal}" target="_blank" title="收录日期：${dateVal}">
+  <h2>${titleVal} -></h2>
+  <p>${descVal}</p>
 </a>`.trim();
 
   allCodes.push(code);
   allOutput.textContent = allCodes.join("\n\n");
 
+  // 清空 buffer 和 input
   fields.forEach(id => document.getElementById(id).value = '');
   buffer = '';
   step = 0;
   render();
 }
 
-document.addEventListener('keydown', e => {
-  const input = steps[step].querySelector('input');
+// 全局 input 监听
+const globalInput = document.getElementById('globalInput');
+globalInput.focus();
 
+globalInput.addEventListener('input', e => {
+  buffer = globalInput.value;
+  render();
+});
+
+// 全局按键
+document.addEventListener('keydown', e => {
+
+  // Ctrl + C 复制全部
   if (e.ctrlKey && e.key.toLowerCase() === 'c') {
     if (allCodes.length) navigator.clipboard.writeText(allCodes.join("\n\n"));
     return;
   }
 
+  // Ctrl + Enter 强制生成
   if (e.ctrlKey && e.key === 'Enter') {
     generate(true);
     return;
   }
 
+  // Enter 下一步 / 生成
   if (e.key === 'Enter') {
     if (step === 0 && !/^https?:\/\//.test(buffer)) return;
     if (step < 3) {
       document.getElementById(fields[step]).value = buffer;
       buffer = '';
+      globalInput.value = '';
       step++;
       render();
     } else {
       document.getElementById(fields[step]).value = buffer;
       generate();
+      globalInput.value = '';
     }
     return;
   }
 
+  // Backspace 删除
   if (e.key === 'Backspace') {
-    buffer = buffer.slice(0, -1);
+    buffer = buffer.slice(0,-1);
     render();
     return;
   }
-
-  if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
-    buffer += e.key;
-    render();
-  }
 });
 
-document.addEventListener('paste', e => {
-  const text = e.clipboardData.getData('text');
-  buffer += text;
-  render();
-  e.preventDefault();
-});
-
-buffer = '';
+// 保持 globalInput 焦点
+setInterval(()=>globalInput.focus(), 100);
 render();
 </script>
 
 </body>
 </html>
-
